@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Mindbox.I18next</RootNamespace>
+    <LangVersion>7.2</LangVersion>    
+	<Company>Mindbox</Company>
+    <Version>0.1</Version>
+    <Product>I18Next .NET implementation</Product>
+    <Description>Internationalization library</Description>
+    <Copyright>Mindbox 2018</Copyright>
+    <PackageProjectUrl>https://github.com/mindbox-moscow/mindbox-i18next-net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mindbox-moscow/mindbox-i18next-net</RepositoryUrl>
+    <PackageTags>i18next, internationalization</PackageTags>
+     <AssemblyName>Mindbox.I18next</AssemblyName>
+    <Authors>Mindbox</Authors>
+  </PropertyGroup>
+</Project>
