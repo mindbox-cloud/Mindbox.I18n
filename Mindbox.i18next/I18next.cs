@@ -14,6 +14,8 @@ namespace Mindbox.i18next
             localeData = new LocaleData(options.LanguageDirectoryPath);
         }
 
+        public string Translate(string key) => Translate(key, new TranslationOptions());
+
         public string Translate(string key, TranslationOptions translationOptions)
         {
             var splitKey = key.Split(':');
