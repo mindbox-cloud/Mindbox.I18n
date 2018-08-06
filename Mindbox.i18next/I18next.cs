@@ -5,16 +5,16 @@ namespace Mindbox.i18next
 {
     public class I18Next
     {
-        private InitOptions initOptions;
+        private Options options;
         private LocaleData localeData;
 
-        public void Init(InitOptions initOptions)
+        public void Init(Options options)
         {
-            this.initOptions = initOptions;
-            localeData = new LocaleData(initOptions.LocalePath);
+            this.options = options;
+            localeData = new LocaleData(options.LanguageDirectoryPath);
         }
 
-        public string Translate(string key, Options options)
+        public string Translate(string key, TranslationOptions translationOptions)
         {
             var splitKey = key.Split(':');
             return localeData.GetKeyValue(splitKey[0], splitKey[1]);

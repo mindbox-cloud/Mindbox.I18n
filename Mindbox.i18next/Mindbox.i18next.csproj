@@ -4,7 +4,7 @@
     <RootNamespace>Mindbox.I18next</RootNamespace>
     <LangVersion>7.2</LangVersion>
     <Company>Mindbox</Company>
-    <Version>0.1-prealpha</Version>
+    <Version>0.1.1-prealpha</Version>
     <Product>I18Next .NET implementation</Product>
     <Description>Internationalization library</Description>
     <Copyright>Mindbox 2018</Copyright>

@@ -10,15 +10,15 @@ namespace Mindbox.i18next.Tests
 		{
 			var i18next = new I18Next();
 			i18next.Init(
-				new InitOptions
+				new Options
 				{
-					Locale = "ru",
-					LocalePath = "ru"
+					Language = "ru",
+					LanguageDirectoryPath = "ru"
 				});
 
-			var result = i18next.Translate("test:testKey1", new Options());
+			var result = i18next.Translate("test:testKey1", new TranslationOptions());
 
-			Assert.AreEqual("Это первый тест", result);
+			Assert.AreEqual("Р­С‚Рѕ РїРµСЂРІС‹Р№ С‚РµСЃС‚", result);
 		}
 
 		[TestMethod]
@@ -26,13 +26,13 @@ namespace Mindbox.i18next.Tests
 		{
 			var i18next = new I18Next();
 			i18next.Init(
-				new InitOptions
+				new Options
 				{
-					Locale = "en",
-					LocalePath = "en"
+					Language = "en",
+					LanguageDirectoryPath = "en"
 				});
 
-			var result = i18next.Translate("test:testKey1", new Options());
+			var result = i18next.Translate("test:testKey1", new TranslationOptions());
 
 			Assert.AreEqual("This is the first test", result);
 		}
