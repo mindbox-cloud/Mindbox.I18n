@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Mindbox.I18n.analysis-settings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="Mindbox.I18n.analysis-settings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mindbox.I18n\Mindbox.I18n.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Localization\Bands.ru-RU.i18n.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Localization\Cars.ru-RU.i18n.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
