@@ -1,0 +1,10 @@
+{
+	"translationSource": {
+		"baseDirectory": "",
+		"locale": "ru-RU",
+		"ignorePaths": [
+			"\\bin\\",
+			"\\ToBeIgnored\\"
+		]
+	}
+}
