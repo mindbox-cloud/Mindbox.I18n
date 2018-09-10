@@ -47,6 +47,7 @@ namespace Mindbox.I18n.Analyzers
 				SyntaxKind.InterpolatedStringExpression,
 				SyntaxKind.InvocationExpression,
 				SyntaxKind.AddExpression,
+				SyntaxKind.ConditionalAccessExpression,
 				SyntaxKind.IdentifierName);
 		}
 

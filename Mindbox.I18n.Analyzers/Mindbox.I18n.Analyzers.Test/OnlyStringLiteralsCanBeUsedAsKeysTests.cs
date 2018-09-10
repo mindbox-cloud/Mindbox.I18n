@@ -151,6 +151,39 @@ namespace Mindbox.I18n.Analyzers.Test
 		}
 
 		[TestMethod]
+		public void OnlyStringLiteralsCanBeUsed_StringConditionalMemberAccess_Error()
+		{
+			var test = @"
+	using Mindbox.I18n;
+
+    namespace ConsoleApplication1
+    {
+		class TestingClass 
+		{
+			void TestMethod() 
+			{
+				(string, string)? tuple = (""a"", ""b"");
+				LocalizableString s = tuple?.Item1;
+			}
+
+			private object object;
+		}
+    }";
+			var expected = new DiagnosticResult
+			{
+				Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
+				Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
+				Severity = DiagnosticSeverity.Error,
+				Locations =
+					new[] {
+						new DiagnosticResultLocation("Test0.cs", 11, 27)
+					}
+			};
+
+			VerifyCSharpDiagnostic(test, expected);
+		}
+
+		[TestMethod]
 		public void OnlyStringLiteralsCanBeUsed_StringConcatenation_Error()
 		{
 			var test = @"
