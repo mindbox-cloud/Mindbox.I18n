@@ -15,8 +15,8 @@ namespace Mindbox.I18n
 			RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
 		protected readonly string BaseDirectory;
+		protected readonly IReadOnlyList<string> IgnoredPathRules;
 		private readonly IReadOnlyList<Locale> supportedLocales;
-		private readonly IReadOnlyList<string> ignoredPathRules;
 
 		private Dictionary<string, TranslationData> translationsPerLocale;
 
@@ -26,8 +26,8 @@ namespace Mindbox.I18n
 			IReadOnlyList<string> ignoredPathRules)
 		{
 			BaseDirectory = baseDirectory;
+			IgnoredPathRules = ignoredPathRules;
 			this.supportedLocales = supportedLocales;
-			this.ignoredPathRules = ignoredPathRules;
 		}
 
 		public virtual void Initialize()
@@ -45,7 +45,7 @@ namespace Mindbox.I18n
 					BaseDirectory,
 					$"*{TranslationFileSuffix}",
 					SearchOption.AllDirectories)
-				.Where(path => !ignoredPathRules.Any(
+				.Where(path => !IgnoredPathRules.Any(
 					ignoredPart => path.IndexOf(ignoredPart, StringComparison.InvariantCultureIgnoreCase) > 0))
 				.ToList();
 
