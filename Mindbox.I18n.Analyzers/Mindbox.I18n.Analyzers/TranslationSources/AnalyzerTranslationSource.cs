@@ -45,10 +45,8 @@ namespace Mindbox.I18n.Analyzers
 					Path.GetDirectoryName(configurationFilePath),
 					relativePath);
 
-				var rootDirectory = Path.GetDirectoryName(baseDirectory);
-
 				locale = Locales.GetByName(localeName);
-				translationSource = new WatchingFileSystemTranslationSource(rootDirectory, new [] { locale }, ignoredPaths);
+				translationSource = new WatchingFileSystemTranslationSource(baseDirectory, new [] { locale }, ignoredPaths);
 				translationSource.Initialize();
 			}
 		}
