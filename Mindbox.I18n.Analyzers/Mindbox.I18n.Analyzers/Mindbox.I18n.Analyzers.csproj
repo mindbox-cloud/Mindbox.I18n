@@ -9,7 +9,7 @@
 
   <PropertyGroup>
     <PackageId>Mindbox.I18n.Analyzers</PackageId>
-    <PackageVersion>1.0.1-rc3</PackageVersion>
+    <PackageVersion>1.0.2</PackageVersion>
     <Authors>Mindbox</Authors>
     <RepositoryUrl>https://github.com/mindbox-moscow/mindbox-i18next-net</RepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
