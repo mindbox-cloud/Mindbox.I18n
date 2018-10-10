@@ -1,8 +1,10 @@
 using System.Collections.Immutable;
+using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.Operations;
 
 namespace Mindbox.I18n.Analyzers
 {
@@ -53,7 +55,7 @@ namespace Mindbox.I18n.Analyzers
 
 		private void AnalyzeStringLiteralExpression(SyntaxNodeAnalysisContext context, IAnalyzerTranslationSource translationSource)
 		{
-			if (!IsStringToLocalizableStringConversion(context))
+			if (!IsStringToLocalizationKeyAssignment(context))
 				return;
 
 			var expression = (LiteralExpressionSyntax) context.Node;
@@ -97,7 +99,7 @@ namespace Mindbox.I18n.Analyzers
 
 		private void AnalyzePossiblyIncorrectLocalizableStringExpression(SyntaxNodeAnalysisContext context)
 		{
-			if (!IsStringToLocalizableStringConversion(context))
+			if (!IsStringToLocalizationKeyAssignment(context))
 				return;
 
 			context.ReportDiagnostic(
@@ -106,10 +108,46 @@ namespace Mindbox.I18n.Analyzers
 					context.Node.GetLocation()));
 		}
 
-		private bool IsStringToLocalizableStringConversion(SyntaxNodeAnalysisContext context)
+		/// <summary>
+		/// Checks whether the expression is string conversion to a
+		/// LocalizableString or assignment to a member marked with LocalizationKeyAttribute
+		/// (both cases assume the string must be a valid localization key)
+		/// </summary>
+		/// <param name="context"></param>
+		/// <returns></returns>
+		private bool IsStringToLocalizationKeyAssignment(SyntaxNodeAnalysisContext context)
 		{
 			var expression = context.Node;
+			var operation = context.SemanticModel.GetOperation(expression);
 
+			// check for an attribute constructor argument
+			if (expression.Parent?.IsKind(SyntaxKind.AttributeArgument) == true)
+			{
+				var parameterSymbol = LocalizationAttributeHelper.GetAttributeParameterSymbol(context, (AttributeArgumentSyntax) expression.Parent);
+				return LocalizationAttributeHelper.CheckForLocalizationAttribute(parameterSymbol);
+			}
+
+			// field or property with an attribute
+			if (operation?.Parent is IAssignmentOperation assignmentOperation && operation == assignmentOperation.Value)
+			{
+				if (LocalizationAttributeHelper.IsReferenceWithLocalizationKeyAttribute(assignmentOperation.Target) 
+				    && !LocalizationAttributeHelper.IsReferenceWithLocalizationKeyAttribute(assignmentOperation.Value))
+				{
+					return true;
+				}
+			}
+
+			// method invocation with an attributed parameter
+			if (operation?.Parent is IArgumentOperation argumentOperation)
+			{
+				if (LocalizationAttributeHelper.IsReferenceWithLocalizationKeyAttribute(argumentOperation) 
+				    && !LocalizationAttributeHelper.IsReferenceWithLocalizationKeyAttribute(argumentOperation.Value))
+				{
+					return true;
+				}
+			}
+
+			// implicit conversion to LocalizableString
 			var typeInfo = context.SemanticModel.GetTypeInfo(expression);
 			if (typeInfo.ConvertedType == null)
 				return false;
