@@ -1,9 +1,8 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Mindbox.I18n.Analyzers.Test;
 using TestHelper;
 
-namespace Mindbox.I18n.Analyzers
+namespace Mindbox.I18n.Analyzers.Test
 {
 	[TestClass]
     public class TranslationDiagnosticTests : MindboxI18nAnalyzerTests

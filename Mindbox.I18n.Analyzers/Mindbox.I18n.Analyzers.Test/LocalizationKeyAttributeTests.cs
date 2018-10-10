@@ -41,7 +41,110 @@ namespace Mindbox.I18n.Analyzers.Test
 
 			VerifyCSharpDiagnostic(test, expected);
 		}
-		
+
+		[TestMethod]
+		public void KeyMustHaveCorrectFormat_AttributeProperty_WrongKeyFormat()
+		{
+			var test = @"
+	using Mindbox.I18n;
+
+    namespace ConsoleApplication1
+    {
+		[AttributeUsage(AttributeTargets.All)]
+		public class TestAttribute : System.Attribute
+		{
+			[LocalizationKey]
+			public string Input {get;set;}
+
+			public TestAttribute()
+			{
+			}
+		}
+
+		[TestAttribute(Input = ""Кириллическая строка"")]
+		public class TestingClass 
+		{
+		}
+    }";
+			var expected = new DiagnosticResult
+			{
+				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+				Message = BuildExpectedMessage("Кириллическая строка"),
+				Severity = DiagnosticSeverity.Error,
+				Locations =
+					new[] {
+						new DiagnosticResultLocation("Test0.cs", 17, 26)
+					}
+			};
+
+			VerifyCSharpDiagnostic(test, expected);
+		}
+
+		[TestMethod]
+		public void KeyMustHaveCorrectFormat_AttributeField_WrongKeyFormat()
+		{
+			var test = @"
+	using Mindbox.I18n;
+
+    namespace ConsoleApplication1
+    {
+		[AttributeUsage(AttributeTargets.All)]
+		public class TestAttribute : System.Attribute
+		{
+			[LocalizationKey]
+			public string Input
+
+			public TestAttribute()
+			{
+			}
+		}
+
+		[TestAttribute(Input = ""Кириллическая строка"")]
+		public class TestingClass 
+		{
+		}
+    }";
+			var expected = new DiagnosticResult
+			{
+				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+				Message = BuildExpectedMessage("Кириллическая строка"),
+				Severity = DiagnosticSeverity.Error,
+				Locations =
+					new[] {
+						new DiagnosticResultLocation("Test0.cs", 17, 26)
+					}
+			};
+
+			VerifyCSharpDiagnostic(test, expected);
+		}
+
+		[TestMethod]
+		public void KeyMustHaveCorrectFormat_AttributeField_CorrectKey()
+		{
+			var test = @"
+	using Mindbox.I18n;
+
+    namespace ConsoleApplication1
+    {
+		[AttributeUsage(AttributeTargets.All)]
+		public class TestAttribute : System.Attribute
+		{
+			[LocalizationKey]
+			public string Input
+
+			public TestAttribute()
+			{
+			}
+		}
+
+		[TestAttribute(Input = ""Namespace:Key"")]
+		public class TestingClass 
+		{
+		}
+    }";
+			VerifyCSharpDiagnostic(test);
+		}
+
 		[TestMethod]
 		public void KeyMustHaveCorrectFormat_AttributeConstructor_CorrectKey()
 		{
