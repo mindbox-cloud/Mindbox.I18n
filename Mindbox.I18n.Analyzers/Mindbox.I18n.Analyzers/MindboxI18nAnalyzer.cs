@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -57,7 +55,7 @@ namespace Mindbox.I18n.Analyzers
 
 		private void AnalyzeStringLiteralExpression(SyntaxNodeAnalysisContext context, IAnalyzerTranslationSource translationSource)
 		{
-			if (!IsStringToLocalizableStringConversion(context))
+			if (!IsStringToLocalizationKeyAssignment(context))
 				return;
 
 			var expression = (LiteralExpressionSyntax) context.Node;
@@ -101,7 +99,7 @@ namespace Mindbox.I18n.Analyzers
 
 		private void AnalyzePossiblyIncorrectLocalizableStringExpression(SyntaxNodeAnalysisContext context)
 		{
-			if (!IsStringToLocalizableStringConversion(context))
+			if (!IsStringToLocalizationKeyAssignment(context))
 				return;
 
 			context.ReportDiagnostic(
@@ -110,54 +108,46 @@ namespace Mindbox.I18n.Analyzers
 					context.Node.GetLocation()));
 		}
 
-		private bool IsReferenceWithLocalizationKeyAttribute(IOperation operation)
-		{
-			switch (operation)
-			{
-				case IMemberReferenceOperation memberReferenceOperation:
-					return CheckAttribute(memberReferenceOperation.Member);
-				case IArgumentOperation argumentOperation:
-					return CheckAttribute(argumentOperation.Parameter);
-				case IParameterReferenceOperation parameterReferenceOperation:
-					return CheckAttribute(parameterReferenceOperation.Parameter);
-				default:
-					return false;
-			}
-		}
-
-		private bool CheckAttribute(ISymbol symbol)
-		{
-			return symbol.GetAttributes().Any(attribute => attribute.AttributeClass.Name.Contains("LocalizationKey"));
-		}
-
-		private bool IsStringToLocalizableStringConversion(SyntaxNodeAnalysisContext context)
+		/// <summary>
+		/// Checks whether the expression is string conversion to a
+		/// LocalizableString or assignment to a member marked with LocalizationKeyAttribute
+		/// (both cases assume the string must be a valid localization key)
+		/// </summary>
+		/// <param name="context"></param>
+		/// <returns></returns>
+		private bool IsStringToLocalizationKeyAssignment(SyntaxNodeAnalysisContext context)
 		{
 			var expression = context.Node;
 			var operation = context.SemanticModel.GetOperation(expression);
 
+			// check for an attribute constructor argument
 			if (expression.Parent?.IsKind(SyntaxKind.AttributeArgument) == true)
 			{
-				var methodSymbol = (IMethodSymbol)context.SemanticModel.GetSymbolInfo((AttributeSyntax)expression.Parent.Parent.Parent).Symbol;
-				var parameterSymbol = Extensions.GetParameterSymbol(methodSymbol, (AttributeArgumentSyntax) expression.Parent);
-				return CheckAttribute(parameterSymbol);
+				var parameterSymbol = LocalizationAttributeHelper.GetAttributeParameterSymbol(context, (AttributeArgumentSyntax) expression.Parent);
+				return LocalizationAttributeHelper.CheckForLocalizationAttribute(parameterSymbol);
 			}
 
+			// field or property with an attribute
 			if (operation?.Parent is IAssignmentOperation assignmentOperation && operation == assignmentOperation.Value)
 			{
-				if (IsReferenceWithLocalizationKeyAttribute(assignmentOperation.Target) && !IsReferenceWithLocalizationKeyAttribute(assignmentOperation.Value))
+				if (LocalizationAttributeHelper.IsReferenceWithLocalizationKeyAttribute(assignmentOperation.Target) 
+				    && !LocalizationAttributeHelper.IsReferenceWithLocalizationKeyAttribute(assignmentOperation.Value))
 				{
 					return true;
 				}
 			}
 
+			// method invocation with an attributed parameter
 			if (operation?.Parent is IArgumentOperation argumentOperation)
 			{
-				if (IsReferenceWithLocalizationKeyAttribute(argumentOperation) && !IsReferenceWithLocalizationKeyAttribute(argumentOperation.Value))
+				if (LocalizationAttributeHelper.IsReferenceWithLocalizationKeyAttribute(argumentOperation) 
+				    && !LocalizationAttributeHelper.IsReferenceWithLocalizationKeyAttribute(argumentOperation.Value))
 				{
 					return true;
 				}
 			}
 
+			// implicit conversion to LocalizableString
 			var typeInfo = context.SemanticModel.GetTypeInfo(expression);
 			if (typeInfo.ConvertedType == null)
 				return false;
@@ -166,50 +156,6 @@ namespace Mindbox.I18n.Analyzers
 
 			// Todo: match full type name (need to migrate projects to Mindbox.I18n first).
 			return typeInfo.ConvertedType.Name.EndsWith("LocalizableString");
-		}
-	}
-
-	public static class Extensions
-	{
-		/// <summary>
-		/// To be able to convert positional arguments to named we need to find
-		/// corresponding <see cref="IParameterSymbol" /> for each argument.
-		/// </summary>
-		public static IParameterSymbol GetParameterSymbol(IMethodSymbol methodSymbol, AttributeArgumentSyntax argument)
-		{
-			var parameters = methodSymbol.Parameters;
-
-			if (argument.NameColon != null)
-			{
-				var nameText = argument.NameColon.Name?.Identifier.ValueText;
-				if (nameText == null)
-					return default;
-
-				foreach (var parameter in parameters)
-				{
-					if (string.Equals(parameter.Name, nameText, StringComparison.Ordinal))
-						return parameter;
-				}
-			}
-			else
-			{
-				var argumentList = argument.Parent as AttributeArgumentListSyntax;
-				var index = argumentList.Arguments.IndexOf(argument);
-				if (index < 0)
-					return default;
-
-				if (index < parameters.Length)
-					return parameters[index];
-
-				if (index >= parameters.Length &&
-					parameters[parameters.Length - 1].IsParams)
-				{
-					return parameters[parameters.Length - 1];
-				}
-			}
-
-			return default;
-	
 		}
 	}
 }
