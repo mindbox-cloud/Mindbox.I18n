@@ -1,7 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-
-namespace Mindbox.I18n
+﻿namespace Mindbox.I18n
 {
 	public abstract class LocalizableString
 	{
@@ -9,13 +6,15 @@ namespace Mindbox.I18n
 
 		public static LocalizableString LocaleIndependent(string localeIndependentString)
 		{
-			return new LocaleIndependentLocalizableString(localeIndependentString);
+			return new LocaleIndependentString(localeIndependentString);
 		}
 
 		public override string ToString()
 		{
 			return ToStringCore();
 		}
+
+		public abstract string Render(LocalizationProvider localizationProvider, Locale locale);
 
 		protected abstract string ToStringCore();
 
@@ -25,43 +24,13 @@ namespace Mindbox.I18n
 			if (key == null)
 				return null;
 
-			return new LocaleDependentLocalizableString(key);
+			return new LocaleDependentString(key);
 		}
-	}
 
-
-	[DebuggerDisplay("{" + nameof(localeIndependentString) + "}")]
-	internal sealed class LocaleIndependentLocalizableString : LocalizableString
-	{
-		private readonly string localeIndependentString = null;
-
-		internal LocaleIndependentLocalizableString(string localeIndependentString)
+		public static LocalizableString ForKey([LocalizationKey]string key)
 		{
-			this.localeIndependentString = localeIndependentString;
+			return new LocaleDependentString(key);
 		}
 
-		public override string Key => throw new InvalidOperationException(
-			$"You can't get a key of a {nameof(LocaleIndependentLocalizableString)}");
-		
-		protected override string ToStringCore()
-		{
-			return localeIndependentString;
-		}
-	}
-
-	[DebuggerDisplay("{" + nameof(Key) + "}")]
-	internal sealed class LocaleDependentLocalizableString : LocalizableString
-	{
-		public override string Key { get; }
-
-		internal LocaleDependentLocalizableString(string key)
-		{
-			Key = key ?? throw new ArgumentNullException(nameof(key));
-		}
-		
-		protected override string ToStringCore()
-		{
-			return Key;
-		}
 	}
 }
