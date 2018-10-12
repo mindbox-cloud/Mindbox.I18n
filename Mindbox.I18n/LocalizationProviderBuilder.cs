@@ -4,19 +4,19 @@ using System.Linq;
 
 namespace Mindbox.I18n
 {
-	public class I18NextBuilder
+	public class LocalizationProviderBuilder
 	{
 		private readonly HashSet<string> supportedLanguages = new HashSet<string>();
 		private ILogger logger;
 		private ITranslationSource translationSource;
 
-		public I18NextBuilder WithSupportedLanguage(string language)
+		public LocalizationProviderBuilder WithSupportedLanguage(string language)
 		{
 			supportedLanguages.Add(language);
 			return this;
 		}
 
-		public I18NextBuilder WithLogger(ILogger logger)
+		public LocalizationProviderBuilder WithLogger(ILogger logger)
 		{
 			if (this.logger != null)
 				throw new InvalidOperationException("You can't set logger twice");
@@ -25,7 +25,7 @@ namespace Mindbox.I18n
 			return this;
 		}
 
-		public I18NextBuilder WithTranslationSource(ITranslationSource translationSource)
+		public LocalizationProviderBuilder WithTranslationSource(ITranslationSource translationSource)
 		{
 			if (translationSource == null)
 				throw new ArgumentNullException(nameof(translationSource));
@@ -36,9 +36,9 @@ namespace Mindbox.I18n
 			return this;
 		}
 
-		public I18Next Build()
+		public LocalizationProvider Build()
 		{
-			return new I18Next(new InitializationOptions
+			return new LocalizationProvider(new InitializationOptions
 			{
 				SupportedLanguages = supportedLanguages.ToList(),
 				TranslationSource = translationSource,
