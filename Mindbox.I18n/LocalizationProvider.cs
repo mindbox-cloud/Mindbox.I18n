@@ -4,13 +4,13 @@ using System.IO;
 
 namespace Mindbox.I18n
 {
-	public class I18Next
+	public class LocalizationProvider
 	{
 		public InitializationOptions InitializationOptions { get; }
 
 		private readonly ITranslationSource translationSource;
 
-		public I18Next(InitializationOptions options)
+		public LocalizationProvider(InitializationOptions options)
 		{
 			InitializationOptions = options;
 			translationSource = options.TranslationSource;

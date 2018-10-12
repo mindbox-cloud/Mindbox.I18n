@@ -2,7 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Mindbox.I18n</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Authors>Mindbox</Authors>
+    <RepositoryUrl>https://github.com/mindbox-moscow/Mindbox.I18n</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Description>Mindbox.I18n internationalization library</Description>
+    <Copyright>Copyright Mindbox 2018</Copyright>
+    <PackageTags>Mindbox, I18n</PackageTags>
+    <NoPackageAnalysis>false</NoPackageAnalysis>
   </PropertyGroup>
 
   <ItemGroup>
