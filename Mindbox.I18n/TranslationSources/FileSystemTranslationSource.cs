@@ -41,13 +41,7 @@ namespace Mindbox.I18n
 				locale => locale.Name,
 				locale => new TranslationData());
 
-			var translationFiles = Directory.GetFiles(
-					BaseDirectory,
-					$"*{TranslationFileSuffix}",
-					SearchOption.AllDirectories)
-				.Where(path => !IgnoredPathRules.Any(
-					ignoredPart => path.IndexOf(ignoredPart, StringComparison.InvariantCultureIgnoreCase) > 0))
-				.ToList();
+			var translationFiles = GetTranslationFiles();
 
 			foreach (var translationFile in translationFiles)
 			{
@@ -61,6 +55,17 @@ namespace Mindbox.I18n
 						translationData.AddNamespace(@namespace, translationFile);
 				}
 			}
+		}
+
+		private IEnumerable<string> GetTranslationFiles()
+		{
+			return Directory.GetFiles(
+				BaseDirectory,
+				$"*{TranslationFileSuffix}",
+				SearchOption.AllDirectories)
+			.Where(path => !IgnoredPathRules.Any(
+				ignoredPart => path.IndexOf(ignoredPart, StringComparison.InvariantCultureIgnoreCase) > 0))
+			.ToList();
 		}
 
 		public string TryGetTranslation(Locale locale, LocalizationKey localizationKey)
