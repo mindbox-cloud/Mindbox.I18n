@@ -92,7 +92,6 @@ namespace Mindbox.I18n.Analyzers.Test
 		{
 			var test = @"
 	using Mindbox.I18n;
-
     namespace ConsoleApplication1
     {
 		class TestingClass 
@@ -112,6 +111,42 @@ namespace Mindbox.I18n.Analyzers.Test
 				Locations =
 					new[] {
 						new DiagnosticResultLocation("Test0.cs", 11, 27)
+					}
+			};
+
+			VerifyCSharpDiagnostic(test, expected);
+		}
+
+		[TestMethod]
+		public void OnlyStringLiteralsCanBeUsed_MethodArgumentIsLocalizableString_Error()
+		{
+			var test = @"
+	using Mindbox.I18n;
+
+    namespace ConsoleApplication1
+    {
+		class TestingClass 
+		{
+			void TestMethod2(LocalizableString s) 
+			{
+				
+			}
+
+			void TestMethod() 
+			{
+				string key = ""text"";
+				TestMethod2(key);
+			}
+		}
+    }";
+			var expected = new DiagnosticResult
+			{
+				Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
+				Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
+				Severity = DiagnosticSeverity.Error,
+				Locations =
+					new[] {
+						new DiagnosticResultLocation("Test0.cs", 16, 17)
 					}
 			};
 
