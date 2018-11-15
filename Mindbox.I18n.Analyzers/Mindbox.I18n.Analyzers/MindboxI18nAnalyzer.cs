@@ -12,7 +12,7 @@ namespace Mindbox.I18n.Analyzers
 	public class MindboxI18nAnalyzer : DiagnosticAnalyzer
 	{
 		// For testing purposes
-		private readonly IAnalyzerTranslationSource explicitTranslationSource;
+		private IAnalyzerTranslationSource translationSource;
 
 		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } =
 			ImmutableArray.Create(
@@ -27,21 +27,23 @@ namespace Mindbox.I18n.Analyzers
 
 		internal MindboxI18nAnalyzer(IAnalyzerTranslationSource translationSource)
 		{
-			explicitTranslationSource = translationSource;
+			this.translationSource = translationSource;
 		}
 
 		public override void Initialize(AnalysisContext context)
 		{
+			context.EnableConcurrentExecution();
+
 			context.RegisterCompilationStartAction(OnCompilationStart);
 		}
 
 		private void OnCompilationStart(CompilationStartAnalysisContext context)
 		{
-			var translationSource = explicitTranslationSource ?? 
+			translationSource = translationSource ?? 
 			    TranslationSourceContainer.TryGetTranslationSourceFromAnalyzerOptions(context.Options);
 
 			context.RegisterSyntaxNodeAction(
-				syntaxNodeAnalysisContext => AnalyzeStringLiteralExpression(syntaxNodeAnalysisContext, translationSource),
+				AnalyzeStringLiteralExpression,
 				SyntaxKind.StringLiteralExpression);
 
 			context.RegisterSyntaxNodeAction(
@@ -53,7 +55,7 @@ namespace Mindbox.I18n.Analyzers
 				SyntaxKind.IdentifierName);
 		}
 
-		private void AnalyzeStringLiteralExpression(SyntaxNodeAnalysisContext context, IAnalyzerTranslationSource translationSource)
+		private void AnalyzeStringLiteralExpression(SyntaxNodeAnalysisContext context)
 		{
 			if (!IsStringToLocalizationKeyAssignment(context))
 				return;
