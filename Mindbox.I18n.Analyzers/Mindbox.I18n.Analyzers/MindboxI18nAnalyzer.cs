@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Immutable;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
@@ -35,6 +36,162 @@ namespace Mindbox.I18n.Analyzers
 			context.EnableConcurrentExecution();
 
 			context.RegisterCompilationStartAction(OnCompilationStart);
+
+			context.RegisterOperationAction(
+				HandleAssignmentOperation, 
+				OperationKind.SimpleAssignment,
+				OperationKind.CompoundAssignment);
+			
+			context.RegisterOperationAction(
+				HandleVariableDeclarationOperation, 
+				OperationKind.VariableDeclarator);
+
+			context.RegisterOperationAction(
+				HandleInvocationOperation, 
+				OperationKind.Invocation);
+		}
+
+		private void HandleAssignmentOperation(OperationAnalysisContext context)
+		{
+			var effectiveOperation = (IAssignmentOperation)context.Operation;
+
+			if (IsNonLocalizableStringAssignmentToLocalizableString(effectiveOperation))
+			{
+				ReportDiagnosticAboutLocalizableStringAssignment(context, effectiveOperation.Value.Syntax);
+			}
+		}
+		
+		private void HandleVariableDeclarationOperation(OperationAnalysisContext context)
+		{
+			var effectiveOperation = (IVariableDeclaratorOperation)context.Operation;
+
+			if (!IsLocalizableString(effectiveOperation.Symbol.Type))
+				return;
+
+			//if (IsLocalizableString(effectiveOperation.Initializer))
+
+
+			//if (IsAssignmentToLocalizableString(effectiveOperation))
+			//{
+			//	ReportDiagnosticAboutLocalizableStringAssignment(context, effectiveOperation.Value.Syntax);
+			//}
+		}
+
+		private void ReportDiagnosticAboutLocalizableStringAssignment(
+			OperationAnalysisContext context, 
+			SyntaxNode localizationKeyValue)
+		{
+			var semanticModel = context.Compilation.GetSemanticModel(localizationKeyValue.SyntaxTree);
+			var localizationKey = semanticModel.GetConstantValue(localizationKeyValue);
+
+			var location = localizationKeyValue.GetLocation();
+
+			if (localizationKey.HasValue)
+			{
+				ReportDiagnosticAboutLocalizationKey(context, localizationKey.Value, location);
+				return;
+			}
+
+			context.ReportDiagnostic(
+				Diagnostic.Create(
+					Diagnostics.KeyMustHaveCorrectFormat,
+					location,
+					string.Empty));
+		}
+
+		private void ReportDiagnosticAboutLocalizationKey(
+			OperationAnalysisContext context, 
+			object localizationKeyValue,
+			Location location)
+		{
+			var stringKey = localizationKeyValue as string;
+			if (stringKey is null)
+			{
+				context.ReportDiagnostic(
+					Diagnostic.Create(
+						Diagnostics.KeyMustHaveCorrectFormat,
+						location,
+						string.Empty));
+			}
+
+			var localizationKey = LocalizationKey.TryParse(stringKey);
+
+			if (localizationKey == null)
+			{
+				context.ReportDiagnostic(
+					Diagnostic.Create(
+						Diagnostics.KeyMustHaveCorrectFormat,
+						location,
+						stringKey));
+			}
+			else
+			{
+				if (translationSource != null)
+				{
+					var translation = translationSource.TryGetTranslation(localizationKey);
+
+					if (translation == null)
+					{
+						context.ReportDiagnostic(
+							Diagnostic.Create(
+								Diagnostics.TranslationMustExistForLocalizationKey,
+								location,
+								stringKey));
+					}
+					else
+					{
+						context.ReportDiagnostic(
+							Diagnostic.Create(
+								Diagnostics.TranslationHint,
+								location,
+								translation));
+					}
+				}
+			}
+		}
+
+		private bool IsNonLocalizableStringAssignmentToLocalizableString(IAssignmentOperation effectiveOperation)
+		{
+			if (!IsLocalizableString(effectiveOperation.Target))
+				return false;
+
+			if (IsLocalizableString(effectiveOperation.Value))
+				return false;
+
+			return true;
+		}
+
+		private bool IsLocalizableString(IOperation operation)
+		{
+			if (IsLocalizableString(operation.Type))
+				return true;
+
+			return LocalizationAttributeHelper.IsStringReferenceWithLocalizationKeyAttribute(operation);
+		}
+
+		private bool IsLocalizableString(ITypeSymbol type)
+		{
+			return type.Name.Contains(typeof(LocalizableString).Name);
+		}
+
+		private void HandleInvocationOperation(OperationAnalysisContext context)
+		{
+			var effectiveOperation = (IInvocationOperation)context.Operation;
+
+			foreach (var effectiveOperationArgument in effectiveOperation.Arguments)
+			{
+				HandleArgumentOperation(context, effectiveOperationArgument);
+			}
+		}
+
+		private void HandleArgumentOperation(OperationAnalysisContext context, IArgumentOperation argument)
+		{
+			//if (argument.Parameter.IsString && argument.Parameter.HasLocalizationAttribute || argument.Parameter.IsLocalizationString)
+			
+			//if (IsAssignmentToLocalizableString(effectiveOperation))
+			//{
+			//	ReportDiagnosticAboutLocalizableStringAssignment(context, effectiveOperation.Value.Syntax);
+			//}
 		}
 
 		private void OnCompilationStart(CompilationStartAnalysisContext context)
@@ -46,13 +203,13 @@ namespace Mindbox.I18n.Analyzers
 				AnalyzeStringLiteralExpression,
 				SyntaxKind.StringLiteralExpression);
 
-			context.RegisterSyntaxNodeAction(
-				AnalyzePossiblyIncorrectLocalizableStringExpression,
-				SyntaxKind.InterpolatedStringExpression,
-				SyntaxKind.InvocationExpression,
-				SyntaxKind.AddExpression,
-				SyntaxKind.ConditionalAccessExpression,
-				SyntaxKind.IdentifierName);
+			//context.RegisterSyntaxNodeAction(
+			//	AnalyzePossiblyIncorrectLocalizableStringExpression,
+			//	SyntaxKind.InterpolatedStringExpression,
+			//	SyntaxKind.InvocationExpression,
+			//	SyntaxKind.AddExpression,
+			//	SyntaxKind.ConditionalAccessExpression,
+			//	SyntaxKind.IdentifierName);
 		}
 
 		private void AnalyzeStringLiteralExpression(SyntaxNodeAnalysisContext context)
@@ -120,7 +277,6 @@ namespace Mindbox.I18n.Analyzers
 		private bool IsStringToLocalizationKeyAssignment(SyntaxNodeAnalysisContext context)
 		{
 			var expression = context.Node;
-			var operation = context.SemanticModel.GetOperation(expression);
 
 			// check for an attribute constructor argument
 			if (expression.Parent?.IsKind(SyntaxKind.AttributeArgument) == true)
@@ -129,11 +285,13 @@ namespace Mindbox.I18n.Analyzers
 				return LocalizationAttributeHelper.CheckForLocalizationAttribute(parameterSymbol);
 			}
 
+			var operation = context.SemanticModel.GetOperation(expression);
+
 			// field or property with an attribute
 			if (operation?.Parent is IAssignmentOperation assignmentOperation && operation == assignmentOperation.Value)
 			{
-				if (LocalizationAttributeHelper.IsReferenceWithLocalizationKeyAttribute(assignmentOperation.Target) 
-				    && !LocalizationAttributeHelper.IsReferenceWithLocalizationKeyAttribute(assignmentOperation.Value))
+				if (LocalizationAttributeHelper.IsStringReferenceWithLocalizationKeyAttribute(assignmentOperation.Target) 
+				    && !LocalizationAttributeHelper.IsStringReferenceWithLocalizationKeyAttribute(assignmentOperation.Value))
 				{
 					return true;
 				}
@@ -142,8 +300,8 @@ namespace Mindbox.I18n.Analyzers
 			// method invocation with an attributed parameter
 			if (operation?.Parent is IArgumentOperation argumentOperation)
 			{
-				if (LocalizationAttributeHelper.IsReferenceWithLocalizationKeyAttribute(argumentOperation) 
-				    && !LocalizationAttributeHelper.IsReferenceWithLocalizationKeyAttribute(argumentOperation.Value))
+				if (LocalizationAttributeHelper.IsStringReferenceWithLocalizationKeyAttribute(argumentOperation) 
+				    && !LocalizationAttributeHelper.IsStringReferenceWithLocalizationKeyAttribute(argumentOperation.Value))
 				{
 					return true;
 				}
