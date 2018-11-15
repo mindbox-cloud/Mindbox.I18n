@@ -10,8 +10,14 @@ namespace Mindbox.I18n.Analyzers
 {
 	public static class LocalizationAttributeHelper
 	{
-		public static bool IsReferenceWithLocalizationKeyAttribute(IOperation operation)
+		public static bool IsStringReferenceWithLocalizationKeyAttribute(IOperation operation)
 		{
+			if (operation.Type == null)
+				return false;
+
+			if (!operation.Type.Name.Equals("string", StringComparison.InvariantCultureIgnoreCase))
+				return false;
+
 			switch (operation)
 			{
 				case IMemberReferenceOperation memberReferenceOperation:
