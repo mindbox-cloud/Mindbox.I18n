@@ -271,6 +271,61 @@ namespace Mindbox.I18n.Analyzers.Test
 			VerifyCSharpDiagnostic(test, expected);
 		}
 
+		[TestMethod]
+		public void KeyMustHaveCorrectFormat_PropertyWithAttribute_Initializer()
+		{
+			var test = @"
+	using Mindbox.I18n;
+
+    namespace ConsoleApplication1
+    {
+		class TestingClass 
+		{
+			[LocalizationKey]
+			string Property {get; set;} = ""Кириллическая строка"";
+		}
+    }";
+			var expected = new DiagnosticResult
+			{
+				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+				Message = BuildExpectedMessage("Кириллическая строка"),
+				Severity = DiagnosticSeverity.Error,
+				Locations =
+					new[] {
+						new DiagnosticResultLocation("Test0.cs", 13, 13)
+					}
+			};
+
+			VerifyCSharpDiagnostic(test, expected);
+		}
+
+		[TestMethod]
+		public void KeyMustHaveCorrectFormat_FieldWithAttribute_Initializer()
+		{
+			var test = @"
+	using Mindbox.I18n;
+
+    namespace ConsoleApplication1
+    {
+		class TestingClass 
+		{
+			[LocalizationKey]
+			string Field = ""Кириллическая строка"";
+		}
+    }";
+			var expected = new DiagnosticResult
+			{
+				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+				Message = BuildExpectedMessage("Кириллическая строка"),
+				Severity = DiagnosticSeverity.Error,
+				Locations =
+					new[] {
+						new DiagnosticResultLocation("Test0.cs", 13, 13)
+					}
+			};
+
+			VerifyCSharpDiagnostic(test, expected);
+		}
 
 		[TestMethod]
 		public void KeyMustHaveCorrectFormat_ArgumentWithAttribute()
