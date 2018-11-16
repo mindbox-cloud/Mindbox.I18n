@@ -292,7 +292,7 @@ namespace Mindbox.I18n.Analyzers.Test
 				Severity = DiagnosticSeverity.Error,
 				Locations =
 					new[] {
-						new DiagnosticResultLocation("Test0.cs", 13, 13)
+						new DiagnosticResultLocation("Test0.cs", 9, 34)
 					}
 			};
 
@@ -320,7 +320,7 @@ namespace Mindbox.I18n.Analyzers.Test
 				Severity = DiagnosticSeverity.Error,
 				Locations =
 					new[] {
-						new DiagnosticResultLocation("Test0.cs", 13, 13)
+						new DiagnosticResultLocation("Test0.cs", 9, 19)
 					}
 			};
 
@@ -383,8 +383,8 @@ namespace Mindbox.I18n.Analyzers.Test
     }";
 			var expected = new DiagnosticResult
 			{
-				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
-				Message = BuildExpectedMessage("Кириллическая строка"),
+				Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
+				Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
 				Severity = DiagnosticSeverity.Error,
 				Locations =
 					new[] {

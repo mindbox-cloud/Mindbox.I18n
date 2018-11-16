@@ -45,6 +45,9 @@ namespace Mindbox.I18n.Analyzers
 
 		public static bool CheckForLocalizationAttribute(ISymbol symbol)
 		{
+			if (symbol == null)
+				return false;
+
 			return symbol.GetAttributes().Any(attribute => attribute.AttributeClass.Name.Contains("LocalizationKey"));
 		}
 
