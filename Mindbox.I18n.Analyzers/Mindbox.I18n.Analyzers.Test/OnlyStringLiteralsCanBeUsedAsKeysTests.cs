@@ -178,7 +178,7 @@ namespace Mindbox.I18n.Analyzers.Test
 				Severity = DiagnosticSeverity.Error,
 				Locations =
 					new[] {
-						new DiagnosticResultLocation("Test0.cs", 10, 40)
+						new DiagnosticResultLocation("Test0.cs", 10, 27)
 					}
 			};
 
