@@ -68,8 +68,14 @@ namespace Mindbox.I18n.Analyzers
 		private void HandleConversionOperation(OperationAnalysisContext context)
 		{
 			var conversionOperation = (IConversionOperation)context.Operation;
+			
+			if (conversionOperation.OperatorMethod == null)
+				return;
 
-			Console.WriteLine(conversionOperation.Conversion);
+			if (!IsLocalizableString(conversionOperation.OperatorMethod.ContainingType)) 
+				return;
+
+			ReportDiagnosticAboutLocalizableStringAssignment(context, conversionOperation.Operand.Syntax);
 		}
 
 		private void HandleAssignmentOperation(OperationAnalysisContext context)
@@ -81,7 +87,7 @@ namespace Mindbox.I18n.Analyzers
 				return;
 
 			var assignmentValueSyntax = assignmentOperation.Value.Syntax;
-			if (!IsStringToLocalizableStringAssignment(
+			if (!IsStringToStringWithLocalizationKeyAttributeAssignment(
 				context.Operation.SemanticModel,
 				assignmentOperation.Target.Type,
 				targetSymbol,
@@ -112,7 +118,7 @@ namespace Mindbox.I18n.Analyzers
 				return;
 
 			var declarationValueSyntax = declaratorOperation.Initializer.Value.Syntax;
-			if (!IsStringToLocalizableStringAssignment(
+			if (!IsStringToStringWithLocalizationKeyAttributeAssignment(
 				context.Operation.SemanticModel,
 				declaratorOperation.Symbol.Type,
 				declaratorOperation.Symbol,
@@ -129,7 +135,7 @@ namespace Mindbox.I18n.Analyzers
 			var initializedProperty = propertyInitializerOperation.InitializedProperties.Single();
 			var initializationValueSyntax = propertyInitializerOperation.Value.Syntax;
 
-			if (!IsStringToLocalizableStringAssignment(
+			if (!IsStringToStringWithLocalizationKeyAttributeAssignment(
 				context.Operation.SemanticModel,
 				initializedProperty.Type,
 				initializedProperty,
@@ -146,7 +152,7 @@ namespace Mindbox.I18n.Analyzers
 			var initializedField = fieldInitializerOperation.InitializedFields.Single();
 
 			var initializationValueSyntax = fieldInitializerOperation.Value.Syntax;
-			if (!IsStringToLocalizableStringAssignment(
+			if (!IsStringToStringWithLocalizationKeyAttributeAssignment(
 				context.Operation.SemanticModel,
 				initializedField.Type,
 				initializedField,
@@ -161,7 +167,7 @@ namespace Mindbox.I18n.Analyzers
 			var argumentOperation = (IArgumentOperation)context.Operation;
 
 			var argumentValueSyntax = argumentOperation.Value.Syntax;
-			if (!IsStringToLocalizableStringAssignment(
+			if (!IsStringToStringWithLocalizationKeyAttributeAssignment(
 				context.Operation.SemanticModel,
 				argumentOperation.Parameter.Type,
 				argumentOperation.Parameter,
@@ -171,13 +177,13 @@ namespace Mindbox.I18n.Analyzers
 			ReportDiagnosticAboutLocalizableStringAssignment(context, argumentValueSyntax);
 		}
 
-		private bool IsStringToLocalizableStringAssignment(
+		private bool IsStringToStringWithLocalizationKeyAttributeAssignment(
 			SemanticModel semanticModel,
 			ITypeSymbol targetTypeSymbol,
 			ISymbol targetSymbol,
 			SyntaxNode assignmentValueSyntax)
 		{
-			if (!IsLeftSideLocalizableString(targetTypeSymbol, targetSymbol))
+			if (!IsLeftSideStringWithLocalizationKeyAttribute(targetTypeSymbol, targetSymbol))
 				return false;
 
 			var typeInfo = semanticModel.GetTypeInfo(assignmentValueSyntax);
@@ -192,11 +198,8 @@ namespace Mindbox.I18n.Analyzers
 			return true;
 		}
 
-		private bool IsLeftSideLocalizableString(ITypeSymbol symbolType, ISymbol symbol)
+		private bool IsLeftSideStringWithLocalizationKeyAttribute(ITypeSymbol symbolType, ISymbol symbol)
 		{
-			if (IsLocalizableString(symbolType))
-				return true;
-
 			if (!IsString(symbolType))
 				return false;
 

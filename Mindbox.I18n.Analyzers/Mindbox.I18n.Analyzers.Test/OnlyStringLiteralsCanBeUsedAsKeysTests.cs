@@ -88,6 +88,36 @@ namespace Mindbox.I18n.Analyzers.Test
 		}
 
 		[TestMethod]
+		public void OnlyStringLiteralsCanBeUsed_ExplicitConversion_Error()
+		{
+			var test = @"
+	using Mindbox.I18n;
+    namespace ConsoleApplication1
+    {
+		class TestingClass 
+		{
+			void TestMethod() 
+			{
+				string key = ""text"";
+				var str = (LocalizableString)key;
+			}
+		}
+    }";
+			var expected = new DiagnosticResult
+			{
+				Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
+				Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
+				Severity = DiagnosticSeverity.Error,
+				Locations =
+					new[] {
+						new DiagnosticResultLocation("Test0.cs", 10, 34)
+					}
+			};
+
+			VerifyCSharpDiagnostic(test, expected);
+		}
+
+		[TestMethod]
 		public void OnlyStringLiteralsCanBeUsed_LocalStringVariable_Error()
 		{
 			var test = @"
