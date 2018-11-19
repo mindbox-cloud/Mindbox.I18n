@@ -28,6 +28,26 @@ namespace Mindbox.I18n.Analyzers.Test
 		}
 
 		[TestMethod]
+		public void OnlyStringLiteralsCanBeUsed_CorrectKeyUsingConditionalExpression_NoDiagnostics()
+		{
+			var test = @"
+	using Mindbox.I18n;
+
+    namespace ConsoleApplication1
+    {
+		class TestingClass 
+		{
+			void TestMethod() 
+			{
+				LocalizableString s = true ? ""Namespace:Key_Key1"" : ""Namespace:Key_Key2"";
+			}
+		}
+    }";
+
+			VerifyCSharpDiagnostic(test);
+		}
+
+		[TestMethod]
 		public void OnlyStringLiteralsCanBeUsed_StringInterpolation_Error()
 		{
 			var test = @"

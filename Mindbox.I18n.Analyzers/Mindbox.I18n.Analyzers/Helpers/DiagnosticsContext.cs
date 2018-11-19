@@ -17,17 +17,29 @@ namespace Mindbox.I18n.Analyzers
 			Action<Diagnostic> reportDiagnostic, 
 			SyntaxNode localizationKeyValueNode)
 		{
+			if (TryReportDiagnosticForLiteralExression(reportDiagnostic, localizationKeyValueNode))
+				return;
+
+			if (TryReportDiagnosticForConditionalExression(reportDiagnostic, localizationKeyValueNode))
+				return;
+
+			reportDiagnostic(
+				Diagnostic.Create(
+					Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys,
+					localizationKeyValueNode.GetLocation(),
+					string.Empty));
+
+			return;
+		}
+
+		private bool TryReportDiagnosticForLiteralExression(
+			Action<Diagnostic> reportDiagnostic, 
+			SyntaxNode localizationKeyValueNode)
+		{
 			var literal = localizationKeyValueNode as LiteralExpressionSyntax;
 
 			if (literal == null)
-			{
-				reportDiagnostic(
-					Diagnostic.Create(
-						Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys,
-						localizationKeyValueNode.GetLocation(),
-						string.Empty));
-				return;
-			}
+				return false;
 
 			var stringKey = literal.Token.Value as string;
 			if (stringKey == null)
@@ -37,7 +49,7 @@ namespace Mindbox.I18n.Analyzers
 						Diagnostics.KeyMustHaveCorrectFormat,
 						localizationKeyValueNode.GetLocation(),
 						string.Empty));
-				return;
+				return true;
 			}
 
 			var localizationKey = LocalizationKey.TryParse(stringKey);
@@ -49,11 +61,11 @@ namespace Mindbox.I18n.Analyzers
 						Diagnostics.KeyMustHaveCorrectFormat,
 						localizationKeyValueNode.GetLocation(),
 						stringKey));
-				return;
+				return true;
 			}
 
 			if (_translationSource == null) 
-				return;
+				return true;
 
 			var translation = _translationSource.TryGetTranslation(localizationKey);
 
@@ -64,7 +76,8 @@ namespace Mindbox.I18n.Analyzers
 						Diagnostics.TranslationMustExistForLocalizationKey,
 						localizationKeyValueNode.GetLocation(),
 						stringKey));
-				return;
+
+				return true;
 			}
 
 			reportDiagnostic(
@@ -72,6 +85,22 @@ namespace Mindbox.I18n.Analyzers
 					Diagnostics.TranslationHint,
 					localizationKeyValueNode.GetLocation(),
 					translation));
+
+			return true;
+		}
+
+		private bool TryReportDiagnosticForConditionalExression(
+			Action<Diagnostic> reportDiagnostic,
+			SyntaxNode localizationKeyValueNode)
+		{
+			var conditionalExression = localizationKeyValueNode as ConditionalExpressionSyntax;
+			if (conditionalExression == null)
+				return false;
+
+			ReportDiagnosticAboutLocalizableStringAssignment(reportDiagnostic, conditionalExression.WhenTrue);
+			ReportDiagnosticAboutLocalizableStringAssignment(reportDiagnostic, conditionalExression.WhenFalse);
+
+			return true;
 		}
 	}
 }
