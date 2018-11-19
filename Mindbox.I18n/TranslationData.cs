@@ -16,11 +16,16 @@ namespace Mindbox.I18n
 		{
 			translationSetsByNamespace.AddOrUpdate(
 				@namespace,
-				ns => new TranslationSet(filePath), 
-				(ns, oldSet) => new TranslationSet(filePath));
+				ns => CreateTranslationSet(filePath), 
+				(ns, oldSet) => CreateTranslationSet(filePath));
 		}
 
-		internal string TryGetTranslation(LocalizationKey localizationKey)
+	    private static TranslationSet CreateTranslationSet(string filePath)
+	    {
+	        return new TranslationSet(filePath);
+	    }
+
+	    internal string TryGetTranslation(LocalizationKey localizationKey)
 		{
 			if (translationSetsByNamespace.TryGetValue(localizationKey.Namespace, out var translationSet))
 			{
