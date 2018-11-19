@@ -22,13 +22,12 @@ namespace Mindbox.I18n.Analyzers
 			var configuration = JsonConvert.DeserializeObject<AnalysisSettingsConfiguration>(
 				File.ReadAllText(configurationFilePath));
 
-			var baseDirectory = Path.Combine(
+			var solutionFilePath = Path.Combine(
 				Path.GetDirectoryName(configurationFilePath),
-				configuration.TranslationSource.BaseDirectory);
+				configuration.TranslationSource.SolutionFilePath);
 
 			locale = Locales.GetByName(configuration.TranslationSource.Locale);
-			translationSource = new WatchingFileSystemTranslationSource(
-				baseDirectory, new [] { locale }, configuration.TranslationSource.IgnorePaths);
+			translationSource = new AnalyzerFileSystemTranslationSource(solutionFilePath, new [] { locale });
 			translationSource.Initialize();
 		}
 	}
