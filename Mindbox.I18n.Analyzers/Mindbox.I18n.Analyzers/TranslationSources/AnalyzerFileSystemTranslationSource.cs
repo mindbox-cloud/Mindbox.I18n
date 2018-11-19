@@ -42,6 +42,7 @@ namespace Mindbox.I18n.Analyzers
 				};
 
 				watcher.Changed += (s, ea) => HandleProjectFileChange(projectFile);
+			    watcher.Renamed += (s, ea) => HandleProjectFileChange(projectFile);
 
 				if (projectFileWatchers.TryAdd(projectFile, watcher))
 				{
@@ -68,10 +69,11 @@ namespace Mindbox.I18n.Analyzers
 					Path = Path.GetDirectoryName(localizationFile),
 					Filter = Path.GetFileName(localizationFile),
 					IncludeSubdirectories = false,
-					NotifyFilter = NotifyFilters.LastWrite
+					NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName
 				};
 
 				watcher.Changed += (s, ea) => HandleLocalizationFileChange(localizationFile);
+				watcher.Renamed += (s, ea) => HandleLocalizationFileChange(localizationFile);
 
 				if (localizationFileSystemWatchers.TryAdd(localizationFile, watcher))
 				{
