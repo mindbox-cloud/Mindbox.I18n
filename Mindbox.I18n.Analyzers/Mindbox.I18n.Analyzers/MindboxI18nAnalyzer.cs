@@ -43,36 +43,36 @@ namespace Mindbox.I18n.Analyzers
 		private void OnCompilationStart(CompilationStartAnalysisContext context)
 		{
 			_diagnosticsContext = new DiagnosticsContext(
-				explicitTranslationSource ?? 
+				explicitTranslationSource ??
 					TranslationSourceContainer.TryGetTranslationSourceFromAnalyzerOptions(context.Options));
 
 			context.RegisterSyntaxNodeAction(
-				WithLogging<SyntaxNodeAnalysisContext>(HandleAttributeSyntax),
+				HandleAttributeSyntax,
 				SyntaxKind.Attribute);
 
 			context.RegisterOperationAction(
-				WithLogging<OperationAnalysisContext>(HandleAssignmentOperation), 
+				HandleAssignmentOperation,
 				OperationKind.SimpleAssignment,
 				OperationKind.CompoundAssignment);
 
 			context.RegisterOperationAction(
-				WithLogging<OperationAnalysisContext>(HandleVariableDeclarationOperation), 
+				HandleVariableDeclarationOperation,
 				OperationKind.VariableDeclarator);
 
 			context.RegisterOperationAction(
-				WithLogging<OperationAnalysisContext>(HandlePropertyInitializerOperation), 
+				HandlePropertyInitializerOperation,
 				OperationKind.PropertyInitializer);
 
 			context.RegisterOperationAction(
-				WithLogging<OperationAnalysisContext>(HandleFieldInitializerOperation), 
+				HandleFieldInitializerOperation,
 				OperationKind.FieldInitializer);
 
 			context.RegisterOperationAction(
-				WithLogging<OperationAnalysisContext>(HandleArgumentOperation), 
+				HandleArgumentOperation,
 				OperationKind.Argument);
 
 			context.RegisterOperationAction(
-				WithLogging<OperationAnalysisContext>(HandleConversionOperation),
+				HandleConversionOperation,
 				OperationKind.Conversion);
 		}
 
@@ -93,7 +93,7 @@ namespace Mindbox.I18n.Analyzers
 				return;
 
 			_diagnosticsContext.ReportDiagnosticAboutLocalizableStringAssignment(
-				context.ReportDiagnostic, 
+				context.ReportDiagnostic,
 				assignmentValueSyntax);
 		}
 
@@ -145,7 +145,7 @@ namespace Mindbox.I18n.Analyzers
 				return;
 
 			_diagnosticsContext.ReportDiagnosticAboutLocalizableStringAssignment(
-				context.ReportDiagnostic, 
+				context.ReportDiagnostic,
 				initializationValueSyntax);
 		}
 
@@ -164,7 +164,7 @@ namespace Mindbox.I18n.Analyzers
 				return;
 
 			_diagnosticsContext.ReportDiagnosticAboutLocalizableStringAssignment(
-				context.ReportDiagnostic, 
+				context.ReportDiagnostic,
 				initializationValueSyntax);
 		}
 
@@ -188,21 +188,21 @@ namespace Mindbox.I18n.Analyzers
 		private void HandleConversionOperation(OperationAnalysisContext context)
 		{
 			var conversionOperation = (IConversionOperation)context.Operation;
-			
+
 			if (conversionOperation.OperatorMethod == null)
 				return;
 
-			if (!conversionOperation.OperatorMethod.ContainingType.IsLocalizableString()) 
+			if (!conversionOperation.OperatorMethod.ContainingType.IsLocalizableString())
 				return;
 
 			_diagnosticsContext.ReportDiagnosticAboutLocalizableStringAssignment(
-				context.ReportDiagnostic, 
+				context.ReportDiagnostic,
 				conversionOperation.Operand.Syntax);
 		}
 
 		private void HandleAttributeSyntax(SyntaxNodeAnalysisContext context)
 		{
-			var attributeSyntax = (AttributeSyntax) context.Node;
+			var attributeSyntax = (AttributeSyntax)context.Node;
 
 			if (attributeSyntax.ArgumentList == null)
 				return;
@@ -250,23 +250,6 @@ namespace Mindbox.I18n.Analyzers
 				return true;
 
 			return false;
-		}
-
-		private Action<T> WithLogging<T>(Action<T> action)
-		{
-			return t =>
-			{
-				try
-				{
-					action(t);
-				}
-				catch (Exception ex)
-				{
-					Console.Error.WriteLine(ex.Message + "\r\n" + ex.StackTrace);
-
-					throw;
-				}
-			};
 		}
 	}
 }
