@@ -381,18 +381,29 @@ namespace Mindbox.I18n.Analyzers.Test
 			}
 		}
     }";
-			var expected = new DiagnosticResult
+			var whenTrueBranchDiagnostic = new DiagnosticResult
 			{
-				Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
-				Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
+				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+				Message = BuildExpectedMessage("Кириллическая строка"),
 				Severity = DiagnosticSeverity.Error,
 				Locations =
 					new[] {
-						new DiagnosticResultLocation("Test0.cs", 14, 29)
+						new DiagnosticResultLocation("Test0.cs", 14, 36),
 					}
 			};
 
-			VerifyCSharpDiagnostic(test, expected);
+			var whenFalseBranchDiagnostic = new DiagnosticResult
+			{
+				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+				Message = BuildExpectedMessage("12312"),
+				Severity = DiagnosticSeverity.Error,
+				Locations =
+					new[] {
+						new DiagnosticResultLocation("Test0.cs", 14, 61),
+					}
+			};
+
+			VerifyCSharpDiagnostic(test, whenTrueBranchDiagnostic, whenFalseBranchDiagnostic);
 		}
 
 		[TestMethod]
