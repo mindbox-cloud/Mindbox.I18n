@@ -52,7 +52,7 @@ namespace Mindbox.I18n
 					var localeName = translationFileRegexMatch.Groups[2].Value;
 
 					if (translationsPerLocale.TryGetValue(localeName, out TranslationData translationData))
-						translationData.AddNamespace(@namespace, translationFile);
+						translationData.AddOrUpdateNamespace(@namespace, translationFile);
 				}
 			}
 		}
