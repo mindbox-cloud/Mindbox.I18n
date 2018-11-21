@@ -9,7 +9,7 @@
 
   <PropertyGroup>
     <PackageId>Mindbox.I18n.Analyzers</PackageId>
-    <PackageVersion>1.1.1</PackageVersion>
+    <PackageVersion>1.1.2</PackageVersion>
     <Authors>Mindbox</Authors>
     <RepositoryUrl>https://github.com/mindbox-moscow/Mindbox.I18n</RepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <None Include="$(OutputPath)\**\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-
+	<None Include="$(ProjectDir)\tools\*" Pack="true" PackagePath="tools" />
     <None Include="$(ProjectDir)\..\Libraries\Newtonsoft.Json.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
