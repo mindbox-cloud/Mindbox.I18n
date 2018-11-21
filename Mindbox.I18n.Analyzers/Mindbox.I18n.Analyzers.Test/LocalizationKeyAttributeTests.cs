@@ -271,6 +271,61 @@ namespace Mindbox.I18n.Analyzers.Test
 			VerifyCSharpDiagnostic(test, expected);
 		}
 
+		[TestMethod]
+		public void KeyMustHaveCorrectFormat_PropertyWithAttribute_Initializer()
+		{
+			var test = @"
+	using Mindbox.I18n;
+
+    namespace ConsoleApplication1
+    {
+		class TestingClass 
+		{
+			[LocalizationKey]
+			string Property {get; set;} = ""Кириллическая строка"";
+		}
+    }";
+			var expected = new DiagnosticResult
+			{
+				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+				Message = BuildExpectedMessage("Кириллическая строка"),
+				Severity = DiagnosticSeverity.Error,
+				Locations =
+					new[] {
+						new DiagnosticResultLocation("Test0.cs", 9, 34)
+					}
+			};
+
+			VerifyCSharpDiagnostic(test, expected);
+		}
+
+		[TestMethod]
+		public void KeyMustHaveCorrectFormat_FieldWithAttribute_Initializer()
+		{
+			var test = @"
+	using Mindbox.I18n;
+
+    namespace ConsoleApplication1
+    {
+		class TestingClass 
+		{
+			[LocalizationKey]
+			string Field = ""Кириллическая строка"";
+		}
+    }";
+			var expected = new DiagnosticResult
+			{
+				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+				Message = BuildExpectedMessage("Кириллическая строка"),
+				Severity = DiagnosticSeverity.Error,
+				Locations =
+					new[] {
+						new DiagnosticResultLocation("Test0.cs", 9, 19)
+					}
+			};
+
+			VerifyCSharpDiagnostic(test, expected);
+		}
 
 		[TestMethod]
 		public void KeyMustHaveCorrectFormat_ArgumentWithAttribute()
@@ -304,6 +359,51 @@ namespace Mindbox.I18n.Analyzers.Test
 			};
 
 			VerifyCSharpDiagnostic(test, expected);
+		}
+
+		[TestMethod]
+		public void KeyMustHaveCorrectFormat_ArgumentWithAttribute_ComplexArgument()
+		{
+			var test = @"
+	using Mindbox.I18n;
+
+    namespace ConsoleApplication1
+    {
+		public class TestingClass 
+		{			
+			TestingClass([LocalizationKey]string field)
+			{
+			}
+
+			TestingClass TestMethod() 
+			{
+				return new TestingClass(true ? ""Кириллическая строка"" : ""12312"");
+			}
+		}
+    }";
+			var whenTrueBranchDiagnostic = new DiagnosticResult
+			{
+				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+				Message = BuildExpectedMessage("Кириллическая строка"),
+				Severity = DiagnosticSeverity.Error,
+				Locations =
+					new[] {
+						new DiagnosticResultLocation("Test0.cs", 14, 36),
+					}
+			};
+
+			var whenFalseBranchDiagnostic = new DiagnosticResult
+			{
+				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+				Message = BuildExpectedMessage("12312"),
+				Severity = DiagnosticSeverity.Error,
+				Locations =
+					new[] {
+						new DiagnosticResultLocation("Test0.cs", 14, 61),
+					}
+			};
+
+			VerifyCSharpDiagnostic(test, whenTrueBranchDiagnostic, whenFalseBranchDiagnostic);
 		}
 
 		[TestMethod]

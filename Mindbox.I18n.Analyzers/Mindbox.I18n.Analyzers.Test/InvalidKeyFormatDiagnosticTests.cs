@@ -39,6 +39,37 @@ namespace Mindbox.I18n.Analyzers.Test
 		{
 			void TestMethod() 
 			{
+				LocalizableString s;
+				s = ""Кириллическая строка"";
+			}
+		}
+    }";
+			var expected = new DiagnosticResult
+			{
+				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+				Message = BuildExpectedMessage("Кириллическая строка"),
+				Severity = DiagnosticSeverity.Error,
+				Locations =
+					new[] {
+						new DiagnosticResultLocation("Test0.cs", 11, 9)
+					}
+			};
+
+			VerifyCSharpDiagnostic(test, expected);
+		}
+
+		[TestMethod]
+		public void KeyMustHaveCorrectFormat_VariableInitializer_CyryllicValue_Error()
+		{
+			var test = @"
+	using Mindbox.I18n;
+
+    namespace ConsoleApplication1
+    {
+		class TestingClass 
+		{
+			void TestMethod() 
+			{
 				LocalizableString s = ""Кириллическая строка"";
 			}
 		}
@@ -145,6 +176,60 @@ namespace Mindbox.I18n.Analyzers.Test
 				Locations =
 					new[] {
 						new DiagnosticResultLocation("Test0.cs", 14, 13)
+					}
+			};
+
+			VerifyCSharpDiagnostic(test, expected);
+		}
+
+		[TestMethod]
+		public void KeyMustHaveCorrectFormat_FieldInitializer_Error()
+		{
+			var test = @"
+	using Mindbox.I18n;
+
+    namespace ConsoleApplication1
+    {
+		class TestingClass 
+		{
+			private LocalizableString Name = ""Кириллическая строка"";
+		}
+    }";
+			var expected = new DiagnosticResult
+			{
+				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+				Message = BuildExpectedMessage("Кириллическая строка"),
+				Severity = DiagnosticSeverity.Error,
+				Locations =
+					new[] {
+						new DiagnosticResultLocation("Test0.cs", 8, 37)
+					}
+			};
+
+			VerifyCSharpDiagnostic(test, expected);
+		}
+
+		[TestMethod]
+		public void KeyMustHaveCorrectFormat_PropertyInitializer_Error()
+		{
+			var test = @"
+	using Mindbox.I18n;
+
+    namespace ConsoleApplication1
+    {
+		class TestingClass 
+		{
+			private LocalizableString Name { get; set; } = ""Кириллическая строка"";
+		}
+    }";
+			var expected = new DiagnosticResult
+			{
+				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+				Message = BuildExpectedMessage("Кириллическая строка"),
+				Severity = DiagnosticSeverity.Error,
+				Locations =
+					new[] {
+						new DiagnosticResultLocation("Test0.cs", 8, 51)
 					}
 			};
 

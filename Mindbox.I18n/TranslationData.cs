@@ -12,12 +12,20 @@ namespace Mindbox.I18n
 		private readonly ConcurrentDictionary<string, TranslationSet> translationSetsByNamespace =
 			new ConcurrentDictionary<string, TranslationSet>();
 
-		public void AddNamespace(string @namespace, string filePath)
+		public void AddOrUpdateNamespace(string @namespace, string filePath)
 		{
-			translationSetsByNamespace.TryAdd(@namespace, new TranslationSet(filePath));
+			translationSetsByNamespace.AddOrUpdate(
+				@namespace,
+				ns => CreateTranslationSet(filePath), 
+				(ns, oldSet) => CreateTranslationSet(filePath));
 		}
 
-		internal string TryGetTranslation(LocalizationKey localizationKey)
+	    private static TranslationSet CreateTranslationSet(string filePath)
+	    {
+	        return new TranslationSet(filePath);
+	    }
+
+	    internal string TryGetTranslation(LocalizationKey localizationKey)
 		{
 			if (translationSetsByNamespace.TryGetValue(localizationKey.Namespace, out var translationSet))
 			{
