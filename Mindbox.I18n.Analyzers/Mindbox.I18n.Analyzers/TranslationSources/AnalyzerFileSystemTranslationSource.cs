@@ -29,8 +29,22 @@ namespace Mindbox.I18n.Analyzers
 
 		public override void Initialize()
 		{
-			var projectFiles = GetProjectFiles(solutionFilePath);
+			var projectFiles = GetProjectFilesFromSolution(solutionFilePath);
+			LoadProjectFiles(projectFiles);
 
+			var localizationFiles = GetLoadedProjectFiles().SelectMany(GetLocalizationFilesFromProjectFile);
+			LoadLocalizationFiles(localizationFiles);
+
+			base.Initialize();
+		}
+
+		private ICollection<string> GetLoadedProjectFiles()
+		{
+			return projectFileWatchers.Keys;
+		}
+
+		private void LoadProjectFiles(IEnumerable<string> projectFiles)
+		{
 			foreach (var projectFile in projectFiles)
 			{
 				var watcher = new FileSystemWatcher
@@ -42,7 +56,7 @@ namespace Mindbox.I18n.Analyzers
 				};
 
 				watcher.Changed += (s, ea) => HandleProjectFileChange(projectFile);
-			    watcher.Renamed += (s, ea) => HandleProjectFileChange(projectFile);
+				watcher.Renamed += (s, ea) => HandleProjectFileChange(projectFile);
 
 				if (projectFileWatchers.TryAdd(projectFile, watcher))
 				{
@@ -53,11 +67,6 @@ namespace Mindbox.I18n.Analyzers
 					watcher.Dispose();
 				}
 			}
-
-			var localizationFiles = projectFileWatchers.Keys.SelectMany(GetLocalizationFilesFromProjectFile);
-			LoadLocalizationFiles(localizationFiles);
-
-			base.Initialize();
 		}
 
 		private void LoadLocalizationFiles(IEnumerable<string> localizationFiles)
@@ -103,17 +112,18 @@ namespace Mindbox.I18n.Analyzers
 		{
 			var document = XDocument.Parse(File.ReadAllText(projectFile));
 
+			// TODO: It would be nice to reuse this code with the TranslationChecker, now it's a copy-paste.
 			return document.Descendants()
 				.Where(x => x.Name.LocalName == "ItemGroup")
 				.SelectMany(itemGroup => itemGroup.Descendants()
 					.Where(y => y.Attribute("Include")?.Value
-				        .EndsWith("i18n.json", StringComparison.InvariantCultureIgnoreCase) ?? false)
+				        .EndsWith(TranslationFileSuffix, StringComparison.InvariantCultureIgnoreCase) ?? false)
 					.Select(node => Path.Combine(
 						Path.GetDirectoryName(projectFile),
 						node.Attribute("Include").Value)));
 		}
 
-		private IEnumerable<string> GetProjectFiles(string solutionFilePath)
+		private IEnumerable<string> GetProjectFilesFromSolution(string solutionFilePath)
 		{
 			var projectRelativePaths = SolutionFileParser.GetProjectRelativePaths(solutionFilePath);
 			var solutionDirectory = Path.GetDirectoryName(solutionFilePath);
