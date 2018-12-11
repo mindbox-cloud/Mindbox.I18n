@@ -1,4 +1,6 @@
-﻿namespace Mindbox.I18n
+﻿using System;
+
+namespace Mindbox.I18n
 {
 	public abstract class LocalizableString
 	{
@@ -32,5 +34,18 @@
 			return new LocaleDependentString(key);
 		}
 
+		private object context;
+
+		public LocalizableString WithContext<TContext>(TContext context) where TContext : class
+		{
+			this.context = context ?? throw new ArgumentNullException(nameof(context));
+
+			return this;
+		}
+
+		public TContext GetContext<TContext>() where TContext : class
+		{
+			return context as TContext;
+		}
 	}
 }
