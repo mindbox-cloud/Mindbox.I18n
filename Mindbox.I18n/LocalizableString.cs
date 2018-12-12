@@ -38,6 +38,9 @@ namespace Mindbox.I18n
 
 		public LocalizableString WithContext<TContext>(TContext context) where TContext : class
 		{
+			if (this.context != null)
+				throw new InvalidOperationException($"Context is already set");
+
 			this.context = context ?? throw new ArgumentNullException(nameof(context));
 
 			return this;
@@ -45,6 +48,14 @@ namespace Mindbox.I18n
 
 		public TContext GetContext<TContext>() where TContext : class
 		{
+			if (context == null)
+				return null;
+
+			var result = context as TContext;
+			if (result == null)
+				throw new InvalidOperationException(
+					$"Context is not empty, but can't cast it's value of type {context.GetType()} to {typeof(TContext)}");
+
 			return context as TContext;
 		}
 	}
