@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Mindbox.I18n
 {
@@ -34,37 +35,43 @@ namespace Mindbox.I18n
 			return new LocaleDependentString(key);
 		}
 
-		private object context;
+		private object context = null;
 
-		public LocalizableString WithContext<TContext>(TContext context) where TContext : class
+		private Func<object> getContext = null;
+		
+		public LocalizableString WithContext<TContext>(TContext aContext) where TContext : class
 		{
-			if (this.context != null)
+			if (context != null || getContext != null)
 				throw new InvalidOperationException($"Context is already set");
 
-			this.context = context ?? throw new ArgumentNullException(nameof(context));
+			context = aContext ?? throw new ArgumentNullException(nameof(aContext));
 
 			return this;
 		}
 
 		public LocalizableString WithContext<TContext>(Func<TContext> contextGetter) where TContext : class
 		{
-			if (contextGetter == null)
-				throw new ArgumentNullException(nameof(contextGetter));
+			if (context != null || getContext != null)
+				throw new InvalidOperationException($"Context is already set");
 			
-			return WithContext(contextGetter());
+			getContext = contextGetter ?? throw new ArgumentNullException(nameof(contextGetter));
+
+			return this;
 		}
 		
 		public TContext GetContext<TContext>() where TContext : class
 		{
-			if (context == null)
+			var targetContext = new[] { context, getContext?.Invoke() }.SingleOrDefault(c => c != null);
+			
+			if (targetContext == null)
 				return null;
 
-			var result = context as TContext;
+			var result = targetContext as TContext;
 			if (result == null)
 				throw new InvalidOperationException(
-					$"Context is not empty, but can't cast it's value of type {context.GetType()} to {typeof(TContext)}");
+					$"Context is not empty, but can't cast it's value of type {targetContext.GetType()} to {typeof(TContext)}");
 
-			return context as TContext;
+			return targetContext as TContext;
 		}
 	}
 }
