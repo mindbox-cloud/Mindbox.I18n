@@ -46,6 +46,14 @@ namespace Mindbox.I18n
 			return this;
 		}
 
+		public LocalizableString WithContext<TContext>(Func<TContext> contextGetter) where TContext : class
+		{
+			if (contextGetter == null)
+				throw new ArgumentNullException(nameof(contextGetter));
+			
+			return WithContext(contextGetter());
+		}
+		
 		public TContext GetContext<TContext>() where TContext : class
 		{
 			if (context == null)
