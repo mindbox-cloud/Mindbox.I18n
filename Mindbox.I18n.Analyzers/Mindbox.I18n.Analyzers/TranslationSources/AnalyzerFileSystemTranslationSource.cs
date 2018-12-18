@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 
@@ -32,7 +33,10 @@ namespace Mindbox.I18n.Analyzers
 			var projectFiles = GetProjectFilesFromSolution(solutionFilePath);
 			LoadProjectFiles(projectFiles);
 
-			var localizationFiles = GetLoadedProjectFiles().SelectMany(GetLocalizationFilesFromProjectFile);
+			var localizationFiles = GetLoadedProjectFiles()
+				.Select(TryGetLocalizationFilesFromProjectFile)
+				.Where(files => files != null)
+				.SelectMany(files => files);
 			LoadLocalizationFiles(localizationFiles);
 
 			base.Initialize();
@@ -102,15 +106,21 @@ namespace Mindbox.I18n.Analyzers
 
 		private void HandleProjectFileChange(string projectFile)
 		{
-			var localizationFilesFromProject = GetLocalizationFilesFromProjectFile(projectFile);
+			var localizationFilesFromProject = TryGetLocalizationFilesFromProjectFile(projectFile);
+			if (localizationFilesFromProject == null)
+				return;
 
 			var localizationFilesToAdd = localizationFilesFromProject.Except(localizationFileSystemWatchers.Keys);
 			LoadLocalizationFiles(localizationFilesToAdd);
 		}
 
-		private IEnumerable<string> GetLocalizationFilesFromProjectFile(string projectFile)
+		private IEnumerable<string> TryGetLocalizationFilesFromProjectFile(string projectFile)
 		{
-			var document = XDocument.Parse(File.ReadAllText(projectFile));
+			var projectFileContent = TryGetProjectFileContent(projectFile).Result;
+			if (projectFileContent == null)
+				return null;
+
+			var document = XDocument.Parse(projectFileContent);
 
 			// TODO: It would be nice to reuse this code with the TranslationChecker, now it's a copy-paste.
 			return document.Descendants()
@@ -121,6 +131,26 @@ namespace Mindbox.I18n.Analyzers
 					.Select(node => Path.Combine(
 						Path.GetDirectoryName(projectFile),
 						node.Attribute("Include").Value)));
+		}
+
+		private static async Task<string> TryGetProjectFileContent(string projectFile, int tryCounter = 0)
+		{
+			if (tryCounter > 2)
+				return null;
+
+			try
+			{
+				return File.ReadAllText(projectFile);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+
+				// Sometimes VS locks the project files so we can't read from them. Maybe we should wait for a bit so we can read?
+				await Task.Delay(TimeSpan.FromMilliseconds(100));
+
+				return await TryGetProjectFileContent(projectFile, tryCounter + 1);
+			}
 		}
 
 		private IEnumerable<string> GetProjectFilesFromSolution(string solutionFilePath)
