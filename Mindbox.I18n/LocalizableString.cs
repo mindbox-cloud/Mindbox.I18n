@@ -4,21 +4,15 @@ namespace Mindbox.I18n
 {
 	public abstract class LocalizableString
 	{
-		public abstract string Key { get; }
+		public static LocalizableString ForKey([LocalizationKey]string key)
+		{
+			return new LocaleDependentString(key);
+		}
 
 		public static LocalizableString LocaleIndependent(string localeIndependentString)
 		{
 			return new LocaleIndependentString(localeIndependentString);
 		}
-
-		public override string ToString()
-		{
-			return ToStringCore();
-		}
-
-		public abstract string Render(LocalizationProvider localizationProvider, Locale locale);
-
-		protected abstract string ToStringCore();
 
 		public static implicit operator LocalizableString(string key)
 		{
@@ -29,17 +23,19 @@ namespace Mindbox.I18n
 			return new LocaleDependentString(key);
 		}
 
-		public static LocalizableString ForKey([LocalizationKey]string key)
+		public abstract string Key { get; }
+
+		public override string ToString()
 		{
-			return new LocaleDependentString(key);
+			return ToStringCore();
 		}
 
-		private object context;
+		public abstract string Render(LocalizationProvider localizationProvider, Locale locale);
 
 		public LocalizableString WithContext<TContext>(TContext context) where TContext : class
 		{
 			if (this.context != null)
-				throw new InvalidOperationException($"Context is already set");
+				throw new InvalidOperationException($"Context has already been set");
 
 			this.context = context ?? throw new ArgumentNullException(nameof(context));
 
@@ -56,7 +52,11 @@ namespace Mindbox.I18n
 				throw new InvalidOperationException(
 					$"Context is not empty, but can't cast it's value of type {context.GetType()} to {typeof(TContext)}");
 
-			return context as TContext;
+			return (TContext)context;
 		}
+
+		private object context;
+
+		protected abstract string ToStringCore();
 	}
 }
