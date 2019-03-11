@@ -27,7 +27,8 @@ namespace Mindbox.I18n.Analyzers
 				configuration.TranslationSource.SolutionFilePath);
 
 			locale = Locales.GetByName(configuration.TranslationSource.Locale);
-			translationSource = new AnalyzerFileSystemTranslationSource(solutionFilePath, new [] { locale });
+			translationSource = new AnalyzerFileSystemTranslationSource(
+				solutionFilePath, new [] { locale }, new NullI18NextLogger());
 			translationSource.Initialize();
 		}
 	}

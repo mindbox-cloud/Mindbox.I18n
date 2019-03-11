@@ -17,10 +17,5 @@ namespace Mindbox.I18n
 		{
 			return localizationProvider.Translate(locale, Key);
 		}
-
-		protected override string ToStringCore()
-		{
-			return Key;
-		}
 	}
 }

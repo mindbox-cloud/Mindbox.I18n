@@ -15,12 +15,14 @@ namespace Mindbox.I18n
 			RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
 		private readonly Dictionary<string, TranslationData> translationsPerLocale;
+		protected ILogger Logger { get; }
 
-		protected FileSystemTranslationSourceBase(IReadOnlyList<Locale> supportedLocales)
+		protected FileSystemTranslationSourceBase(IReadOnlyList<Locale> supportedLocales, ILogger logger)
 		{
+			Logger = logger;
 			translationsPerLocale = supportedLocales.ToDictionary(
 				locale => locale.Name,
-				locale => new TranslationData());
+				locale => new TranslationData(locale, Logger));
 		}
 
 		public virtual void Initialize()
@@ -46,7 +48,7 @@ namespace Mindbox.I18n
 				var @namespace = translationFileRegexMatch.Groups[1].Value;
 				var localeName = translationFileRegexMatch.Groups[2].Value;
 
-				if (translationsPerLocale.TryGetValue(localeName, out TranslationData translationData))
+				if (translationsPerLocale.TryGetValue(localeName, out var translationData))
 					translationData.AddOrUpdateNamespace(@namespace, translationFile);
 			}
 		}
@@ -56,7 +58,10 @@ namespace Mindbox.I18n
 		public string TryGetTranslation(Locale locale, LocalizationKey localizationKey)
 		{
 			if (!translationsPerLocale.TryGetValue(locale.Name, out var translationData))
+			{
+				Logger.LogMissingLocale(locale, localizationKey.FullKey);
 				return null;
+			}
 
 			return translationData.TryGetTranslation(localizationKey);
 		}

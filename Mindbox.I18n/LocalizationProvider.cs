@@ -16,34 +16,45 @@ namespace Mindbox.I18n
 			translationSource = options.TranslationSource;
 			translationSource.Initialize();
 
-			CheckInitializationOptions();
+			if (InitializationOptions.Logger == null)
+				throw new InvalidOperationException($"{nameof(InitializationOptions)} is null");
 		}
 
 		public string TryGetTranslation(Locale locale, string key)
 		{
-			var localizationKey = LocalizationKey.TryParse(key);
-			if (localizationKey == null)
+			try
 			{
-				InitializationOptions.Logger.LogInvalidKey(key);
+				var localizationKey = LocalizationKey.TryParse(key);
+				if (localizationKey == null)
+				{
+					InitializationOptions.Logger.LogInvalidKey(key);
+					return null;
+				}
+				return translationSource.TryGetTranslation(locale, localizationKey);
+			}
+			catch (Exception e)
+			{
+				InitializationOptions.Logger.LogError(e, $"Error occured while translating key {key}");
 				return null;
 			}
-
-			return translationSource.TryGetTranslation(locale, localizationKey);
 		}
+
 		public string TryGetTranslation(Locale locale, LocalizationKey key)
 		{
-			return translationSource.TryGetTranslation(locale, key);
+			try
+			{
+				return translationSource.TryGetTranslation(locale, key);
+			}
+			catch (Exception e)
+			{
+				InitializationOptions.Logger.LogError(e, $"Error occured while translating key {key.FullKey}");
+				return null;
+			}
 		}
 
 		public string Translate(Locale locale, string key)
 		{
 			return TryGetTranslation(locale, key) ?? key;
-		}
-
-		private void CheckInitializationOptions()
-		{
-			if (InitializationOptions.Logger == null)
-				throw new InvalidOperationException($"{nameof(InitializationOptions)} is null");
 		}
 	}
 }

@@ -14,7 +14,8 @@ namespace Mindbox.I18n
 		public DiscoveringFileSystemTranslationSource(
 			string baseDirectory,
 			IReadOnlyList<Locale> supportedLocales,
-			IReadOnlyList<string> ignoredPathRules) : base(supportedLocales)
+			IReadOnlyList<string> ignoredPathRules,
+			ILogger logger) : base(supportedLocales, logger)
 		{
 			BaseDirectory = baseDirectory;
 			IgnoredPathRules = ignoredPathRules;
