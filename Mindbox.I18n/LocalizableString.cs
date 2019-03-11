@@ -4,8 +4,19 @@ namespace Mindbox.I18n
 {
 	public abstract class LocalizableString
 	{
+		protected static ILogger Logger { get; private set; } = new NullI18NextLogger();
+
+		public static void InitializeLogger(ILogger logger)
+		{
+			Logger = logger ?? new NullI18NextLogger();
+		}
+
 		public static LocalizableString ForKey([LocalizationKey]string key)
 		{
+			if (key == null)
+			{
+				throw new ArgumentNullException(nameof(key));
+			}
 			return new LocaleDependentString(key);
 		}
 
@@ -18,7 +29,10 @@ namespace Mindbox.I18n
 		{
 			// Strictly speaking, this is illegal and will result in ArgumentNullException later.
 			if (key == null)
+			{
+				Logger.LogInvalidOperation($"Attempting to implicitly cast nulll to LocalizableString");
 				return null;
+			}
 
 			return new LocaleDependentString(key);
 		}
@@ -27,7 +41,8 @@ namespace Mindbox.I18n
 
 		public override string ToString()
 		{
-			return ToStringCore();
+			Logger.LogInvalidOperation($"ToString() called on LocalizableString with key {Key}");
+			return Key;
 		}
 
 		public abstract string Render(LocalizationProvider localizationProvider, Locale locale);
@@ -56,7 +71,5 @@ namespace Mindbox.I18n
 		}
 
 		private object context;
-
-		protected abstract string ToStringCore();
 	}
 }

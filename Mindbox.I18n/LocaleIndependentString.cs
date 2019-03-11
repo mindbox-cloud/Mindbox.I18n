@@ -17,10 +17,5 @@ namespace Mindbox.I18n
 		{
 			return Key;
 		}
-
-		protected override string ToStringCore()
-		{
-			return Key;
-		}
 	}
 }
