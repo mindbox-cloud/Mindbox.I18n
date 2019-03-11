@@ -22,8 +22,9 @@ namespace Mindbox.I18n.Analyzers
 
 		public AnalyzerFileSystemTranslationSource(
 			string solutionFilePath,
-			IReadOnlyList<Locale> supportedLocales)
-			: base(supportedLocales)
+			IReadOnlyList<Locale> supportedLocales,
+			ILogger logger)
+			: base(supportedLocales, logger)
 		{
 			this.solutionFilePath = solutionFilePath;
 		}
