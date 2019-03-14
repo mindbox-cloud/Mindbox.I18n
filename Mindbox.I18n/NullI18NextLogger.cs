@@ -4,7 +4,7 @@ namespace Mindbox.I18n
 {
 	public class NullI18NextLogger : ILogger
 	{
-		public void LogMissingNamespace(string @namespace, string key)
+		public void LogMissingNamespace(Locale locale, string @namespace, string key)
 		{
 			// empty
 		}
@@ -14,7 +14,7 @@ namespace Mindbox.I18n
 			// empty
 		}
 
-		public void LogMissingKey(string localeName, string @namespace, string key)
+		public void LogMissingKey(Locale locale, string @namespace, string key)
 		{
 			// empty
 		}
