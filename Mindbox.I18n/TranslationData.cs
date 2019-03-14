@@ -39,12 +39,12 @@ namespace Mindbox.I18n
 				}
 				else
 				{
-					logger.LogMissingKey(locale.Name, localizationKey.Namespace, localizationKey.FullKey);
+					logger.LogMissingKey(locale, localizationKey.Namespace, localizationKey.FullKey);
 				}
 			}
 			else
 			{
-				logger.LogMissingNamespace(localizationKey.Namespace, localizationKey.FullKey);
+				logger.LogMissingNamespace(locale, localizationKey.Namespace, localizationKey.FullKey);
 			}
 
 			return null;
