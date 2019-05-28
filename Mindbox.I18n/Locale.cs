@@ -14,6 +14,10 @@ namespace Mindbox.I18n
 
 		public static Locale GetByName(string name) => localesByName[name];
 
+		public static Locale TryGetByName(string name) => localesByName.TryGetValue(name, out var locale) 
+			? locale 
+			: null;
+
 		static Locales()
 		{
 			localesByName = new []
