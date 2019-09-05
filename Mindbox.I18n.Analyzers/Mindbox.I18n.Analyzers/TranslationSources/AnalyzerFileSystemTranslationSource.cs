@@ -127,11 +127,22 @@ namespace Mindbox.I18n.Analyzers
 			return document.Descendants()
 				.Where(x => x.Name.LocalName == "ItemGroup")
 				.SelectMany(itemGroup => itemGroup.Descendants()
-					.Where(y => y.Attribute("Include")?.Value
-				        .EndsWith(TranslationFileSuffix, StringComparison.InvariantCultureIgnoreCase) ?? false)
-					.Select(node => Path.Combine(
-						Path.GetDirectoryName(projectFile),
-						node.Attribute("Include").Value)));
+					.Where(y =>
+						y.Attribute("Include")
+							?.Value
+							.EndsWith(TranslationFileSuffix, StringComparison.InvariantCultureIgnoreCase)
+						?? false)
+					.Select(node => node.Attribute("Include").Value)
+					.SelectMany(path =>
+						path.Contains("?") || path.Contains("*")
+						? GetFilesFromWildcard(Path.GetDirectoryName(projectFile), path)
+						: new []{ Path.Combine(
+							Path.GetDirectoryName(projectFile), path) }));
+		}
+
+		private IEnumerable<string> GetFilesFromWildcard(string projectDirectory, string wildcard)
+		{
+			return Directory.GetFiles(projectDirectory, wildcard, searchOption: SearchOption.AllDirectories);
 		}
 
 		private static async Task<string> TryGetProjectFileContent(string projectFile, int tryCounter = 0)
