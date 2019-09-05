@@ -16,7 +16,7 @@
     <Copyright>Copyright Mindbox 2018</Copyright>
     <PackageTags>Mindbox, I18n, analyzers</PackageTags>
     <NoPackageAnalysis>false</NoPackageAnalysis>
-    <Version>1.1.8</Version>
+    <Version>1.1.9</Version>
   </PropertyGroup>
    
   <ItemGroup>
