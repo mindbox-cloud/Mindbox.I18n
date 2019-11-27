@@ -32,7 +32,9 @@ namespace Mindbox.I18n
 
 		protected void LoadTranslationFiles()
 		{
-			var translationFiles = GetTranslationFiles();
+			var translationFiles = GetTranslationFiles()
+				.Select(PathHelpers.ConvertToUnixPath)
+				.ToList();
 
 			foreach (var translationFile in translationFiles)
 			{
