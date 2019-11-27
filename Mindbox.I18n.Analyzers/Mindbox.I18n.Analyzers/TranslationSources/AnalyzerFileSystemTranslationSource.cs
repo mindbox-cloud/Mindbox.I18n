@@ -38,6 +38,7 @@ namespace Mindbox.I18n.Analyzers
 				.Select(TryGetLocalizationFilesFromProjectFile)
 				.Where(files => files != null)
 				.SelectMany(files => files);
+
 			LoadLocalizationFiles(localizationFiles);
 
 			base.Initialize();
@@ -172,15 +173,16 @@ namespace Mindbox.I18n.Analyzers
 			if (solutionDirectory == null)
 				throw new InvalidOperationException($"Couldn't get directory name from {solutionFilePath}");
 
-			return projectRelativePaths.Select(projectRelativePath =>
-				Path.Combine(solutionDirectory, projectRelativePath));
+			return projectRelativePaths
+				.Select(PathHelpers.ConvertToUnixPath)
+				.Select(projectRelativePath => Path.Combine(solutionDirectory, projectRelativePath));
 		}
 
 		protected override IEnumerable<string> GetTranslationFiles()
 		{
 			return localizationFileSystemWatchers.Keys;
 		}
-
+		
 		public void Dispose()
 		{
 			foreach (var localizationFileSystemWatcher in localizationFileSystemWatchers.Values)

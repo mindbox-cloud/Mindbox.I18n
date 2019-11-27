@@ -16,7 +16,7 @@
     <Copyright>Copyright Mindbox 2018</Copyright>
     <PackageTags>Mindbox, I18n, analyzers</PackageTags>
     <NoPackageAnalysis>false</NoPackageAnalysis>
-    <Version>1.1.9</Version>
+    <Version>1.2.0</Version>
   </PropertyGroup>
    
   <ItemGroup>
@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <None Include="$(OutputPath)\**\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-	<None Include="$(ProjectDir)\tools\*" Pack="true" PackagePath="tools" />
+	  <None Include="$(ProjectDir)\tools\*" Pack="true" PackagePath="tools" />
     <None Include="$(ProjectDir)\..\Libraries\Newtonsoft.Json.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
