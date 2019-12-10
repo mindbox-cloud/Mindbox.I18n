@@ -5,6 +5,7 @@
     <IncludeBuildOutput>true</IncludeBuildOutput>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <LangVersion>7.1</LangVersion>
+    <PackageVersion>1.2.1</PackageVersion>
   </PropertyGroup>
 
   <PropertyGroup>
