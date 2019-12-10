@@ -23,6 +23,11 @@ namespace Mindbox.I18n
 
 		protected override IEnumerable<string> GetTranslationFiles()
 		{
+			if (!Directory.Exists(BaseDirectory))
+			{
+				return Array.Empty<string>();
+			}
+
 			return Directory.GetFiles(
 					BaseDirectory,
 					$"*{TranslationFileSuffix}",
