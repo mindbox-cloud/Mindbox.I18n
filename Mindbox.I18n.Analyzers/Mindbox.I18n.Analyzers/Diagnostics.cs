@@ -30,7 +30,7 @@ namespace Mindbox.I18n.Analyzers
 			new DiagnosticDescriptor(
 				"Mindbox1802",
 				"Translation for key must exist",
-				"Translation not found for key \"{0}\"",
+				"No translation found for key \"{0}\"",
 				Category,
 				DiagnosticSeverity.Error,
 				true);
