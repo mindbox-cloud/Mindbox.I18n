@@ -141,9 +141,11 @@ namespace Mindbox.I18n.Analyzers
 							Path.GetDirectoryName(projectFile), path) }));
 		}
 
-		private IEnumerable<string> GetFilesFromWildcard(string projectDirectory, string wildcard)
+		private static IEnumerable<string> GetFilesFromWildcard(string projectDirectory, string wildcard)
 		{
-			return Directory.GetFiles(projectDirectory, wildcard, searchOption: SearchOption.AllDirectories);
+			return Directory.GetFiles(projectDirectory,
+				PathHelpers.ConvertToUnixPath(wildcard),
+				searchOption: SearchOption.AllDirectories);
 		}
 
 		private static async Task<string> TryGetProjectFileContent(string projectFile, int tryCounter = 0)
