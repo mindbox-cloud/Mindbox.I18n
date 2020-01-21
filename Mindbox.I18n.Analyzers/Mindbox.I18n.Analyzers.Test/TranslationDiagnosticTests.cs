@@ -62,7 +62,7 @@ namespace Mindbox.I18n.Analyzers.Test
 			var expected = new DiagnosticResult
 			{
 				Id = Diagnostics.TranslationMustExistForLocalizationKey.Id,
-				Message = "Translation not found for key \"Marvin:HumanLove\"",
+				Message = "No translation found for key \"Marvin:HumanLove\"",
 				Severity = DiagnosticSeverity.Error,
 				Locations =
 					new[] {
