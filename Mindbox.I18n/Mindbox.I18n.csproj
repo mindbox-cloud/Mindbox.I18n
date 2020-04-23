@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <PackageId>Mindbox.I18n</PackageId>
-    <Authors>Mindbox</Authors>
+	  <Version>1.2.4</Version>
     <RepositoryUrl>https://github.com/mindbox-moscow/Mindbox.I18n</RepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>Mindbox.I18n internationalization library</Description>

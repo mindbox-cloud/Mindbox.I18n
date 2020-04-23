@@ -2,9 +2,7 @@
     <PropertyGroup>
         <LangVersion>latest</LangVersion>
         <Authors>Mindbox</Authors>
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-		<Version>1.2.4</Version>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>		
     </PropertyGroup>
 	
 	<ItemGroup>
