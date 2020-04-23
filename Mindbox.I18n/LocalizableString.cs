@@ -62,8 +62,7 @@ namespace Mindbox.I18n
 			if (context == null)
 				return null;
 
-			var result = context as TContext;
-			if (result == null)
+			if (!(context is TContext result))
 				throw new InvalidOperationException(
 					$"Context is not empty, but can't cast it's value of type {context.GetType()} to {typeof(TContext)}");
 

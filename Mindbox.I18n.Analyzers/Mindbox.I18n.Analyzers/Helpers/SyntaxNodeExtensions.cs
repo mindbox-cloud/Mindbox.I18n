@@ -17,12 +17,10 @@ namespace Mindbox.I18n.Analyzers
 			if (argument.NameEquals != null)
 				return null;
 
-			var argumentList = argument.Parent as AttributeArgumentListSyntax;
-			if (argumentList == null)
+			if (!(argument.Parent is AttributeArgumentListSyntax argumentList))
 				return null;
 
-			var invocableExpression = argumentList.Parent as AttributeSyntax;
-			if (invocableExpression == null)
+			if (!(argumentList.Parent is AttributeSyntax invocableExpression))
 				return null;
 
 			var symbol = semanticModel.GetSymbolInfo(invocableExpression, cancellationToken).Symbol;
