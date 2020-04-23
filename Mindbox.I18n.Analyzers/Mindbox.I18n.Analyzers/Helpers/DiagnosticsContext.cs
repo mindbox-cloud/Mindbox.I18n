@@ -17,10 +17,10 @@ namespace Mindbox.I18n.Analyzers
 			Action<Diagnostic> reportDiagnostic, 
 			SyntaxNode localizationKeyValueNode)
 		{
-			if (TryReportDiagnosticForLiteralExression(reportDiagnostic, localizationKeyValueNode))
+			if (TryReportDiagnosticForLiteralExpression(reportDiagnostic, localizationKeyValueNode))
 				return;
 
-			if (TryReportDiagnosticForConditionalExression(reportDiagnostic, localizationKeyValueNode))
+			if (TryReportDiagnosticForConditionalExpression(reportDiagnostic, localizationKeyValueNode))
 				return;
 
 			reportDiagnostic(
@@ -28,21 +28,16 @@ namespace Mindbox.I18n.Analyzers
 					Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys,
 					localizationKeyValueNode.GetLocation(),
 					string.Empty));
-
-			return;
 		}
 
-		private bool TryReportDiagnosticForLiteralExression(
+		private bool TryReportDiagnosticForLiteralExpression(
 			Action<Diagnostic> reportDiagnostic, 
 			SyntaxNode localizationKeyValueNode)
 		{
-			var literal = localizationKeyValueNode as LiteralExpressionSyntax;
-
-			if (literal == null)
+			if (!(localizationKeyValueNode is LiteralExpressionSyntax literal))
 				return false;
 
-			var stringKey = literal.Token.Value as string;
-			if (stringKey == null)
+			if (!(literal.Token.Value is string stringKey))
 			{
 				reportDiagnostic(
 					Diagnostic.Create(
@@ -89,16 +84,15 @@ namespace Mindbox.I18n.Analyzers
 			return true;
 		}
 
-		private bool TryReportDiagnosticForConditionalExression(
+		private bool TryReportDiagnosticForConditionalExpression(
 			Action<Diagnostic> reportDiagnostic,
 			SyntaxNode localizationKeyValueNode)
 		{
-			var conditionalExression = localizationKeyValueNode as ConditionalExpressionSyntax;
-			if (conditionalExression == null)
+			if (!(localizationKeyValueNode is ConditionalExpressionSyntax conditionalExpression))
 				return false;
 
-			ReportDiagnosticAboutLocalizableStringAssignment(reportDiagnostic, conditionalExression.WhenTrue);
-			ReportDiagnosticAboutLocalizableStringAssignment(reportDiagnostic, conditionalExression.WhenFalse);
+			ReportDiagnosticAboutLocalizableStringAssignment(reportDiagnostic, conditionalExpression.WhenTrue);
+			ReportDiagnosticAboutLocalizableStringAssignment(reportDiagnostic, conditionalExpression.WhenFalse);
 
 			return true;
 		}

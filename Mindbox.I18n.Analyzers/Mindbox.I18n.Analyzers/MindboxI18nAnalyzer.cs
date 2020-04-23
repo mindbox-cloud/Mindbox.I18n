@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -35,8 +34,9 @@ namespace Mindbox.I18n.Analyzers
 
 		public override void Initialize(AnalysisContext context)
 		{
-			context.EnableConcurrentExecution();
+			context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 
+			context.EnableConcurrentExecution();
 			context.RegisterCompilationStartAction(OnCompilationStart);
 		}
 
