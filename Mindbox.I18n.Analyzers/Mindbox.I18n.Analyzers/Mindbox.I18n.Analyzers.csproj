@@ -5,7 +5,7 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageId>Mindbox.I18n.Analyzers</PackageId>
-	  <PackageVersion>1.2.7</PackageVersion>
+	  <PackageVersion>1.2.8</PackageVersion>
     <RepositoryUrl>https://github.com/mindbox-moscow/Mindbox.I18n</RepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>Code analyzers for Mindbox.I18n library</Description>
