@@ -38,4 +38,4 @@ jobs:
       run: dotnet test Mindbox.I18n.sln --no-build --configuration Release
      
     - name: Publish
-      run: dotnet nuget push **\bin\Release\*.nupkg -n -k ${{secrets.Nuget_Token}} -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push **\bin\Release\*.nupkg -k ${{secrets.Nuget_Token}} -s https://api.nuget.org/v3/index.json -n
