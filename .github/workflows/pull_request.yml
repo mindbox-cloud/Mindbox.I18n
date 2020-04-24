@@ -1,0 +1,35 @@
+name: Pull Request
+
+on: pull_request
+
+jobs:
+
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+     
+    - name: Checkout
+      uses: actions/checkout@v1
+      
+    - name: Setup msbuild
+      uses: microsoft/setup-msbuild@v1.0.0
+
+    - name: Setup .NET Core 3.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.100
+
+    - name: Setup nuget
+      uses: nuget/setup-nuget@v1
+
+    - name: Restore packages
+      run: nuget restore Mindbox.I18n.sln
+
+    - name: Build
+      continue-on-error: true
+      run: msbuild Mindbox.I18n.sln /m /nr:false /p:Configuration=Release;DeployOnBuild=true;DeployTarget=Package 
+      
+    - name: Test
+      run: dotnet test Mindbox.I18n.sln --no-build --configuration Release

@@ -4,20 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <IncludeBuildOutput>true</IncludeBuildOutput>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <LangVersion>7.1</LangVersion>
-    <PackageVersion>1.2.2</PackageVersion>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageId>Mindbox.I18n</PackageId>
-    <Authors>Mindbox</Authors>
+	  <PackageVersion>1.2.4</PackageVersion>
     <RepositoryUrl>https://github.com/mindbox-moscow/Mindbox.I18n</RepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>Mindbox.I18n internationalization library</Description>
     <Copyright>Copyright Mindbox 2018</Copyright>
     <PackageTags>Mindbox, I18n</PackageTags>
     <NoPackageAnalysis>false</NoPackageAnalysis>
-    <Version>1.2.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
