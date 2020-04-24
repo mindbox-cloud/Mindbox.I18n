@@ -32,10 +32,10 @@ jobs:
 
     - name: Build
       continue-on-error: true
-      run: msbuild Mindbox.I18n.sln /m /nr:false /p:Configuration=Release;DeployOnBuild=true;DeployTarget=Package 
+      run: msbuild Mindbox.I18n.sln /m /nr:false /p:Configuration=Release;DeployOnBuild=true;DeployTarget=Package;CreateHardLinksForCopyLocalIfPossible=true;CreateHardLinksForCopyFilesToOutputDirectoryIfPossible=true;CreateHardLinksForCopyAdditionalFilesIfPossible=true;CreateHardLinksForPublishFilesIfPossible=true
       
     - name: Test
       run: dotnet test Mindbox.I18n.sln --no-build --configuration Release
      
     - name: Publish
-      run: nuget push **\bin\Release\*.nupkg -ApiKey ${{secrets.Nuget_Token}} -Source https://api.nuget.org/v3/index.json
+      run: nuget push **\bin\Release\*.nupkg -ApiKey ${{secrets.Nuget_Token}} -Source https://api.nuget.org/v3/index.json -NoSymbols
