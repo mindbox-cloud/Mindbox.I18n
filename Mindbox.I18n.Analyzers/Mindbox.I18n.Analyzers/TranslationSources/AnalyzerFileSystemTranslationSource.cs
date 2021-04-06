@@ -141,6 +141,11 @@ namespace Mindbox.I18n.Analyzers
 
 		private static IEnumerable<string> GetFilesFromWildcard(string projectDirectory, string wildcard)
 		{
+			if (!Directory.Exists(projectDirectory))
+			{
+				return Array.Empty<string>();
+			}
+
 			return Directory.GetFiles(projectDirectory,
 				PathHelpers.ConvertToUnixPath(wildcard),
 				searchOption: SearchOption.AllDirectories);
