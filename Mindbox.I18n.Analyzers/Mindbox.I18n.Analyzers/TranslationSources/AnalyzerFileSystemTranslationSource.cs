@@ -141,14 +141,17 @@ namespace Mindbox.I18n.Analyzers
 
 		private static IEnumerable<string> GetFilesFromWildcard(string projectDirectory, string wildcard)
 		{
-			if (!Directory.Exists(projectDirectory))
+			try
+			{
+				return Directory.GetFiles(projectDirectory,
+					PathHelpers.ConvertToUnixPath(wildcard),
+					searchOption: SearchOption.AllDirectories);
+			}
+			catch (DirectoryNotFoundException)
 			{
 				return Array.Empty<string>();
 			}
-
-			return Directory.GetFiles(projectDirectory,
-				PathHelpers.ConvertToUnixPath(wildcard),
-				searchOption: SearchOption.AllDirectories);
+			
 		}
 
 		private static async Task<string> TryGetProjectFileContent(string projectFile, int tryCounter = 0)
