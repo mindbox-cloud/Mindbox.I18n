@@ -15,22 +15,42 @@ namespace Mindbox.I18n.Analyzers.Test
 
     namespace ConsoleApplication1
     {
-		[AttributeUsage(AttributeTargets.All)]
-		public class TestAttribute : System.Attribute
-		{
-			public TestAttribute([LocalizationKey]string input)
-			{
-			}
-		}
-
-		[TestAttribute(input:""Кириллическая строка"")]
 		public class TestingClass 
 		{
+			private void TrackedEntitySetState()
+			{
+				LocalizableString.LocaleIndependent(""ex.Message"");
+			}
 		}
     }";
+			
+			var test2 = @"
+	using System;
+
+using Mindbox.I18n;
+
+namespace ConsoleApplication1
+{
+	public class TestingClass 
+	{
+		private void TrackedEntitySetState()
+		{
+			try
+			{
+				throw new ArgumentException(""Message"");
+		}
+		catch (Exception ex)
+		{
+			var name = LocalizableString.LocaleIndependent(ex.Message);
+		}
+	}
+}
+}";
+			
+			
 			var expected = new DiagnosticResult
 			{
-				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+				Id = Diagnostics.OnlyStringsCanBeUsedInLocaleIndependent.Id,
 				Message = BuildExpectedMessage("Кириллическая строка"),
 				Severity = DiagnosticSeverity.Error,
 				Locations =
@@ -39,7 +59,7 @@ namespace Mindbox.I18n.Analyzers.Test
 					}
 			};
 
-			VerifyCSharpDiagnostic(test, expected);
+			VerifyCSharpDiagnostic(test2, expected);
 		}
 
 		[TestMethod]

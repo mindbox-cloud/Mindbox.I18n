@@ -74,6 +74,12 @@ namespace Mindbox.I18n.Analyzers
 			context.RegisterOperationAction(
 				HandleConversionOperation,
 				OperationKind.Conversion);
+			
+			context.RegisterOperationAction(
+				HandleMethodInvocation,
+				OperationKind.Invocation);
+			
+			// кажется где-то тут
 		}
 
 		private void HandleAssignmentOperation(OperationAnalysisContext context)
@@ -198,6 +204,21 @@ namespace Mindbox.I18n.Analyzers
 			_diagnosticsContext.ReportDiagnosticAboutLocalizableStringAssignment(
 				context.ReportDiagnostic,
 				conversionOperation.Operand.Syntax);
+		}
+		
+		private void HandleMethodInvocation(OperationAnalysisContext context)
+		{
+			var invocationOperation = (IInvocationOperation)context.Operation;
+			
+			if (invocationOperation.TargetMethod == null)
+				return;
+
+			if (!invocationOperation.TargetMethod.ContainingType.IsLocalizableLocaleIndependent())
+				return;
+
+			var params1 = invocationOperation.TargetMethod.Parameters.SingleOrDefault();
+
+
 		}
 
 		private void HandleAttributeSyntax(SyntaxNodeAnalysisContext context)

@@ -45,5 +45,16 @@ namespace Mindbox.I18n.Analyzers
 				Category,
 				DiagnosticSeverity.Error,
 				true);
+		
+		public static DiagnosticDescriptor OnlyStringsCanBeUsedInLocaleIndependent { get; } =
+			new DiagnosticDescriptor(
+				"Mindbox1804",
+				"Only string literals can be used as localization keys",
+				"Expression of this type can't be used as a localization key. " +
+				$"Only string literals or other {nameof(LocalizableString)} instances " +
+				$"can be used as a {nameof(LocalizableString)} value",
+				Category,
+				DiagnosticSeverity.Error,
+				true);
 	}
 }

@@ -30,8 +30,18 @@ namespace Mindbox.I18n.Analyzers
 		{
 			return type.Name.Contains(typeof(LocalizableString).Name);
 		}
+		
+		public static bool IsLocalizableLocaleIndependent(this ITypeSymbol type)
+		{
+			return type.Name.Contains(typeof(LocalizableString).Name);
+		}
 
 		public static bool IsString(this ITypeSymbol symbolType)
+		{
+			return symbolType.Name.Equals("string", StringComparison.InvariantCultureIgnoreCase);
+		}
+		
+		public static bool IsConstant(this ITypeSymbol symbolType)
 		{
 			return symbolType.Name.Equals("string", StringComparison.InvariantCultureIgnoreCase);
 		}
