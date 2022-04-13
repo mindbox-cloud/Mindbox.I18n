@@ -1,0 +1,29 @@
+﻿# Mindbox.I18n.AspNetCore
+
+Набор расширений, позволяющий встроить локализацию I18n в приложение ASP.NET Core.
+
+## Как подключить
+
+Ниже - минимальный набор изменений, нужных для встраивания в приложение ASP.NET Core.
+
+### Startup.cs или Program.cs
+
+Для подключения зависимостей в методе `ConfigureServices`:
+
+```csharp
+services
+  .AddI18nRequestLocalization();
+```
+
+И в методе `Configure`:
+
+```csharp
+app.UseI18nRequestLocalization();
+```
+
+Место подключения важно, влияет на порядок middleware-ов.
+
+## Использование в коде
+
+После подключения, для доступа к локализации используйте абстракцию `IRequestLocalizationContextAccessor`:
+* `IRequestLocalizationContextAccessor.Context.UserLocale` - язык пользователя

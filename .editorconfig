@@ -1,0 +1,14 @@
+﻿[*]
+charset=utf-8-bom
+end_of_line=crlf
+insert_final_newline=false
+indent_style = space
+indent_size = 2
+
+[*.cs]
+indent_style = tab
+indent_size = 4
+
+[*.{csproj,props}]
+indent_style = space
+indent_size = 2
