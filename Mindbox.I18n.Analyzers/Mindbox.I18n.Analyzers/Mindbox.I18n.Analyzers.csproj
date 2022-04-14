@@ -5,14 +5,13 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageId>Mindbox.I18n.Analyzers</PackageId>
-	  <PackageVersion>1.2.11</PackageVersion>
     <RepositoryUrl>https://github.com/mindbox-moscow/Mindbox.I18n</RepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Description>Code analyzers for Mindbox.I18n library</Description>
     <Copyright>Copyright Mindbox 2018</Copyright>
     <PackageTags>Mindbox, I18n, analyzers</PackageTags>
     <NoPackageAnalysis>false</NoPackageAnalysis>
-	  <NoWarn>$(NoWarn);NU5128</NoWarn>
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
   </PropertyGroup>
    
   <ItemGroup>
