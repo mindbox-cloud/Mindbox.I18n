@@ -16,7 +16,7 @@ public class AcceptLanguageHeaderLocalizationProvider : IRequestLocalizationProv
 	/// Максимальное число значений из Accept-Language заголовка для попыток получения локализации.
 	/// По умолчанию <c>3</c>.
 	/// </summary>
-	public int MaximumAcceptLanguageHeaderValuesToTry { get; set; } = 3;
+	public int MaximumAcceptLanguageHeaderValuesToTry { get; init; } = 3;
 
 	public Task<Locale?> TryGetLocale(HttpContext httpContext)
 	{
