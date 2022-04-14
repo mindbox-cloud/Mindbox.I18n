@@ -9,11 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mindbox.I18n.Analyzers.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mindbox.I18n", "Mindbox.I18n\Mindbox.I18n.csproj", "{4C3516A8-F84F-46CC-96BC-31D15115D2F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mindbox.I18n.AspNetCore", "Mindbox.I18n.AspNetCore\Mindbox.I18n.AspNetCore.csproj", "{79BF0373-D8E8-408F-A609-7B0D5C3FCD62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mindbox.I18n.AspNetCore", "Mindbox.I18n.AspNetCore\Mindbox.I18n.AspNetCore.csproj", "{79BF0373-D8E8-408F-A609-7B0D5C3FCD62}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0EBB4929-0BBD-41D0-943F-467627EB7EF0}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mindbox.I18n.AspNetCore.Tests", "Mindbox.I18n.AspNetCore.Tests\Mindbox.I18n.AspNetCore.Tests.csproj", "{FE60B00F-7BCC-4374-AD65-96CD74F3DCA7}"
