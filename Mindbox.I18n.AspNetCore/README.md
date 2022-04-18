@@ -25,5 +25,5 @@ app.UseI18nRequestLocalization();
 
 ## Использование в коде
 
-После подключения, для доступа к локализации используйте абстракцию `IRequestLocalizationContextAccessor`:
-* `IRequestLocalizationContextAccessor.Context.UserLocale` - язык пользователя
+После подключения, для доступа к локализации используйте абстракцию `ILocalizationContextAccessor`:
+* `ILocalizationContextAccessor.Context.UserLocale` - язык пользователя

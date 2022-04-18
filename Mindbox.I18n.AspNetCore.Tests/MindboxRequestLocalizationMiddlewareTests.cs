@@ -16,13 +16,13 @@ namespace Mindbox.I18n.AspNetCore.Tests;
 public class MindboxRequestLocalizationMiddlewareTests
 {
 	private Mock<IRequestLocalizationProvider> localizationProviderMock;
-	private RequestLocalizationContextAccessor accessor;
+	private LocalizationContextAccessor accessor;
 
 	[TestInitialize]
 	public void TestInitialize()
 	{
 		localizationProviderMock = new Mock<IRequestLocalizationProvider>();
-		accessor = new RequestLocalizationContextAccessor();
+		accessor = new LocalizationContextAccessor();
 	}
 
 	[TestCleanup]
@@ -53,7 +53,7 @@ public class MindboxRequestLocalizationMiddlewareTests
 	}
 
 	[TestMethod]
-	public async Task Middleware_GetLocales_When_NoTenant_Should_ReturnsNull()
+	public async Task Middleware_GetLocales_When_NoHeader_Should_ReturnsNull()
 	{
 		RequestDelegate next = _ =>
 		{

@@ -12,7 +12,7 @@ public static class ServiceCollectionExtensions
 	/// <returns> <paramref name="services"/>. </returns>
 	public static IServiceCollection AddI18nRequestLocalization(this IServiceCollection services)
 	{
-		services.TryAddSingleton<IRequestLocalizationContextAccessor, RequestLocalizationContextAccessor>();
+		services.TryAddSingleton<ILocalizationContextAccessor, LocalizationContextAccessor>();
 		services.TryAddTransient<IRequestLocalizationProvider, AcceptLanguageHeaderLocalizationProvider>();
 
 		return services;

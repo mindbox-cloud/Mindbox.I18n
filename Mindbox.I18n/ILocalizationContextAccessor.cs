@@ -1,12 +1,14 @@
-﻿namespace Mindbox.I18n.AspNetCore;
+﻿namespace Mindbox.I18n;
+
+#nullable enable
 
 /// <summary>
 /// Предоставляет доступ к текущему контексту локализации запроса.
 /// </summary>
-public interface IRequestLocalizationContextAccessor
+public interface ILocalizationContextAccessor
 {
 	/// <summary>
 	/// Текущий контекст. 
 	/// </summary>
-	RequestLocalizationContext? Context { get; set; }
+	LocalizationContext? Context { get; set; }
 }
