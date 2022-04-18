@@ -1,9 +1,11 @@
-﻿namespace Mindbox.I18n.AspNetCore;
+﻿namespace Mindbox.I18n;
+
+#nullable enable
 
 /// <summary>
 /// Контекст локализации в рамках запроса.
 /// </summary>
-public class RequestLocalizationContext
+public class LocalizationContext
 {
 	/// <summary>
 	/// Язык пользователя.

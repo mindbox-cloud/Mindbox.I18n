@@ -1,11 +1,15 @@
-﻿namespace Mindbox.I18n.AspNetCore;
+﻿using System.Threading;
+
+namespace Mindbox.I18n;
+
+#nullable enable
 
 /// <inheritdoc />
-public class RequestLocalizationContextAccessor : IRequestLocalizationContextAccessor
+public class LocalizationContextAccessor : ILocalizationContextAccessor
 {
 	private static readonly AsyncLocal<ContextHolder> _sessionContextCurrent = new();
 
-	public RequestLocalizationContext? Context
+	public LocalizationContext? Context
 	{
 		get
 		{
@@ -31,6 +35,6 @@ public class RequestLocalizationContextAccessor : IRequestLocalizationContextAcc
 
 	private class ContextHolder
 	{
-		public RequestLocalizationContext? Context { get; set; }
+		public LocalizationContext? Context { get; set; }
 	}
 }

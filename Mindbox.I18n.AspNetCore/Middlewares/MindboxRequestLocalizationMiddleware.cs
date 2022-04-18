@@ -8,13 +8,13 @@ namespace Mindbox.I18n.AspNetCore;
 internal class MindboxRequestLocalizationMiddleware
 {
 	private readonly RequestDelegate next;
-	private readonly IRequestLocalizationContextAccessor accessor;
+	private readonly ILocalizationContextAccessor accessor;
 	private readonly IRequestLocalizationProvider[] localizationProviders;
 
 	public MindboxRequestLocalizationMiddleware(
 		RequestDelegate next,
 		IEnumerable<IRequestLocalizationProvider> localizationProviders,
-		IRequestLocalizationContextAccessor accessor)
+		ILocalizationContextAccessor accessor)
 	{
 		this.next = next;
 		this.localizationProviders = localizationProviders.ToArray();
@@ -34,7 +34,7 @@ internal class MindboxRequestLocalizationMiddleware
 			}
 		}
 
-		accessor.Context ??= new RequestLocalizationContext();
+		accessor.Context ??= new LocalizationContext();
 		accessor.Context.UserLocale = userLocale;
 
 		await next(context);
