@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace Mindbox.I18n.AspNetCore;
+namespace Mindbox.I18n;
 
 #nullable enable
 
