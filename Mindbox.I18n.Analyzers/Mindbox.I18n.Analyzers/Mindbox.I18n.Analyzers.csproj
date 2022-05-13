@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <None Include="$(OutputPath)\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-	<None Include="$(ProjectDir)\tools\*" Pack="true" PackagePath="tools" />
+    <None Include="$(ProjectDir)\tools\*" Pack="true" PackagePath="tools" />
     <None Include="$(ProjectDir)\..\Libraries\Newtonsoft.Json.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
 
