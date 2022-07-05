@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
@@ -13,18 +12,15 @@
     <NoPackageAnalysis>false</NoPackageAnalysis>
     <NoWarn>$(NoWarn);NU5128</NoWarn>
   </PropertyGroup>
-   
   <ItemGroup>
     <ProjectReference Include="..\..\Mindbox.I18n\Mindbox.I18n.csproj" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.5.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.5.0" PrivateAssets="all" />
   </ItemGroup>
-
   <ItemGroup>
     <None Include="$(OutputPath)\Mindbox.I18n.Analyzers.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(OutputPath)\Mindbox.I18n.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(ProjectDir)\tools\*" Pack="true" PackagePath="tools" />
     <None Include="$(ProjectDir)\..\Libraries\Newtonsoft.Json.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
-
 </Project>

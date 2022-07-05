@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 
 namespace Mindbox.I18n.AspNetCore;
 
@@ -15,5 +15,5 @@ public interface IRequestLocalizationProvider
 	///     Полученная <see cref="Locale"/>.
 	///     Возвращает <c>null</c> если определить язык не удалось.
 	/// </returns>
-	Task<Locale?> TryGetLocale(HttpContext httpContext);
+	Task<Locale?> TryGetLocaleAsync(HttpContext httpContext);
 }

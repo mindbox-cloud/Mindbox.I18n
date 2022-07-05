@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 
 using FluentAssertions;
 
@@ -15,67 +15,67 @@ namespace Mindbox.I18n.AspNetCore.Tests;
 [TestClass]
 public class MindboxRequestLocalizationMiddlewareTests
 {
-	private Mock<IRequestLocalizationProvider> localizationProviderMock;
-	private LocalizationContextAccessor accessor;
+	private Mock<IRequestLocalizationProvider> _localizationProviderMock;
+	private LocalizationContextAccessor _accessor;
 
 	[TestInitialize]
 	public void TestInitialize()
 	{
-		localizationProviderMock = new Mock<IRequestLocalizationProvider>();
-		accessor = new LocalizationContextAccessor();
+		_localizationProviderMock = new Mock<IRequestLocalizationProvider>();
+		_accessor = new LocalizationContextAccessor();
 	}
 
 	[TestCleanup]
 	public void TestCleanup()
 	{
-		localizationProviderMock.Verify();
-		localizationProviderMock.VerifyNoOtherCalls();
+		_localizationProviderMock.Verify();
+		_localizationProviderMock.VerifyNoOtherCalls();
 	}
 
 	[TestMethod]
 	public async Task Middleware_GetLocales_Success()
 	{
-		RequestDelegate next = _ =>
+		Task next(HttpContext _)
 		{
 			// проверяем тут, чтобы избежать смены контекста для AsyncLocal
-			accessor.Context.Should().NotBeNull();
-			accessor.Context.UserLocale.Should().NotBeNull();
-			accessor.Context.UserLocale.Should().Be(Locales.enUS);
+			_accessor.Context.Should().NotBeNull();
+			_accessor.Context.UserLocale.Should().NotBeNull();
+			_accessor.Context.UserLocale.Should().Be(Locales.enUS);
 			return Task.CompletedTask;
-		};
+		}
 
 		var middleware = CreateMiddleware(next);
 		var httpContext = Mock.Of<HttpContext>();
 
-		localizationProviderMock.Setup(x => x.TryGetLocale(httpContext)).ReturnsAsync(Locales.enUS).Verifiable();
+		_localizationProviderMock.Setup(x => x.TryGetLocaleAsync(httpContext)).ReturnsAsync(Locales.enUS).Verifiable();
 
-		await middleware.Invoke(httpContext).ConfigureAwait(false);
+		await middleware.InvokeAsync(httpContext).ConfigureAwait(false);
 	}
 
 	[TestMethod]
 	public async Task Middleware_GetLocales_When_NoHeader_Should_ReturnsNull()
 	{
-		RequestDelegate next = _ =>
+		Task next(HttpContext _)
 		{
 			// проверяем тут, чтобы избежать смены контекста для AsyncLocal
-			accessor.Context.Should().NotBeNull();
-			accessor.Context.UserLocale.Should().BeNull();
+			_accessor.Context.Should().NotBeNull();
+			_accessor.Context.UserLocale.Should().BeNull();
 			return Task.CompletedTask;
-		};
+		}
 
 		var middleware = CreateMiddleware(next);
 		var httpContext = Mock.Of<HttpContext>();
 
-		localizationProviderMock.Setup(x => x.TryGetLocale(httpContext)).ReturnsAsync(() => null).Verifiable();
+		_localizationProviderMock.Setup(x => x.TryGetLocaleAsync(httpContext)).ReturnsAsync(() => null).Verifiable();
 
-		await middleware.Invoke(httpContext).ConfigureAwait(false);
+		await middleware.InvokeAsync(httpContext).ConfigureAwait(false);
 	}
 
 	private MindboxRequestLocalizationMiddleware CreateMiddleware(RequestDelegate next)
 	{
 		return new MindboxRequestLocalizationMiddleware(
 			next,
-			new[] { localizationProviderMock.Object },
-			accessor);
+			new[] { _localizationProviderMock.Object },
+			_accessor);
 	}
 }

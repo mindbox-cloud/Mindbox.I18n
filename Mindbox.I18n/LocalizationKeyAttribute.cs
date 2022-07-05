@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 
-namespace Mindbox.I18n
+namespace Mindbox.I18n;
+
+[AttributeUsage(validOn: AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Parameter)]
+public class LocalizationKeyAttribute : Attribute
 {
-	[AttributeUsage(validOn:AttributeTargets.Field|AttributeTargets.Property|AttributeTargets.Parameter)]
-	public class LocalizationKeyAttribute : Attribute
-	{
-	}
 }

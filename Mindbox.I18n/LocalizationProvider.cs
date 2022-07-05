@@ -1,58 +1,57 @@
-﻿using System;
+using System;
 
-namespace Mindbox.I18n
+namespace Mindbox.I18n;
+
+public class LocalizationProvider
 {
-	public class LocalizationProvider
+	public InitializationOptions InitializationOptions { get; }
+
+	private readonly ITranslationSource _translationSource;
+
+	public LocalizationProvider(InitializationOptions options)
 	{
-		public InitializationOptions InitializationOptions { get; }
+		InitializationOptions = options;
+		_translationSource = options.TranslationSource;
+		_translationSource.Initialize();
 
-		private readonly ITranslationSource translationSource;
+		if (InitializationOptions.Logger == null)
+			throw new InvalidOperationException($"{nameof(InitializationOptions)} is null");
+	}
 
-		public LocalizationProvider(InitializationOptions options)
+	public string TryGetTranslation(Locale locale, string key)
+	{
+		try
 		{
-			InitializationOptions = options;
-			translationSource = options.TranslationSource;
-			translationSource.Initialize();
-
-			if (InitializationOptions.Logger == null)
-				throw new InvalidOperationException($"{nameof(InitializationOptions)} is null");
-		}
-
-		public string TryGetTranslation(Locale locale, string key)
-		{
-			try
+			var localizationKey = LocalizationKey.TryParse(key);
+			if (localizationKey == null)
 			{
-				var localizationKey = LocalizationKey.TryParse(key);
-				if (localizationKey == null)
-				{
-					InitializationOptions.Logger.LogInvalidKey(key);
-					return null;
-				}
-				return translationSource.TryGetTranslation(locale, localizationKey);
-			}
-			catch (Exception e)
-			{
-				InitializationOptions.Logger.LogError(e, $"Error occured while translating key {key}");
+				InitializationOptions.Logger.LogInvalidKey(key);
 				return null;
 			}
+			return _translationSource.TryGetTranslation(locale, localizationKey);
 		}
-
-		public string TryGetTranslation(Locale locale, LocalizationKey key)
+		catch (Exception e)
 		{
-			try
-			{
-				return translationSource.TryGetTranslation(locale, key);
-			}
-			catch (Exception e)
-			{
-				InitializationOptions.Logger.LogError(e, $"Error occured while translating key {key.FullKey}");
-				return null;
-			}
+			InitializationOptions.Logger.LogError(e, $"Error occured while translating key {key}");
+			return null;
 		}
+	}
 
-		public string Translate(Locale locale, string key)
+	public string TryGetTranslation(Locale locale, LocalizationKey key)
+	{
+		try
 		{
-			return TryGetTranslation(locale, key) ?? key;
+			return _translationSource.TryGetTranslation(locale, key);
 		}
+		catch (Exception e)
+		{
+			InitializationOptions.Logger.LogError(e, $"Error occured while translating key {key.FullKey}");
+			return null;
+		}
+	}
+
+	public string Translate(Locale locale, string key)
+	{
+		return TryGetTranslation(locale, key) ?? key;
 	}
 }

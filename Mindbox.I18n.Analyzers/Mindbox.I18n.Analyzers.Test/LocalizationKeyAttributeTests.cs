@@ -1,16 +1,17 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TestHelper;
 
-namespace Mindbox.I18n.Analyzers.Test
+namespace Mindbox.I18n.Analyzers.Test;
+
+[TestClass]
+public class LocalizationKeyAttributeTests : MindboxI18nAnalyzerTests
 {
-	[TestClass]
-	public class LocalizationKeyAttributeTests : MindboxI18nAnalyzerTests
+	[TestMethod]
+	public void KeyMustHaveCorrectFormat_AttributeConstructor_NamedArgument_WrongKeyFormatAsync()
 	{
-		[TestMethod]
-		public void KeyMustHaveCorrectFormat_AttributeConstructor_NamedArgument_WrongKeyFormat()
-		{
-			var test = @"
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -28,24 +29,25 @@ namespace Mindbox.I18n.Analyzers.Test
 		{
 		}
     }";
-			var expected = new DiagnosticResult
-			{
-				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
-				Message = BuildExpectedMessage("Кириллическая строка"),
-				Severity = DiagnosticSeverity.Error,
-				Locations =
-					new[] {
-						new DiagnosticResultLocation("Test0.cs", 14, 24)
-					}
-			};
-
-			VerifyCSharpDiagnostic(test, expected);
-		}
-
-		[TestMethod]
-		public void KeyMustHaveCorrectFormat_AttributeProperty_WrongKeyFormat()
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var expected = new DiagnosticResult
 		{
-			var test = @"
+			Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+			Message = BuildExpectedMessage("Кириллическая строка"),
+			Severity = DiagnosticSeverity.Error,
+			Locations =
+				new[] {
+					new DiagnosticResultLocation("Test0.cs", 14, 24)
+				}
+		};
+		VerifyCSharpDiagnostic(test, expected);
+	}
+
+	[TestMethod]
+	public void KeyMustHaveCorrectFormat_AttributeProperty_WrongKeyFormatAsync()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -66,24 +68,25 @@ namespace Mindbox.I18n.Analyzers.Test
 		{
 		}
     }";
-			var expected = new DiagnosticResult
-			{
-				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
-				Message = BuildExpectedMessage("Кириллическая строка"),
-				Severity = DiagnosticSeverity.Error,
-				Locations =
-					new[] {
-						new DiagnosticResultLocation("Test0.cs", 17, 26)
-					}
-			};
-
-			VerifyCSharpDiagnostic(test, expected);
-		}
-
-		[TestMethod]
-		public void KeyMustHaveCorrectFormat_AttributeField_WrongKeyFormat()
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var expected = new DiagnosticResult
 		{
-			var test = @"
+			Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+			Message = BuildExpectedMessage("Кириллическая строка"),
+			Severity = DiagnosticSeverity.Error,
+			Locations =
+				new[] {
+					new DiagnosticResultLocation("Test0.cs", 17, 26)
+				}
+		};
+		VerifyCSharpDiagnostic(test, expected);
+	}
+
+	[TestMethod]
+	public void KeyMustHaveCorrectFormat_AttributeField_WrongKeyFormatAsync()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -104,24 +107,25 @@ namespace Mindbox.I18n.Analyzers.Test
 		{
 		}
     }";
-			var expected = new DiagnosticResult
-			{
-				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
-				Message = BuildExpectedMessage("Кириллическая строка"),
-				Severity = DiagnosticSeverity.Error,
-				Locations =
-					new[] {
-						new DiagnosticResultLocation("Test0.cs", 17, 26)
-					}
-			};
-
-			VerifyCSharpDiagnostic(test, expected);
-		}
-
-		[TestMethod]
-		public void KeyMustHaveCorrectFormat_AttributeField_CorrectKey()
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var expected = new DiagnosticResult
 		{
-			var test = @"
+			Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+			Message = BuildExpectedMessage("Кириллическая строка"),
+			Severity = DiagnosticSeverity.Error,
+			Locations =
+				new[] {
+					new DiagnosticResultLocation("Test0.cs", 17, 26)
+				}
+		};
+		VerifyCSharpDiagnostic(test, expected);
+	}
+
+	[TestMethod]
+	public void KeyMustHaveCorrectFormat_AttributeField_CorrectKeyAsync()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -142,13 +146,15 @@ namespace Mindbox.I18n.Analyzers.Test
 		{
 		}
     }";
-			VerifyCSharpDiagnostic(test);
-		}
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		VerifyCSharpDiagnostic(test);
+	}
 
-		[TestMethod]
-		public void KeyMustHaveCorrectFormat_AttributeConstructor_CorrectKey()
-		{
-			var test = @"
+	[TestMethod]
+	public void KeyMustHaveCorrectFormat_AttributeConstructor_CorrectKeyAsync()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -166,14 +172,15 @@ namespace Mindbox.I18n.Analyzers.Test
 		{
 		}
     }";
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		VerifyCSharpDiagnostic(test);
+	}
 
-			VerifyCSharpDiagnostic(test);
-		}
-
-		[TestMethod]
-		public void KeyMustHaveCorrectFormat_AttributeConstructor_WrongKeyFormat()
-		{
-			var test = @"
+	[TestMethod]
+	public void KeyMustHaveCorrectFormat_AttributeConstructor_WrongKeyFormatAsync()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -191,24 +198,25 @@ namespace Mindbox.I18n.Analyzers.Test
 		{
 		}
     }";
-			var expected = new DiagnosticResult
-			{
-				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
-				Message = BuildExpectedMessage("Кириллическая строка"),
-				Severity = DiagnosticSeverity.Error,
-				Locations =
-					new[] {
-						new DiagnosticResultLocation("Test0.cs", 14, 18)
-					}
-			};
-
-			VerifyCSharpDiagnostic(test, expected);
-		}
-
-		[TestMethod]
-		public void KeyMustHaveCorrectFormat_FieldWithAttribute()
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var expected = new DiagnosticResult
 		{
-			var test = @"
+			Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+			Message = BuildExpectedMessage("Кириллическая строка"),
+			Severity = DiagnosticSeverity.Error,
+			Locations =
+				new[] {
+					new DiagnosticResultLocation("Test0.cs", 14, 18)
+				}
+		};
+		VerifyCSharpDiagnostic(test, expected);
+	}
+
+	[TestMethod]
+	public void KeyMustHaveCorrectFormat_FieldWithAttributeAsync()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -224,24 +232,25 @@ namespace Mindbox.I18n.Analyzers.Test
 			}
 		}
     }";
-			var expected = new DiagnosticResult
-			{
-				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
-				Message = BuildExpectedMessage("Кириллическая строка"),
-				Severity = DiagnosticSeverity.Error,
-				Locations =
-					new[] {
-						new DiagnosticResultLocation("Test0.cs", 13, 13)
-					}
-			};
-
-			VerifyCSharpDiagnostic(test, expected);
-		}
-
-		[TestMethod]
-		public void KeyMustHaveCorrectFormat_PropertyWithAttribute()
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var expected = new DiagnosticResult
 		{
-			var test = @"
+			Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+			Message = BuildExpectedMessage("Кириллическая строка"),
+			Severity = DiagnosticSeverity.Error,
+			Locations =
+				new[] {
+					new DiagnosticResultLocation("Test0.cs", 13, 13)
+				}
+		};
+		VerifyCSharpDiagnostic(test, expected);
+	}
+
+	[TestMethod]
+	public void KeyMustHaveCorrectFormat_PropertyWithAttributeAsync()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -257,24 +266,25 @@ namespace Mindbox.I18n.Analyzers.Test
 			}
 		}
     }";
-			var expected = new DiagnosticResult
-			{
-				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
-				Message = BuildExpectedMessage("Кириллическая строка"),
-				Severity = DiagnosticSeverity.Error,
-				Locations =
-					new[] {
-						new DiagnosticResultLocation("Test0.cs", 13, 13)
-					}
-			};
-
-			VerifyCSharpDiagnostic(test, expected);
-		}
-
-		[TestMethod]
-		public void KeyMustHaveCorrectFormat_PropertyWithAttribute_Initializer()
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var expected = new DiagnosticResult
 		{
-			var test = @"
+			Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+			Message = BuildExpectedMessage("Кириллическая строка"),
+			Severity = DiagnosticSeverity.Error,
+			Locations =
+				new[] {
+					new DiagnosticResultLocation("Test0.cs", 13, 13)
+				}
+		};
+		VerifyCSharpDiagnostic(test, expected);
+	}
+
+	[TestMethod]
+	public void KeyMustHaveCorrectFormat_PropertyWithAttribute_InitializerAsync()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -285,24 +295,25 @@ namespace Mindbox.I18n.Analyzers.Test
 			string Property {get; set;} = ""Кириллическая строка"";
 		}
     }";
-			var expected = new DiagnosticResult
-			{
-				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
-				Message = BuildExpectedMessage("Кириллическая строка"),
-				Severity = DiagnosticSeverity.Error,
-				Locations =
-					new[] {
-						new DiagnosticResultLocation("Test0.cs", 9, 34)
-					}
-			};
-
-			VerifyCSharpDiagnostic(test, expected);
-		}
-
-		[TestMethod]
-		public void KeyMustHaveCorrectFormat_FieldWithAttribute_Initializer()
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var expected = new DiagnosticResult
 		{
-			var test = @"
+			Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+			Message = BuildExpectedMessage("Кириллическая строка"),
+			Severity = DiagnosticSeverity.Error,
+			Locations =
+				new[] {
+					new DiagnosticResultLocation("Test0.cs", 9, 34)
+				}
+		};
+		VerifyCSharpDiagnostic(test, expected);
+	}
+
+	[TestMethod]
+	public void KeyMustHaveCorrectFormat_FieldWithAttribute_InitializerAsync()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -313,24 +324,25 @@ namespace Mindbox.I18n.Analyzers.Test
 			string Field = ""Кириллическая строка"";
 		}
     }";
-			var expected = new DiagnosticResult
-			{
-				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
-				Message = BuildExpectedMessage("Кириллическая строка"),
-				Severity = DiagnosticSeverity.Error,
-				Locations =
-					new[] {
-						new DiagnosticResultLocation("Test0.cs", 9, 19)
-					}
-			};
-
-			VerifyCSharpDiagnostic(test, expected);
-		}
-
-		[TestMethod]
-		public void KeyMustHaveCorrectFormat_ArgumentWithAttribute()
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var expected = new DiagnosticResult
 		{
-			var test = @"
+			Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+			Message = BuildExpectedMessage("Кириллическая строка"),
+			Severity = DiagnosticSeverity.Error,
+			Locations =
+				new[] {
+					new DiagnosticResultLocation("Test0.cs", 9, 19)
+				}
+		};
+		VerifyCSharpDiagnostic(test, expected);
+	}
+
+	[TestMethod]
+	public void KeyMustHaveCorrectFormat_ArgumentWithAttributeAsync()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -347,24 +359,25 @@ namespace Mindbox.I18n.Analyzers.Test
 			}
 		}
     }";
-			var expected = new DiagnosticResult
-			{
-				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
-				Message = BuildExpectedMessage("Кириллическая строка"),
-				Severity = DiagnosticSeverity.Error,
-				Locations =
-					new[] {
-						new DiagnosticResultLocation("Test0.cs", 14, 29)
-					}
-			};
-
-			VerifyCSharpDiagnostic(test, expected);
-		}
-
-		[TestMethod]
-		public void KeyMustHaveCorrectFormat_ArgumentWithAttribute_ComplexArgument()
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var expected = new DiagnosticResult
 		{
-			var test = @"
+			Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+			Message = BuildExpectedMessage("Кириллическая строка"),
+			Severity = DiagnosticSeverity.Error,
+			Locations =
+				new[] {
+					new DiagnosticResultLocation("Test0.cs", 14, 29)
+				}
+		};
+		VerifyCSharpDiagnostic(test, expected);
+	}
+
+	[TestMethod]
+	public void KeyMustHaveCorrectFormat_ArgumentWithAttribute_ComplexArgumentAsync()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -381,35 +394,36 @@ namespace Mindbox.I18n.Analyzers.Test
 			}
 		}
     }";
-			var whenTrueBranchDiagnostic = new DiagnosticResult
-			{
-				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
-				Message = BuildExpectedMessage("Кириллическая строка"),
-				Severity = DiagnosticSeverity.Error,
-				Locations =
-					new[] {
-						new DiagnosticResultLocation("Test0.cs", 14, 36),
-					}
-			};
-
-			var whenFalseBranchDiagnostic = new DiagnosticResult
-			{
-				Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
-				Message = BuildExpectedMessage("12312"),
-				Severity = DiagnosticSeverity.Error,
-				Locations =
-					new[] {
-						new DiagnosticResultLocation("Test0.cs", 14, 61),
-					}
-			};
-
-			VerifyCSharpDiagnostic(test, whenTrueBranchDiagnostic, whenFalseBranchDiagnostic);
-		}
-
-		[TestMethod]
-		public void KeyMustHaveCorrectFormat_AssignmentFromAttributedMember_NoDiagnostics()
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var whenTrueBranchDiagnostic = new DiagnosticResult
 		{
-			var test = @"
+			Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+			Message = BuildExpectedMessage("Кириллическая строка"),
+			Severity = DiagnosticSeverity.Error,
+			Locations =
+				new[] {
+					new DiagnosticResultLocation("Test0.cs", 14, 36),
+				}
+		};
+
+		var whenFalseBranchDiagnostic = new DiagnosticResult
+		{
+			Id = Diagnostics.KeyMustHaveCorrectFormat.Id,
+			Message = BuildExpectedMessage("12312"),
+			Severity = DiagnosticSeverity.Error,
+			Locations =
+				new[] {
+					new DiagnosticResultLocation("Test0.cs", 14, 61),
+				}
+		};
+		VerifyCSharpDiagnostic(test, whenTrueBranchDiagnostic, whenFalseBranchDiagnostic);
+	}
+
+	[TestMethod]
+	public void KeyMustHaveCorrectFormat_AssignmentFromAttributedMember_NoDiagnosticsAsync()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -426,13 +440,15 @@ namespace Mindbox.I18n.Analyzers.Test
 			}
 		}
     }";
-			VerifyCSharpDiagnostic(test);
-		}
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		VerifyCSharpDiagnostic(test);
+	}
 
-		[TestMethod]
-		public void KeyMustHaveCorrectFormat_AttributedMemberAsArgument_NoDiagnostics()
-		{
-			var test = @"
+	[TestMethod]
+	public void KeyMustHaveCorrectFormat_AttributedMemberAsArgument_NoDiagnosticsAsync()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -454,18 +470,17 @@ namespace Mindbox.I18n.Analyzers.Test
 			}
 		}
     }";
-			VerifyCSharpDiagnostic(test);
-		}
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		VerifyCSharpDiagnostic(test);
+	}
 
-		protected override MindboxI18nAnalyzer CreateAnalyzer()
-		{
-			return new MindboxI18nAnalyzer();
-		}
+	protected override MindboxI18nAnalyzer CreateAnalyzer()
+	{
+		return new MindboxI18nAnalyzer();
+	}
 
-		private string BuildExpectedMessage(string key)
-		{
-			return string.Format(Diagnostics.KeyMustHaveCorrectFormat.MessageFormat.ToString(), key);
-		}
-
+	private string BuildExpectedMessage(string key)
+	{
+		return string.Format(Diagnostics.KeyMustHaveCorrectFormat.MessageFormat.ToString(), key);
 	}
 }

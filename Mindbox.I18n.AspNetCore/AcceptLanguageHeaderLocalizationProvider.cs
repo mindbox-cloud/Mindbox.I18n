@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Net.Http.Headers;
 
@@ -10,7 +10,7 @@ namespace Mindbox.I18n.AspNetCore;
 /// </summary>
 public class AcceptLanguageHeaderLocalizationProvider : IRequestLocalizationProvider
 {
-	private static readonly Task<Locale?> nullProviderCultureResult = Task.FromResult((Locale?)null);
+	private static readonly Task<Locale?> _nullProviderCultureResult = Task.FromResult((Locale?)null);
 
 	/// <summary>
 	/// Максимальное число значений из Accept-Language заголовка для попыток получения локализации.
@@ -18,13 +18,13 @@ public class AcceptLanguageHeaderLocalizationProvider : IRequestLocalizationProv
 	/// </summary>
 	public int MaximumAcceptLanguageHeaderValuesToTry { get; init; } = 3;
 
-	public Task<Locale?> TryGetLocale(HttpContext httpContext)
+	public Task<Locale?> TryGetLocaleAsync(HttpContext httpContext)
 	{
 		var acceptLanguageHeader = httpContext.Request.GetTypedHeaders().AcceptLanguage;
 
 		if (acceptLanguageHeader.Count == 0)
 		{
-			return nullProviderCultureResult;
+			return _nullProviderCultureResult;
 		}
 
 		var languages = acceptLanguageHeader.AsEnumerable();
@@ -37,8 +37,8 @@ public class AcceptLanguageHeaderLocalizationProvider : IRequestLocalizationProv
 		}
 
 		foreach (var language in languages
-			         .OrderByDescending(h => h, StringWithQualityHeaderValueComparer.QualityComparer)
-			         .Select(x => x.Value))
+					 .OrderByDescending(h => h, StringWithQualityHeaderValueComparer.QualityComparer)
+					 .Select(x => x.Value))
 		{
 			var locale = Locales.TryGetByName(language.Value);
 			if (locale != null)
@@ -47,6 +47,6 @@ public class AcceptLanguageHeaderLocalizationProvider : IRequestLocalizationProv
 			}
 		}
 
-		return nullProviderCultureResult;
+		return _nullProviderCultureResult;
 	}
 }
