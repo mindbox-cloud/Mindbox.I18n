@@ -8,7 +8,7 @@ namespace Mindbox.I18n.Analyzers.Test;
 public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 {
 	[TestMethod]
-	public void OnlyStringLiteralsCanBeUsed_CorrectKey_NoDiagnosticsAsync()
+	public void OnlyStringLiteralsCanBeUsed_CorrectKey_NoDiagnostics()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -29,7 +29,7 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void OnlyStringLiteralsCanBeUsed_CorrectKeyUsingConditionalExpression_NoDiagnosticsAsync()
+	public void OnlyStringLiteralsCanBeUsed_CorrectKeyUsingConditionalExpression_NoDiagnostics()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -50,7 +50,7 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void OnlyStringLiteralsCanBeUsed_StringInterpolation_ErrorAsync()
+	public void OnlyStringLiteralsCanBeUsed_StringInterpolation_Error()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -81,7 +81,7 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void OnlyStringLiteralsCanBeUsed_StringFormat_ErrorAsync()
+	public void OnlyStringLiteralsCanBeUsed_StringFormat_Error()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -112,7 +112,7 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void OnlyStringLiteralsCanBeUsed_ExplicitConversion_ErrorAsync()
+	public void OnlyStringLiteralsCanBeUsed_ExplicitConversion_Error()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -143,7 +143,7 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void OnlyStringLiteralsCanBeUsed_LocalStringVariable_ErrorAsync()
+	public void OnlyStringLiteralsCanBeUsed_LocalStringVariable_Error()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -174,7 +174,7 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void OnlyStringLiteralsCanBeUsed_MethodArgumentIsLocalizableString_ErrorAsync()
+	public void OnlyStringLiteralsCanBeUsed_MethodArgumentIsLocalizableString_Error()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -211,7 +211,7 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void OnlyStringLiteralsCanBeUsed_StringMemberAccess_ErrorAsync()
+	public void OnlyStringLiteralsCanBeUsed_StringMemberAccess_Error()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -244,7 +244,7 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void OnlyStringLiteralsCanBeUsed_StringConditionalMemberAccess_ErrorAsync()
+	public void OnlyStringLiteralsCanBeUsed_StringConditionalMemberAccess_Error()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -278,7 +278,7 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void OnlyStringLiteralsCanBeUsed_StringConcatenation_ErrorAsync()
+	public void OnlyStringLiteralsCanBeUsed_StringConcatenation_Error()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -309,7 +309,7 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void OnlyStringLiteralsCanBeUsed_LocalizableStringAssignedToLocalizableString_NoDiagnosticsAsync()
+	public void OnlyStringLiteralsCanBeUsed_LocalizableStringAssignedToLocalizableString_NoDiagnostics()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"

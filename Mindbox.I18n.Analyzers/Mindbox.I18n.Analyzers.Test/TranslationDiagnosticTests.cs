@@ -20,7 +20,7 @@ public class TranslationDiagnosticTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void TranslationAnalysis_TranslationExists_InfoAsync()
+	public void TranslationAnalysis_TranslationExists_Info()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -48,7 +48,7 @@ public class TranslationDiagnosticTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void TranslationAnalysis_TranslationNotFound_ErrorAsync()
+	public void TranslationAnalysis_TranslationNotFound_Error()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"

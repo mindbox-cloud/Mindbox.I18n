@@ -8,7 +8,7 @@ namespace Mindbox.I18n.Analyzers.Test;
 public class LocalizationKeyAttributeTests : MindboxI18nAnalyzerTests
 {
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_AttributeConstructor_NamedArgument_WrongKeyFormatAsync()
+	public void KeyMustHaveCorrectFormat_AttributeConstructor_NamedArgument_WrongKeyFormat()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -44,7 +44,7 @@ public class LocalizationKeyAttributeTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_AttributeProperty_WrongKeyFormatAsync()
+	public void KeyMustHaveCorrectFormat_AttributeProperty_WrongKeyFormat()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -83,7 +83,7 @@ public class LocalizationKeyAttributeTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_AttributeField_WrongKeyFormatAsync()
+	public void KeyMustHaveCorrectFormat_AttributeField_WrongKeyFormat()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -122,7 +122,7 @@ public class LocalizationKeyAttributeTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_AttributeField_CorrectKeyAsync()
+	public void KeyMustHaveCorrectFormat_AttributeField_CorrectKey()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -151,7 +151,7 @@ public class LocalizationKeyAttributeTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_AttributeConstructor_CorrectKeyAsync()
+	public void KeyMustHaveCorrectFormat_AttributeConstructor_CorrectKey()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -177,7 +177,7 @@ public class LocalizationKeyAttributeTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_AttributeConstructor_WrongKeyFormatAsync()
+	public void KeyMustHaveCorrectFormat_AttributeConstructor_WrongKeyFormat()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -213,7 +213,7 @@ public class LocalizationKeyAttributeTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_FieldWithAttributeAsync()
+	public void KeyMustHaveCorrectFormat_FieldWithAttribute()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -247,7 +247,7 @@ public class LocalizationKeyAttributeTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_PropertyWithAttributeAsync()
+	public void KeyMustHaveCorrectFormat_PropertyWithAttribute()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -281,7 +281,7 @@ public class LocalizationKeyAttributeTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_PropertyWithAttribute_InitializerAsync()
+	public void KeyMustHaveCorrectFormat_PropertyWithAttribute_Initializer()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -310,7 +310,7 @@ public class LocalizationKeyAttributeTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_FieldWithAttribute_InitializerAsync()
+	public void KeyMustHaveCorrectFormat_FieldWithAttribute_Initializer()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -339,7 +339,7 @@ public class LocalizationKeyAttributeTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_ArgumentWithAttributeAsync()
+	public void KeyMustHaveCorrectFormat_ArgumentWithAttribute()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -374,7 +374,7 @@ public class LocalizationKeyAttributeTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_ArgumentWithAttribute_ComplexArgumentAsync()
+	public void KeyMustHaveCorrectFormat_ArgumentWithAttribute_ComplexArgument()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -420,7 +420,7 @@ public class LocalizationKeyAttributeTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_AssignmentFromAttributedMember_NoDiagnosticsAsync()
+	public void KeyMustHaveCorrectFormat_AssignmentFromAttributedMember_NoDiagnostics()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -445,7 +445,7 @@ public class LocalizationKeyAttributeTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_AttributedMemberAsArgument_NoDiagnosticsAsync()
+	public void KeyMustHaveCorrectFormat_AttributedMemberAsArgument_NoDiagnostics()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"

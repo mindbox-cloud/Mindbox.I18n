@@ -8,7 +8,7 @@ namespace Mindbox.I18n.Analyzers.Test;
 public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 {
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_VariableAssignment_CorrectKeyFormat_NoDiagnosticsAsync()
+	public void KeyMustHaveCorrectFormat_VariableAssignment_CorrectKeyFormat_NoDiagnostics()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -29,7 +29,7 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_VariableAssignment_CyryllicValue_ErrorAsync()
+	public void KeyMustHaveCorrectFormat_VariableAssignment_CyryllicValue_Error()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -61,7 +61,7 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_VariableInitializer_CyryllicValue_ErrorAsync()
+	public void KeyMustHaveCorrectFormat_VariableInitializer_CyryllicValue_Error()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -92,7 +92,7 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_VariableAssignment_NoNamespace_ErrorAsync()
+	public void KeyMustHaveCorrectFormat_VariableAssignment_NoNamespace_Error()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -123,7 +123,7 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_VariableAssignment_UnwantedSpaces_ErrorAsync()
+	public void KeyMustHaveCorrectFormat_VariableAssignment_UnwantedSpaces_Error()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -154,7 +154,7 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_MethodArgument_CyryllicValue_ErrorAsync()
+	public void KeyMustHaveCorrectFormat_MethodArgument_CyryllicValue_Error()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -189,7 +189,7 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_FieldInitializer_ErrorAsync()
+	public void KeyMustHaveCorrectFormat_FieldInitializer_Error()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -217,7 +217,7 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_PropertyInitializer_ErrorAsync()
+	public void KeyMustHaveCorrectFormat_PropertyInitializer_Error()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -245,7 +245,7 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_PropertyAssignment_CyryllicValue_ErrorAsync()
+	public void KeyMustHaveCorrectFormat_PropertyAssignment_CyryllicValue_Error()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -278,7 +278,7 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_Constructor_CyryllicValue_ErrorAsync()
+	public void KeyMustHaveCorrectFormat_Constructor_CyryllicValue_Error()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
@@ -313,7 +313,7 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	}
 
 	[TestMethod]
-	public void KeyMustHaveCorrectFormat_ReturnValue_CyryllicValue_ErrorAsync()
+	public void KeyMustHaveCorrectFormat_ReturnValue_CyryllicValue_Error()
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
