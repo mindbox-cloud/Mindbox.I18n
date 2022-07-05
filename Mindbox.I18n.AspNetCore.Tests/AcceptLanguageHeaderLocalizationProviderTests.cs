@@ -19,7 +19,7 @@ public class AcceptLanguageHeaderLocalizationProviderTests
 	{
 		var httpContext = CreateContext("ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7");
 
-		var result = await _provider.TryGetLocaleAsync(httpContext);
+		var result = await _provider.TryGetLocale(httpContext);
 
 		result.Should().NotBeNull();
 		result.Name.Should().Be("ru-RU");
@@ -30,7 +30,7 @@ public class AcceptLanguageHeaderLocalizationProviderTests
 	{
 		var httpContext = CreateContext("en-GB,en;q=0.9,en-US;q=0.8,en;q=0.7");
 
-		var result = await _provider.TryGetLocaleAsync(httpContext);
+		var result = await _provider.TryGetLocale(httpContext);
 
 		result.Should().NotBeNull();
 		result.Name.Should().Be("en-US");
@@ -41,7 +41,7 @@ public class AcceptLanguageHeaderLocalizationProviderTests
 	{
 		var httpContext = CreateContext("en-GB,en;q=0.9,fr-FR;q=0.8,en;q=0.7");
 
-		var result = await _provider.TryGetLocaleAsync(httpContext);
+		var result = await _provider.TryGetLocale(httpContext);
 
 		result.Should().BeNull();
 	}

@@ -47,9 +47,9 @@ public class MindboxRequestLocalizationMiddlewareTests
 		var middleware = CreateMiddleware(next);
 		var httpContext = Mock.Of<HttpContext>();
 
-		_localizationProviderMock.Setup(x => x.TryGetLocaleAsync(httpContext)).ReturnsAsync(Locales.enUS).Verifiable();
+		_localizationProviderMock.Setup(x => x.TryGetLocale(httpContext)).ReturnsAsync(Locales.enUS).Verifiable();
 
-		await middleware.InvokeAsync(httpContext).ConfigureAwait(false);
+		await middleware.Invoke(httpContext).ConfigureAwait(false);
 	}
 
 	[TestMethod]
@@ -66,9 +66,9 @@ public class MindboxRequestLocalizationMiddlewareTests
 		var middleware = CreateMiddleware(next);
 		var httpContext = Mock.Of<HttpContext>();
 
-		_localizationProviderMock.Setup(x => x.TryGetLocaleAsync(httpContext)).ReturnsAsync(() => null).Verifiable();
+		_localizationProviderMock.Setup(x => x.TryGetLocale(httpContext)).ReturnsAsync(() => null).Verifiable();
 
-		await middleware.InvokeAsync(httpContext).ConfigureAwait(false);
+		await middleware.Invoke(httpContext).ConfigureAwait(false);
 	}
 
 	private MindboxRequestLocalizationMiddleware CreateMiddleware(RequestDelegate next)

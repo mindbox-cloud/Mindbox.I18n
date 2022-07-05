@@ -21,13 +21,15 @@ internal class MindboxRequestLocalizationMiddleware
 		_accessor = accessor;
 	}
 
-	public async Task InvokeAsync(HttpContext context)
+#pragma warning disable VSTHRD200 // Use "Async" suffix for async methods
+	public async Task Invoke(HttpContext context)
+#pragma warning restore VSTHRD200 // Use "Async" suffix for async methods
 	{
 		// язык пользователя
 		Locale? userLocale = null;
 		foreach (var provider in _localizationProviders)
 		{
-			userLocale = await provider.TryGetLocaleAsync(context);
+			userLocale = await provider.TryGetLocale(context);
 			if (userLocale != null)
 			{
 				break;

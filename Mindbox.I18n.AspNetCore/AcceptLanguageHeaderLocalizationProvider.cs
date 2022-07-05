@@ -18,7 +18,7 @@ public class AcceptLanguageHeaderLocalizationProvider : IRequestLocalizationProv
 	/// </summary>
 	public int MaximumAcceptLanguageHeaderValuesToTry { get; init; } = 3;
 
-	public Task<Locale?> TryGetLocaleAsync(HttpContext httpContext)
+	public Task<Locale?> TryGetLocale(HttpContext httpContext)
 	{
 		var acceptLanguageHeader = httpContext.Request.GetTypedHeaders().AcceptLanguage;
 

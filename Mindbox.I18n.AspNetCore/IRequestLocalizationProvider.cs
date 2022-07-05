@@ -15,5 +15,7 @@ public interface IRequestLocalizationProvider
 	///     Полученная <see cref="Locale"/>.
 	///     Возвращает <c>null</c> если определить язык не удалось.
 	/// </returns>
-	Task<Locale?> TryGetLocaleAsync(HttpContext httpContext);
+#pragma warning disable VSTHRD200 // Use "Async" suffix for async methods
+	Task<Locale?> TryGetLocale(HttpContext httpContext);
+#pragma warning restore VSTHRD200 // Use "Async" suffix for async methods
 }
