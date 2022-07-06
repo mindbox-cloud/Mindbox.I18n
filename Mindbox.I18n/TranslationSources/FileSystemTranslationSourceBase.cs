@@ -1,69 +1,68 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Mindbox.I18n
+namespace Mindbox.I18n;
+
+public abstract class FileSystemTranslationSourceBase : ITranslationSource
 {
-	public abstract class FileSystemTranslationSourceBase : ITranslationSource
+	protected const string TranslationFileSuffix = ".i18n.json";
+
+	private static readonly Regex _translationFileRegex = new(
+		$@"([^\\\/]+)\.([^\\\/]+){Regex.Escape(TranslationFileSuffix)}$",
+		RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+	private readonly Dictionary<string, TranslationData> _translationsPerLocale;
+	protected ILogger Logger { get; }
+
+	protected FileSystemTranslationSourceBase(IReadOnlyList<Locale> supportedLocales, ILogger logger)
 	{
-		protected const string TranslationFileSuffix = ".i18n.json";
+		Logger = logger;
+		_translationsPerLocale = supportedLocales.ToDictionary(
+			locale => locale.Name,
+			locale => new TranslationData(locale, Logger));
+	}
 
-		private static readonly Regex TranslationFileRegex = new Regex(
-			$@"([^\\\/]+)\.([^\\\/]+){Regex.Escape(TranslationFileSuffix)}$",
-			RegexOptions.IgnoreCase | RegexOptions.Compiled);
+	public virtual void Initialize()
+	{
+		LoadTranslationFiles();
+	}
 
-		private readonly Dictionary<string, TranslationData> translationsPerLocale;
-		protected ILogger Logger { get; }
+	protected void LoadTranslationFiles()
+	{
+		var translationFiles = GetTranslationFiles()
+			.Select(PathHelpers.ConvertToUnixPath)
+			.ToList();
 
-		protected FileSystemTranslationSourceBase(IReadOnlyList<Locale> supportedLocales, ILogger logger)
+		foreach (var translationFile in translationFiles)
 		{
-			Logger = logger;
-			translationsPerLocale = supportedLocales.ToDictionary(
-				locale => locale.Name,
-				locale => new TranslationData(locale, Logger));
+			LoadTranslationFile(translationFile);
+		}
+	}
+
+	protected void LoadTranslationFile(string translationFile)
+	{
+		var translationFileRegexMatch = _translationFileRegex.Match(translationFile);
+		if (translationFileRegexMatch.Success)
+		{
+			var @namespace = translationFileRegexMatch.Groups[1].Value;
+			var localeName = translationFileRegexMatch.Groups[2].Value;
+
+			if (_translationsPerLocale.TryGetValue(localeName, out var translationData))
+				translationData.AddOrUpdateNamespace(@namespace, translationFile);
+		}
+	}
+
+	protected abstract IEnumerable<string> GetTranslationFiles();
+
+	public string TryGetTranslation(Locale locale, LocalizationKey localizationKey)
+	{
+		if (!_translationsPerLocale.TryGetValue(locale.Name, out var translationData))
+		{
+			Logger.LogMissingLocale(locale, localizationKey.FullKey);
+			return null;
 		}
 
-		public virtual void Initialize()
-		{
-			LoadTranslationFiles();
-		}
-
-		protected void LoadTranslationFiles()
-		{
-			var translationFiles = GetTranslationFiles()
-				.Select(PathHelpers.ConvertToUnixPath)
-				.ToList();
-
-			foreach (var translationFile in translationFiles)
-			{
-				LoadTranslationFile(translationFile);
-			}
-		}
-
-		protected void LoadTranslationFile(string translationFile)
-		{
-			var translationFileRegexMatch = TranslationFileRegex.Match(translationFile);
-			if (translationFileRegexMatch.Success)
-			{
-				var @namespace = translationFileRegexMatch.Groups[1].Value;
-				var localeName = translationFileRegexMatch.Groups[2].Value;
-
-				if (translationsPerLocale.TryGetValue(localeName, out var translationData))
-					translationData.AddOrUpdateNamespace(@namespace, translationFile);
-			}
-		}
-
-		protected abstract IEnumerable<string> GetTranslationFiles();
-
-		public string TryGetTranslation(Locale locale, LocalizationKey localizationKey)
-		{
-			if (!translationsPerLocale.TryGetValue(locale.Name, out var translationData))
-			{
-				Logger.LogMissingLocale(locale, localizationKey.FullKey);
-				return null;
-			}
-
-			return translationData.TryGetTranslation(localizationKey);
-		}
+		return translationData.TryGetTranslation(localizationKey);
 	}
 }

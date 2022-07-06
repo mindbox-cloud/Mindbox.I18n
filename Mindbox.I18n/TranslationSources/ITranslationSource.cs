@@ -1,9 +1,8 @@
-﻿namespace Mindbox.I18n
-{
-	public interface ITranslationSource
-	{
-		void Initialize();
+namespace Mindbox.I18n;
 
-		string TryGetTranslation(Locale locale, LocalizationKey localizationKey);
-	}
+public interface ITranslationSource
+{
+	void Initialize();
+
+	string TryGetTranslation(Locale locale, LocalizationKey localizationKey);
 }

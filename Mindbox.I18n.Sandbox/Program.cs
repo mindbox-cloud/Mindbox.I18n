@@ -1,30 +1,26 @@
-﻿using System;
+namespace Mindbox.I18n.Sandbox;
 
-namespace Mindbox.I18n.Sandbox
+internal class Program
 {
-    class Program
-    {
-        static void Main(string[] args)
-        {
-			// Incorrect key
-			LocalizableString sss = "Abacaba";
+	private static void Main(string[] _1)
+	{
+		// Incorrect key
+		_ = "Abacaba";
 
-			// Correct key, should be found
-	        LocalizableString s = "Cars:Bntl";
+		// Correct key, should be found
+		_ = "Cars:Bntl";
 
-			// Correct key, should be found
-			LocalizableString s2 = "Bands:DeathCab";
+		// Correct key, should be found
+		_ = "Bands:DeathCab";
 
-			// Correct key but doesn't have a translation
-			LocalizableString s3 = "Bands:SomeUnknownGuys"; 
+		// Correct key but doesn't have a translation
+		_ = "Bands:SomeUnknownGuys";
 
-			// Correct key but doesn't have a translation
-			LocalizableString s4 = "Bands:UnknownAtTheBeginning";
+		// Correct key but doesn't have a translation
+		_ = "Bands:UnknownAtTheBeginning";
 
-			// Should be an error because the translation file is ignored by the configuration
-	        LocalizableString coke = "Drinks:Coke";
-
-			LocalizableString strange = $"Try {"that"}";
-        }
-    }
+		// Should be an error because the translation file is ignored by the configuration
+		_ = "Drinks:Coke";
+		_ = $"Try {"that"}";
+	}
 }

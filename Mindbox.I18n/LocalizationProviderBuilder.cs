@@ -1,49 +1,46 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Mindbox.I18n
+namespace Mindbox.I18n;
+
+public class LocalizationProviderBuilder
 {
-	public class LocalizationProviderBuilder
+	private readonly HashSet<string> _supportedLanguages = new();
+	private ILogger _logger;
+	private ITranslationSource _translationSource;
+
+	public LocalizationProviderBuilder WithSupportedLanguage(string language)
 	{
-		private readonly HashSet<string> supportedLanguages = new HashSet<string>();
-		private ILogger logger;
-		private ITranslationSource translationSource;
+		_supportedLanguages.Add(language);
+		return this;
+	}
 
-		public LocalizationProviderBuilder WithSupportedLanguage(string language)
+	public LocalizationProviderBuilder WithLogger(ILogger logger)
+	{
+		if (_logger != null)
+			throw new InvalidOperationException("You can't set logger twice");
+
+		_logger = logger;
+		return this;
+	}
+
+	public LocalizationProviderBuilder WithTranslationSource(ITranslationSource translationSource)
+	{
+		if (_translationSource != null)
+			throw new InvalidOperationException("You can't set translation source twice");
+
+		_translationSource = translationSource ?? throw new ArgumentNullException(nameof(translationSource));
+		return this;
+	}
+
+	public LocalizationProvider Build()
+	{
+		return new LocalizationProvider(new InitializationOptions
 		{
-			supportedLanguages.Add(language);
-			return this;
-		}
-
-		public LocalizationProviderBuilder WithLogger(ILogger logger)
-		{
-			if (this.logger != null)
-				throw new InvalidOperationException("You can't set logger twice");
-
-			this.logger = logger;
-			return this;
-		}
-
-		public LocalizationProviderBuilder WithTranslationSource(ITranslationSource translationSource)
-		{
-			if (translationSource == null)
-				throw new ArgumentNullException(nameof(translationSource));
-			if (this.translationSource != null)
-				throw new InvalidOperationException("You can't set translation source twice");
-
-			this.translationSource = translationSource;
-			return this;
-		}
-
-		public LocalizationProvider Build()
-		{
-			return new LocalizationProvider(new InitializationOptions
-			{
-				SupportedLanguages = supportedLanguages.ToList(),
-				TranslationSource = translationSource,
-				Logger = logger
-			});
-		}
+			SupportedLanguages = _supportedLanguages.ToList(),
+			TranslationSource = _translationSource,
+			Logger = _logger
+		});
 	}
 }

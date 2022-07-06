@@ -1,11 +1,10 @@
-﻿using System.Runtime.Serialization;
+using System.Runtime.Serialization;
 
-namespace Mindbox.I18n.Analyzers
+namespace Mindbox.I18n.Analyzers;
+
+[DataContract]
+public class AnalysisSettingsConfiguration
 {
-	[DataContract]
-	public class AnalysisSettingsConfiguration
-	{
-		[DataMember(Name = "translationSource")]
-		public TranslationSourceConfigurationSection TranslationSource { get;set; }
-	}
+	[DataMember(Name = "translationSource")]
+	public TranslationSourceConfigurationSection TranslationSource { get; set; }
 }

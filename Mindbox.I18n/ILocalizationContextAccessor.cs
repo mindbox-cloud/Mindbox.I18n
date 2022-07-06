@@ -1,4 +1,4 @@
-﻿namespace Mindbox.I18n;
+namespace Mindbox.I18n;
 
 #nullable enable
 

@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,14 +12,14 @@ namespace Mindbox.I18n.AspNetCore.Tests;
 [TestClass]
 public class AcceptLanguageHeaderLocalizationProviderTests
 {
-	private readonly AcceptLanguageHeaderLocalizationProvider provider = new();
+	private readonly AcceptLanguageHeaderLocalizationProvider _provider = new();
 
 	[TestMethod]
 	public async Task Provide_When_ManyLanguages_Success()
 	{
 		var httpContext = CreateContext("ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7");
 
-		var result = await provider.TryGetLocale(httpContext);
+		var result = await _provider.TryGetLocale(httpContext);
 
 		result.Should().NotBeNull();
 		result.Name.Should().Be("ru-RU");
@@ -30,7 +30,7 @@ public class AcceptLanguageHeaderLocalizationProviderTests
 	{
 		var httpContext = CreateContext("en-GB,en;q=0.9,en-US;q=0.8,en;q=0.7");
 
-		var result = await provider.TryGetLocale(httpContext);
+		var result = await _provider.TryGetLocale(httpContext);
 
 		result.Should().NotBeNull();
 		result.Name.Should().Be("en-US");
@@ -41,7 +41,7 @@ public class AcceptLanguageHeaderLocalizationProviderTests
 	{
 		var httpContext = CreateContext("en-GB,en;q=0.9,fr-FR;q=0.8,en;q=0.7");
 
-		var result = await provider.TryGetLocale(httpContext);
+		var result = await _provider.TryGetLocale(httpContext);
 
 		result.Should().BeNull();
 	}

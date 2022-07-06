@@ -1,20 +1,19 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
-namespace Mindbox.I18n
+namespace Mindbox.I18n;
+
+[DebuggerDisplay("{" + nameof(Key) + "}")]
+internal sealed class LocaleIndependentString : LocalizableString
 {
-	[DebuggerDisplay("{" + nameof(Key) + "}")]
-	internal sealed class LocaleIndependentString : LocalizableString
+	internal LocaleIndependentString(string localeIndependentString)
 	{
-		internal LocaleIndependentString(string localeIndependentString)
-		{
-			Key = localeIndependentString;
-		}
+		Key = localeIndependentString;
+	}
 
-		public override string Key { get; }
+	public override string Key { get; }
 
-		public override string Render(LocalizationProvider localizationProvider, Locale locale)
-		{
-			return Key;
-		}
+	public override string Render(LocalizationProvider localizationProvider, Locale locale)
+	{
+		return Key;
 	}
 }

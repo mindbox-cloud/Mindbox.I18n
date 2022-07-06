@@ -1,7 +1,6 @@
-﻿namespace Mindbox.I18n.Analyzers
+namespace Mindbox.I18n.Analyzers;
+
+internal interface IAnalyzerTranslationSource
 {
-	internal interface IAnalyzerTranslationSource
-	{
-		string TryGetTranslation(LocalizationKey key);
-	}
+	string TryGetTranslation(LocalizationKey key);
 }

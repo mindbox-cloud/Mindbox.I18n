@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 
 namespace Mindbox.I18n.AspNetCore;
 
@@ -7,25 +7,27 @@ namespace Mindbox.I18n.AspNetCore;
 /// </summary>
 internal class MindboxRequestLocalizationMiddleware
 {
-	private readonly RequestDelegate next;
-	private readonly ILocalizationContextAccessor accessor;
-	private readonly IRequestLocalizationProvider[] localizationProviders;
+	private readonly RequestDelegate _next;
+	private readonly ILocalizationContextAccessor _accessor;
+	private readonly IRequestLocalizationProvider[] _localizationProviders;
 
 	public MindboxRequestLocalizationMiddleware(
 		RequestDelegate next,
 		IEnumerable<IRequestLocalizationProvider> localizationProviders,
 		ILocalizationContextAccessor accessor)
 	{
-		this.next = next;
-		this.localizationProviders = localizationProviders.ToArray();
-		this.accessor = accessor;
+		_next = next;
+		_localizationProviders = localizationProviders.ToArray();
+		_accessor = accessor;
 	}
 
+#pragma warning disable VSTHRD200 // Use "Async" suffix for async methods
 	public async Task Invoke(HttpContext context)
+#pragma warning restore VSTHRD200 // Use "Async" suffix for async methods
 	{
 		// язык пользователя
 		Locale? userLocale = null;
-		foreach (var provider in localizationProviders)
+		foreach (var provider in _localizationProviders)
 		{
 			userLocale = await provider.TryGetLocale(context);
 			if (userLocale != null)
@@ -34,9 +36,9 @@ internal class MindboxRequestLocalizationMiddleware
 			}
 		}
 
-		accessor.Context ??= new LocalizationContext();
-		accessor.Context.UserLocale = userLocale;
+		_accessor.Context ??= new LocalizationContext();
+		_accessor.Context.UserLocale = userLocale;
 
-		await next(context);
+		await _next(context);
 	}
 }

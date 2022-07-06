@@ -1,16 +1,17 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TestHelper;
 
-namespace Mindbox.I18n.Analyzers.Test
+namespace Mindbox.I18n.Analyzers.Test;
+
+[TestClass]
+public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 {
-	[TestClass]
-    public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
+	[TestMethod]
+	public void OnlyStringLiteralsCanBeUsed_CorrectKey_NoDiagnostics()
 	{
-		[TestMethod]
-		public void OnlyStringLiteralsCanBeUsed_CorrectKey_NoDiagnostics()
-		{
-			var test = @"
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -23,14 +24,15 @@ namespace Mindbox.I18n.Analyzers.Test
 			}
 		}
     }";
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		VerifyCSharpDiagnostic(test);
+	}
 
-			VerifyCSharpDiagnostic(test);
-		}
-
-		[TestMethod]
-		public void OnlyStringLiteralsCanBeUsed_CorrectKeyUsingConditionalExpression_NoDiagnostics()
-		{
-			var test = @"
+	[TestMethod]
+	public void OnlyStringLiteralsCanBeUsed_CorrectKeyUsingConditionalExpression_NoDiagnostics()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -43,14 +45,15 @@ namespace Mindbox.I18n.Analyzers.Test
 			}
 		}
     }";
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		VerifyCSharpDiagnostic(test);
+	}
 
-			VerifyCSharpDiagnostic(test);
-		}
-
-		[TestMethod]
-		public void OnlyStringLiteralsCanBeUsed_StringInterpolation_Error()
-		{
-			var test = @"
+	[TestMethod]
+	public void OnlyStringLiteralsCanBeUsed_StringInterpolation_Error()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -63,24 +66,25 @@ namespace Mindbox.I18n.Analyzers.Test
 			}
 		}
     }";
-			var expected = new DiagnosticResult
-			{
-				Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
-				Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
-				Severity = DiagnosticSeverity.Error,
-				Locations =
-					new[] {
-						new DiagnosticResultLocation("Test0.cs", 10, 27)
-					}
-			};
-
-			VerifyCSharpDiagnostic(test, expected);
-		}
-
-		[TestMethod]
-		public void OnlyStringLiteralsCanBeUsed_StringFormat_Error()
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var expected = new DiagnosticResult
 		{
-			var test = @"
+			Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
+			Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
+			Severity = DiagnosticSeverity.Error,
+			Locations =
+				new[] {
+					new DiagnosticResultLocation("Test0.cs", 10, 27)
+				}
+		};
+		VerifyCSharpDiagnostic(test, expected);
+	}
+
+	[TestMethod]
+	public void OnlyStringLiteralsCanBeUsed_StringFormat_Error()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -93,24 +97,25 @@ namespace Mindbox.I18n.Analyzers.Test
 			}
 		}
     }";
-			var expected = new DiagnosticResult
-			{
-				Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
-				Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
-				Severity = DiagnosticSeverity.Error,
-				Locations =
-					new[] {
-						new DiagnosticResultLocation("Test0.cs", 10, 27)
-					}
-			};
-
-			VerifyCSharpDiagnostic(test, expected);
-		}
-
-		[TestMethod]
-		public void OnlyStringLiteralsCanBeUsed_ExplicitConversion_Error()
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var expected = new DiagnosticResult
 		{
-			var test = @"
+			Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
+			Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
+			Severity = DiagnosticSeverity.Error,
+			Locations =
+				new[] {
+					new DiagnosticResultLocation("Test0.cs", 10, 27)
+				}
+		};
+		VerifyCSharpDiagnostic(test, expected);
+	}
+
+	[TestMethod]
+	public void OnlyStringLiteralsCanBeUsed_ExplicitConversion_Error()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
     namespace ConsoleApplication1
     {
@@ -123,24 +128,25 @@ namespace Mindbox.I18n.Analyzers.Test
 			}
 		}
     }";
-			var expected = new DiagnosticResult
-			{
-				Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
-				Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
-				Severity = DiagnosticSeverity.Error,
-				Locations =
-					new[] {
-						new DiagnosticResultLocation("Test0.cs", 10, 34)
-					}
-			};
-
-			VerifyCSharpDiagnostic(test, expected);
-		}
-
-		[TestMethod]
-		public void OnlyStringLiteralsCanBeUsed_LocalStringVariable_Error()
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var expected = new DiagnosticResult
 		{
-			var test = @"
+			Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
+			Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
+			Severity = DiagnosticSeverity.Error,
+			Locations =
+				new[] {
+					new DiagnosticResultLocation("Test0.cs", 10, 34)
+				}
+		};
+		VerifyCSharpDiagnostic(test, expected);
+	}
+
+	[TestMethod]
+	public void OnlyStringLiteralsCanBeUsed_LocalStringVariable_Error()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
     namespace ConsoleApplication1
     {
@@ -153,24 +159,25 @@ namespace Mindbox.I18n.Analyzers.Test
 			}
 		}
     }";
-			var expected = new DiagnosticResult
-			{
-				Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
-				Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
-				Severity = DiagnosticSeverity.Error,
-				Locations =
-					new[] {
-						new DiagnosticResultLocation("Test0.cs", 10, 27)
-					}
-			};
-
-			VerifyCSharpDiagnostic(test, expected);
-		}
-
-		[TestMethod]
-		public void OnlyStringLiteralsCanBeUsed_MethodArgumentIsLocalizableString_Error()
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var expected = new DiagnosticResult
 		{
-			var test = @"
+			Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
+			Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
+			Severity = DiagnosticSeverity.Error,
+			Locations =
+				new[] {
+					new DiagnosticResultLocation("Test0.cs", 10, 27)
+				}
+		};
+		VerifyCSharpDiagnostic(test, expected);
+	}
+
+	[TestMethod]
+	public void OnlyStringLiteralsCanBeUsed_MethodArgumentIsLocalizableString_Error()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -189,24 +196,25 @@ namespace Mindbox.I18n.Analyzers.Test
 			}
 		}
     }";
-			var expected = new DiagnosticResult
-			{
-				Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
-				Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
-				Severity = DiagnosticSeverity.Error,
-				Locations =
-					new[] {
-						new DiagnosticResultLocation("Test0.cs", 16, 17)
-					}
-			};
-
-			VerifyCSharpDiagnostic(test, expected);
-		}
-
-		[TestMethod]
-		public void OnlyStringLiteralsCanBeUsed_StringMemberAccess_Error()
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var expected = new DiagnosticResult
 		{
-			var test = @"
+			Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
+			Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
+			Severity = DiagnosticSeverity.Error,
+			Locations =
+				new[] {
+					new DiagnosticResultLocation("Test0.cs", 16, 17)
+				}
+		};
+		VerifyCSharpDiagnostic(test, expected);
+	}
+
+	[TestMethod]
+	public void OnlyStringLiteralsCanBeUsed_StringMemberAccess_Error()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -221,24 +229,25 @@ namespace Mindbox.I18n.Analyzers.Test
 			private const string Key = ""text"";
 		}
     }";
-			var expected = new DiagnosticResult
-			{
-				Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
-				Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
-				Severity = DiagnosticSeverity.Error,
-				Locations =
-					new[] {
-						new DiagnosticResultLocation("Test0.cs", 10, 27)
-					}
-			};
-
-			VerifyCSharpDiagnostic(test, expected);
-		}
-
-		[TestMethod]
-		public void OnlyStringLiteralsCanBeUsed_StringConditionalMemberAccess_Error()
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var expected = new DiagnosticResult
 		{
-			var test = @"
+			Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
+			Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
+			Severity = DiagnosticSeverity.Error,
+			Locations =
+				new[] {
+					new DiagnosticResultLocation("Test0.cs", 10, 27)
+				}
+		};
+		VerifyCSharpDiagnostic(test, expected);
+	}
+
+	[TestMethod]
+	public void OnlyStringLiteralsCanBeUsed_StringConditionalMemberAccess_Error()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -254,24 +263,25 @@ namespace Mindbox.I18n.Analyzers.Test
 			private object object;
 		}
     }";
-			var expected = new DiagnosticResult
-			{
-				Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
-				Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
-				Severity = DiagnosticSeverity.Error,
-				Locations =
-					new[] {
-						new DiagnosticResultLocation("Test0.cs", 11, 27)
-					}
-			};
-
-			VerifyCSharpDiagnostic(test, expected);
-		}
-
-		[TestMethod]
-		public void OnlyStringLiteralsCanBeUsed_StringConcatenation_Error()
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var expected = new DiagnosticResult
 		{
-			var test = @"
+			Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
+			Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
+			Severity = DiagnosticSeverity.Error,
+			Locations =
+				new[] {
+					new DiagnosticResultLocation("Test0.cs", 11, 27)
+				}
+		};
+		VerifyCSharpDiagnostic(test, expected);
+	}
+
+	[TestMethod]
+	public void OnlyStringLiteralsCanBeUsed_StringConcatenation_Error()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -284,24 +294,25 @@ namespace Mindbox.I18n.Analyzers.Test
 			}
 		}
     }";
-			var expected = new DiagnosticResult
-			{
-				Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
-				Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
-				Severity = DiagnosticSeverity.Error,
-				Locations =
-					new[] {
-						new DiagnosticResultLocation("Test0.cs", 10, 27)
-					}
-			};
-
-			VerifyCSharpDiagnostic(test, expected);
-		}
-
-		[TestMethod]
-		public void OnlyStringLiteralsCanBeUsed_LocalizableStringAssignedToLocalizableString_NoDiagnostics()
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var expected = new DiagnosticResult
 		{
-			var test = @"
+			Id = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.Id,
+			Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
+			Severity = DiagnosticSeverity.Error,
+			Locations =
+				new[] {
+					new DiagnosticResultLocation("Test0.cs", 10, 27)
+				}
+		};
+		VerifyCSharpDiagnostic(test, expected);
+	}
+
+	[TestMethod]
+	public void OnlyStringLiteralsCanBeUsed_LocalizableStringAssignedToLocalizableString_NoDiagnostics()
+	{
+#pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		var test = @"
 	using Mindbox.I18n;
 
     namespace ConsoleApplication1
@@ -315,13 +326,12 @@ namespace Mindbox.I18n.Analyzers.Test
 			}
 		}
     }";
+#pragma warning restore Mindbox1002 // Отступы должны формироваться только с помощью табуляции
+		VerifyCSharpDiagnostic(test);
+	}
 
-			VerifyCSharpDiagnostic(test);
-		}
-
-		protected override MindboxI18nAnalyzer CreateAnalyzer()
-		{
-			return new MindboxI18nAnalyzer();
-		}
+	protected override MindboxI18nAnalyzer CreateAnalyzer()
+	{
+		return new MindboxI18nAnalyzer();
 	}
 }
