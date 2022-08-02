@@ -19,7 +19,7 @@ public class LocalizationProvider : ILocalizationProvider
 			throw new InvalidOperationException($"{nameof(InitializationOptions)} is null");
 	}
 
-	public string TryGetTranslation(Locale locale, string key)
+	public string TryGetTranslation(ILocale locale, string key)
 	{
 		try
 		{
@@ -51,7 +51,7 @@ public class LocalizationProvider : ILocalizationProvider
 		}
 	}
 
-	public string Translate(Locale locale, string key)
+	public string Translate(ILocale locale, string key)
 	{
 		return TryGetTranslation(locale, key) ?? key;
 	}

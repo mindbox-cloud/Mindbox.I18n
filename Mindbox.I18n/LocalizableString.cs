@@ -46,10 +46,7 @@ public abstract class LocalizableString : ILocalizableString
 		return Key;
 	}
 
-	string ILocalizableString.Render(ILocalizationProvider localizationProvider, ILocale locale)
-		=> Render((LocalizationProvider)localizationProvider, (Locale)locale);
-
-	public abstract string Render(LocalizationProvider localizationProvider, Locale locale);
+	public abstract string Render(ILocalizationProvider localizationProvider, ILocale locale);
 
 	public LocalizableString WithContext<TContext>(TContext context) where TContext : class
 	{
