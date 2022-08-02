@@ -1,8 +1,10 @@
+using Mindbox.i18n.Abstractions;
+
 namespace Mindbox.I18n;
 
 public interface ITranslationSource
 {
 	void Initialize();
 
-	string TryGetTranslation(Locale locale, LocalizationKey localizationKey);
+	string TryGetTranslation(ILocale locale, LocalizationKey localizationKey);
 }

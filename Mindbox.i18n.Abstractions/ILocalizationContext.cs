@@ -1,13 +1,11 @@
-using Mindbox.i18n.Abstractions;
-
-namespace Mindbox.I18n;
+namespace Mindbox.i18n.Abstractions;
 
 #nullable enable
 
 /// <summary>
 /// Контекст локализации в рамках запроса.
 /// </summary>
-public class LocalizationContext : ILocalizationContext
+public interface ILocalizationContext
 {
 	/// <summary>
 	/// Язык пользователя.

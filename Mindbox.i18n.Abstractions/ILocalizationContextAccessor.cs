@@ -1,4 +1,4 @@
-namespace Mindbox.I18n;
+namespace Mindbox.i18n.Abstractions;
 
 #nullable enable
 
@@ -8,7 +8,7 @@ namespace Mindbox.I18n;
 public interface ILocalizationContextAccessor
 {
 	/// <summary>
-	/// Текущий контекст. 
+	/// Текущий контекст.
 	/// </summary>
-	LocalizationContext? Context { get; set; }
+	ILocalizationContext? Context { get; set; }
 }

@@ -1,8 +1,9 @@
 using System;
+using Mindbox.i18n.Abstractions;
 
 namespace Mindbox.I18n;
 
-public class LocalizationProvider
+public class LocalizationProvider : ILocalizationProvider
 {
 	public InitializationOptions InitializationOptions { get; }
 
@@ -18,7 +19,7 @@ public class LocalizationProvider
 			throw new InvalidOperationException($"{nameof(InitializationOptions)} is null");
 	}
 
-	public string TryGetTranslation(Locale locale, string key)
+	public string TryGetTranslation(ILocale locale, string key)
 	{
 		try
 		{
@@ -50,7 +51,7 @@ public class LocalizationProvider
 		}
 	}
 
-	public string Translate(Locale locale, string key)
+	public string Translate(ILocale locale, string key)
 	{
 		return TryGetTranslation(locale, key) ?? key;
 	}

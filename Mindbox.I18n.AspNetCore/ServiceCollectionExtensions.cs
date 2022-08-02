@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Mindbox.i18n.Abstractions;
 
 namespace Mindbox.I18n.AspNetCore;
 

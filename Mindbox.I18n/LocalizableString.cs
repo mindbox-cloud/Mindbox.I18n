@@ -1,8 +1,9 @@
 using System;
+using Mindbox.i18n.Abstractions;
 
 namespace Mindbox.I18n;
 
-public abstract class LocalizableString
+public abstract class LocalizableString : ILocalizableString
 {
 	protected static ILogger Logger { get; private set; } = new NullI18NextLogger();
 
@@ -45,7 +46,7 @@ public abstract class LocalizableString
 		return Key;
 	}
 
-	public abstract string Render(LocalizationProvider localizationProvider, Locale locale);
+	public abstract string Render(ILocalizationProvider localizationProvider, ILocale locale);
 
 	public LocalizableString WithContext<TContext>(TContext context) where TContext : class
 	{

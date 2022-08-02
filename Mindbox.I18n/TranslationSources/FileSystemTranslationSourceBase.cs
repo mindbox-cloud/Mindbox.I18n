@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Mindbox.i18n.Abstractions;
 
 namespace Mindbox.I18n;
 
@@ -55,7 +56,7 @@ public abstract class FileSystemTranslationSourceBase : ITranslationSource
 
 	protected abstract IEnumerable<string> GetTranslationFiles();
 
-	public string TryGetTranslation(Locale locale, LocalizationKey localizationKey)
+	public string TryGetTranslation(ILocale locale, LocalizationKey localizationKey)
 	{
 		if (!_translationsPerLocale.TryGetValue(locale.Name, out var translationData))
 		{

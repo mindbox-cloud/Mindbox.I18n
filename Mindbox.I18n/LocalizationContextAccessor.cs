@@ -1,4 +1,5 @@
 using System.Threading;
+using Mindbox.i18n.Abstractions;
 
 namespace Mindbox.I18n;
 
@@ -9,7 +10,7 @@ public class LocalizationContextAccessor : ILocalizationContextAccessor
 {
 	private static readonly AsyncLocal<ContextHolder> _sessionContextCurrent = new();
 
-	public LocalizationContext? Context
+	public ILocalizationContext? Context
 	{
 		get
 		{
@@ -35,6 +36,6 @@ public class LocalizationContextAccessor : ILocalizationContextAccessor
 
 	private class ContextHolder
 	{
-		public LocalizationContext? Context { get; set; }
+		public ILocalizationContext? Context { get; set; }
 	}
 }

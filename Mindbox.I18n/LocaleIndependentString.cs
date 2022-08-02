@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Mindbox.i18n.Abstractions;
 
 namespace Mindbox.I18n;
 
@@ -12,7 +13,7 @@ internal sealed class LocaleIndependentString : LocalizableString
 
 	public override string Key { get; }
 
-	public override string Render(LocalizationProvider localizationProvider, Locale locale)
+	public override string Render(ILocalizationProvider localizationProvider, ILocale locale)
 	{
 		return Key;
 	}

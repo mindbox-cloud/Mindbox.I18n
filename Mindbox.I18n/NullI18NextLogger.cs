@@ -1,4 +1,5 @@
 using System;
+using Mindbox.i18n.Abstractions;
 
 namespace Mindbox.I18n;
 
@@ -9,7 +10,7 @@ public class NullI18NextLogger : ILogger
 		// empty
 	}
 
-	public void LogMissingLocale(Locale locale, string key)
+	public void LogMissingLocale(ILocale locale, string key)
 	{
 		// empty
 	}
