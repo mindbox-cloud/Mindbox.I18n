@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Mindbox.i18n.Abstractions;
+
 namespace Mindbox.I18n;
 
 public static class Locales
@@ -27,7 +29,7 @@ public static class Locales
 	}
 }
 
-public class Locale : IEquatable<Locale>
+public class Locale : ILocale, IEquatable<Locale>
 {
 	public string Name { get; }
 
