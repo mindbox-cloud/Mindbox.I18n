@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mindbox.I18n.AspNetCore.Tests", "Mindbox.I18n.AspNetCore.Tests\Mindbox.I18n.AspNetCore.Tests.csproj", "{FE60B00F-7BCC-4374-AD65-96CD74F3DCA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mindbox.i18n.Abstractions", "Mindbox.i18n.Abstractions\Mindbox.i18n.Abstractions.csproj", "{8F4812DB-A1D7-4E34-8C2C-7D15B54E48F8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mindbox.I18n.Abstractions", "Mindbox.I18n.Abstractions\Mindbox.I18n.Abstractions.csproj", "{8F4812DB-A1D7-4E34-8C2C-7D15B54E48F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
