@@ -18,6 +18,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mindbox.i18n.Abstractions\Mindbox.i18n.Abstractions.csproj" />
+    <ProjectReference Include="..\Mindbox.I18n.Abstractions\Mindbox.I18n.Abstractions.csproj" />
   </ItemGroup>
 </Project>
