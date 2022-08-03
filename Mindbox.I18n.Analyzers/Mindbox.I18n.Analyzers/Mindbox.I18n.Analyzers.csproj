@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <IncludeBuildOutput>true</IncludeBuildOutput>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageId>Mindbox.I18n.Analyzers</PackageId>
     <RepositoryUrl>https://github.com/mindbox-moscow/Mindbox.I18n</RepositoryUrl>
@@ -21,6 +21,7 @@
   <ItemGroup>
     <None Include="$(OutputPath)\Mindbox.I18n.Analyzers.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(OutputPath)\Mindbox.I18n.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(OutputPath)\Mindbox.I18n.Abstractions.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(ProjectDir)\tools\*" Pack="true" PackagePath="tools" />
     <None Include="$(ProjectDir)\..\Libraries\Newtonsoft.Json.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
   </ItemGroup>
