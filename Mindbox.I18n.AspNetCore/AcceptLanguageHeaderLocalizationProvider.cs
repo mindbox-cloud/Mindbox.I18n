@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Net.Http.Headers;
+using Mindbox.i18n.Abstractions;
 
 namespace Mindbox.I18n.AspNetCore;
 
@@ -10,7 +11,7 @@ namespace Mindbox.I18n.AspNetCore;
 /// </summary>
 public class AcceptLanguageHeaderLocalizationProvider : IRequestLocalizationProvider
 {
-	private static readonly Task<Locale?> _nullProviderCultureResult = Task.FromResult((Locale?)null);
+	private static readonly Task<ILocale?> _nullProviderCultureResult = Task.FromResult((ILocale?)null);
 
 	/// <summary>
 	/// Максимальное число значений из Accept-Language заголовка для попыток получения локализации.
@@ -18,7 +19,7 @@ public class AcceptLanguageHeaderLocalizationProvider : IRequestLocalizationProv
 	/// </summary>
 	public int MaximumAcceptLanguageHeaderValuesToTry { get; init; } = 3;
 
-	public Task<Locale?> TryGetLocale(HttpContext httpContext)
+	public Task<ILocale?> TryGetLocale(HttpContext httpContext)
 	{
 		var acceptLanguageHeader = httpContext.Request.GetTypedHeaders().AcceptLanguage;
 
@@ -43,7 +44,7 @@ public class AcceptLanguageHeaderLocalizationProvider : IRequestLocalizationProv
 			var locale = Locales.TryGetByName(language.Value);
 			if (locale != null)
 			{
-				return Task.FromResult<Locale?>(locale);
+				return Task.FromResult<ILocale?>(locale);
 			}
 		}
 

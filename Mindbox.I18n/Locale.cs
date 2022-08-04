@@ -8,14 +8,14 @@ namespace Mindbox.I18n;
 
 public static class Locales
 {
-	private static readonly IDictionary<string, Locale> _localesByName;
+	private static readonly IDictionary<string, ILocale> _localesByName;
 
-	public static Locale ruRU { get; } = new Locale("ru-RU");
-	public static Locale enUS { get; } = new Locale("en-US");
+	public static ILocale ruRU { get; } = new Locale("ru-RU");
+	public static ILocale enUS { get; } = new Locale("en-US");
 
-	public static Locale GetByName(string name) => _localesByName[name];
+	public static ILocale GetByName(string name) => _localesByName[name];
 
-	public static Locale TryGetByName(string name) => _localesByName.TryGetValue(name, out var locale)
+	public static ILocale TryGetByName(string name) => _localesByName.TryGetValue(name, out var locale)
 		? locale
 		: null;
 
@@ -29,7 +29,7 @@ public static class Locales
 	}
 }
 
-public class Locale : ILocale, IEquatable<Locale>
+public class Locale : ILocale, IEquatable<ILocale>
 {
 	public string Name { get; }
 
@@ -50,12 +50,12 @@ public class Locale : ILocale, IEquatable<Locale>
 			return true;
 		if (obj.GetType() != GetType())
 			return false;
-		return Equals((Locale)obj);
+		return Equals((ILocale)obj);
 	}
 
 	public override int GetHashCode() => Name.GetHashCode();
 
-	public bool Equals(Locale other) => Name == other?.Name;
+	public bool Equals(ILocale other) => Name == other?.Name;
 
 	public override string ToString() => Name;
 }

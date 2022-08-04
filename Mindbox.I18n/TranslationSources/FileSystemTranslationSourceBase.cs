@@ -16,7 +16,7 @@ public abstract class FileSystemTranslationSourceBase : ITranslationSource
 	private readonly Dictionary<string, TranslationData> _translationsPerLocale;
 	protected ILogger Logger { get; }
 
-	protected FileSystemTranslationSourceBase(IReadOnlyList<Locale> supportedLocales, ILogger logger)
+	protected FileSystemTranslationSourceBase(IReadOnlyList<ILocale> supportedLocales, ILogger logger)
 	{
 		Logger = logger;
 		_translationsPerLocale = supportedLocales.ToDictionary(

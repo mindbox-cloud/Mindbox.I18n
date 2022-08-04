@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Mindbox.i18n.Abstractions;
 
 namespace Mindbox.I18n.Analyzers;
 
@@ -20,7 +21,7 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 
 	public AnalyzerFileSystemTranslationSource(
 		string solutionFilePath,
-		IReadOnlyList<Locale> supportedLocales,
+		IReadOnlyList<ILocale> supportedLocales,
 		ILogger logger)
 		: base(supportedLocales, logger)
 	{

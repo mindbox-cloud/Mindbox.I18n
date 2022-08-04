@@ -1,4 +1,5 @@
 using System.IO;
+using Mindbox.i18n.Abstractions;
 using Newtonsoft.Json;
 
 namespace Mindbox.I18n.Analyzers;
@@ -6,7 +7,7 @@ namespace Mindbox.I18n.Analyzers;
 internal class AnalyzerTranslationSource : IAnalyzerTranslationSource
 {
 	private readonly ITranslationSource _translationSource;
-	private readonly Locale _locale;
+	private readonly ILocale _locale;
 
 	public string TryGetTranslation(LocalizationKey key)
 	{

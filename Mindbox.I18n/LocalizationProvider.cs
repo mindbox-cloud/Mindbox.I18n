@@ -38,7 +38,7 @@ public class LocalizationProvider : ILocalizationProvider
 		}
 	}
 
-	public string TryGetTranslation(Locale locale, LocalizationKey key)
+	public string TryGetTranslation(ILocale locale, LocalizationKey key)
 	{
 		try
 		{
