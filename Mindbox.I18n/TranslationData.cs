@@ -2,7 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using Mindbox.i18n.Abstractions;
+using Mindbox.I18n.Abstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

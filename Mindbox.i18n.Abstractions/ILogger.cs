@@ -1,7 +1,4 @@
-using System;
-using Mindbox.I18n.Abstractions;
-
-namespace Mindbox.I18n;
+namespace Mindbox.I18n.Abstractions;
 
 public interface ILogger
 {

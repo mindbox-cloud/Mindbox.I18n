@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Mindbox.i18n.Abstractions;
+using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n;
 

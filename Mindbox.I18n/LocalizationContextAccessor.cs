@@ -1,5 +1,5 @@
 using System.Threading;
-using Mindbox.i18n.Abstractions;
+using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n;
 

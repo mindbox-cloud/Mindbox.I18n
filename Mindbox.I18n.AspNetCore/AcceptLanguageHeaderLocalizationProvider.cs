@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Net.Http.Headers;
-using Mindbox.i18n.Abstractions;
+using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n.AspNetCore;
 

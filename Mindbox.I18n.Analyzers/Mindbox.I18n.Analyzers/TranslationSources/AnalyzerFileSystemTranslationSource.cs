@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Mindbox.i18n.Abstractions;
+using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n.Analyzers;
 

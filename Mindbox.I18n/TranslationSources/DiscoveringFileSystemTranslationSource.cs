@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Mindbox.i18n.Abstractions;
+using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n;
 

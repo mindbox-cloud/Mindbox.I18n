@@ -1,5 +1,5 @@
 using System.IO;
-using Mindbox.i18n.Abstractions;
+using Mindbox.I18n.Abstractions;
 using Newtonsoft.Json;
 
 namespace Mindbox.I18n.Analyzers;
