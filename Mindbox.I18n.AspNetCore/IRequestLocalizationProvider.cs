@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n.AspNetCore;
 
@@ -16,6 +17,6 @@ public interface IRequestLocalizationProvider
 	///     Возвращает <c>null</c> если определить язык не удалось.
 	/// </returns>
 #pragma warning disable VSTHRD200 // Use "Async" suffix for async methods
-	Task<Locale?> TryGetLocale(HttpContext httpContext);
+	Task<ILocale?> TryGetLocale(HttpContext httpContext);
 #pragma warning restore VSTHRD200 // Use "Async" suffix for async methods
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n;
 
@@ -12,7 +13,7 @@ public class DiscoveringFileSystemTranslationSource : FileSystemTranslationSourc
 
 	public DiscoveringFileSystemTranslationSource(
 		string baseDirectory,
-		IReadOnlyList<Locale> supportedLocales,
+		IReadOnlyList<ILocale> supportedLocales,
 		IReadOnlyList<string> ignoredPathRules,
 		ILogger logger) : base(supportedLocales, logger)
 	{

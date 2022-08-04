@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using Mindbox.I18n.Abstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -9,10 +10,10 @@ namespace Mindbox.I18n;
 
 internal class TranslationData
 {
-	private readonly Locale _locale;
+	private readonly ILocale _locale;
 	private readonly ILogger _logger;
 
-	public TranslationData(Locale locale, ILogger logger)
+	public TranslationData(ILocale locale, ILogger logger)
 	{
 		_locale = locale;
 		_logger = logger;

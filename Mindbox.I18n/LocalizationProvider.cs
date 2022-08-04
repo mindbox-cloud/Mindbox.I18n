@@ -1,5 +1,5 @@
 using System;
-using Mindbox.i18n.Abstractions;
+using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n;
 
@@ -38,7 +38,7 @@ public class LocalizationProvider : ILocalizationProvider
 		}
 	}
 
-	public string TryGetTranslation(Locale locale, LocalizationKey key)
+	public string TryGetTranslation(ILocale locale, LocalizationKey key)
 	{
 		try
 		{

@@ -1,4 +1,4 @@
-namespace Mindbox.i18n.Abstractions;
+namespace Mindbox.I18n.Abstractions;
 
 #nullable enable
 

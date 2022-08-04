@@ -1,6 +1,6 @@
 using System;
 using System.Diagnostics;
-using Mindbox.i18n.Abstractions;
+using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n;
 

@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Http;
-using Mindbox.i18n.Abstractions;
+using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n.AspNetCore;
 
@@ -27,7 +27,7 @@ internal class MindboxRequestLocalizationMiddleware
 #pragma warning restore VSTHRD200 // Use "Async" suffix for async methods
 	{
 		// язык пользователя
-		Locale? userLocale = null;
+		ILocale? userLocale = null;
 		foreach (var provider in _localizationProviders)
 		{
 			userLocale = await provider.TryGetLocale(context);
