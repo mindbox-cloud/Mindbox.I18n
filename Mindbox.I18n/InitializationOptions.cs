@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n;
 
