@@ -9,10 +9,13 @@ indent_style = space
 indent_size = 2
 
 [*.cs]
+max_line_length = 130
 charset=utf-8
 # end_of_line=crlf - git manages line endings based on current checkout platform. See more details at https://github.com/dotnet/roslyn/issues/55526
 insert_final_newline=false
 indent_style = tab
+trim_trailing_whitespace = true
+
 
 csharp_style_namespace_declarations = file_scoped
 
@@ -28,11 +31,17 @@ dotnet_diagnostic.CA1032.severity = none
 # CA2227: Collection properties should be read only
 dotnet_diagnostic.CA2227.severity = none
 
+# CA1055: Change from string to Uri
+dotnet_diagnostic.CA1055.severity = none
+
 # CA1056: Change from string to Uri
 dotnet_diagnostic.CA1056.severity = none
 
 # CA1062: Validate arguments of public methods
 dotnet_diagnostic.CA1062.severity = none
+
+# CA2254: Template should be a static expression
+dotnet_diagnostic.CA2254.severity = none
 
 # CS1591: Missing XML comment for publicly visible type or member 'Type_or_Member'
 dotnet_diagnostic.CS1591.severity = none
@@ -40,7 +49,7 @@ dotnet_diagnostic.CS1591.severity = none
 # CA1848 Use the LoggerMessage delegates
 dotnet_diagnostic.CA1848.severity = none
 
-# CS1998 Async method lacks await and will run sycnrhonously
+# CS1998 Async method lacks await and will run synchronously 
 dotnet_diagnostic.CS1998.severity = none
 
 
@@ -103,6 +112,12 @@ dotnet_diagnostic.IDE0048.severity = none
 # IDE0050 Convert anonymous type to tuple
 dotnet_diagnostic.IDE0050.severity = none
 
+# IDE0054 Use compound assignment
+dotnet_diagnostic.IDE0054.severity = none
+
+# IDE0055 Fix formatting
+dotnet_diagnostic.IDE0055.severity = suggestion
+
 # IDE0058 Remove unnecessary expression value
 dotnet_diagnostic.IDE0058.severity = none
 
@@ -115,8 +130,17 @@ dotnet_diagnostic.IDE0061.severity = none
 # IDE0072 Populate switch
 dotnet_diagnostic.IDE0072.severity = none
 
+# IDE0074 Use coalesce compound assignment
+dotnet_diagnostic.IDE0074.severity = none
+
 # IDE0130 Namespace {0} does not match folder structure, expected "{1}" based on directory structure
 dotnet_diagnostic.IDE0130.severity = none
+
+# IDE0220 'foreach' statement implicitly converts 'object' to '{1}'. Add an explicit cast to make intent clearer, as it may fail at runtime
+dotnet_diagnostic.IDE0220.severity = none
+
+# JSON002 Enable json support 
+dotnet_diagnostic.JSON002.severity = none
 
 # Naming convention - Private and internal fields should start with _ and be camelCased
 dotnet_naming_symbols.private_internal_fields.applicable_kinds = field
@@ -140,7 +164,7 @@ csharp_new_line_before_catch = true
 #require members of anonymous types to be on the same line
 csharp_new_line_before_members_in_anonymous_types = false
 #require members of object intializers to be on separate lines
-csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_object_initializers = false
 #require braces to be on a new line, also known as "Allman" style
 csharp_new_line_before_open_brace = all
 
@@ -176,9 +200,13 @@ csharp_preserve_single_line_blocks = true
 #when this rule is set to a list of modifiers, prefer the specified ordering.
 csharp_preferred_modifier_order = public,private,protected,internal,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,volatile,async:suggestion
 
+# ReSharper properties
+resharper_csharp_wrap_after_declaration_lpar = true
+resharper_csharp_wrap_parameters_style = chop_if_long
 
 [*Test{s.cs,.cs,sBase.cs,Base.cs}]
 dotnet_diagnostic.VSTHRD200.severity = none
+dotnet_diagnostic.CA1707.severity = none
 
 [*Controller.cs]
 dotnet_diagnostic.VSTHRD200.severity = none
