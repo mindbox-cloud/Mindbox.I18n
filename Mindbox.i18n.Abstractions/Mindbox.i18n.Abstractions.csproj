@@ -1,12 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-      <ImplicitUsings>enable</ImplicitUsings>
-      <Nullable>disable</Nullable>
-      <TargetFramework>netstandard2.0</TargetFramework>
-      <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
-
   <PropertyGroup>
     <PackageId>Mindbox.I18n.Abstractions</PackageId>
     <RepositoryUrl>https://github.com/mindbox-moscow/Mindbox.I18n</RepositoryUrl>
@@ -16,5 +14,4 @@
     <PackageTags>Mindbox, I18n, abstractions</PackageTags>
     <NoPackageAnalysis>false</NoPackageAnalysis>
   </PropertyGroup>
-
 </Project>
