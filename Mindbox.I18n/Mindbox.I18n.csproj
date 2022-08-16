@@ -15,7 +15,7 @@
     <NoPackageAnalysis>false</NoPackageAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mindbox.I18n.Abstractions\Mindbox.I18n.Abstractions.csproj" />
