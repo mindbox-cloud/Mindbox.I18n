@@ -15,9 +15,9 @@
     <NoPackageAnalysis>false</NoPackageAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../Mindbox.I18n.Abstractions/Mindbox.I18n.Abstractions.csproj" />
+    <PackageReference Include="System.Text.Json" Version="6.0.5" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="6.0.5" />
+    <ProjectReference Include="..\Mindbox.I18n.Abstractions\Mindbox.I18n.Abstractions.csproj" />
   </ItemGroup>
 </Project>
