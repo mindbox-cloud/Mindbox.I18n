@@ -3,8 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using Mindbox.I18n.Abstractions;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
 namespace Mindbox.I18n;
 
@@ -65,9 +64,8 @@ internal class TranslationData
 				{
 					try
 					{
-						using var streamReader = new StreamReader(filePath);
-						using var jsonReader = new JsonTextReader(streamReader);
-						return JObject.Load(jsonReader).ToObject<Dictionary<string, string>>();
+						using var stream = File.OpenRead(filePath);
+						return JsonSerializer.Deserialize<Dictionary<string, string>>(stream);
 					}
 					catch (Exception e)
 					{

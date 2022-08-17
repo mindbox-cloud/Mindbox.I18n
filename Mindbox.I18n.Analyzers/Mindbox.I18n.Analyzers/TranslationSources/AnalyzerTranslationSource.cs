@@ -1,6 +1,6 @@
 using System.IO;
+using System.Text.Json;
 using Mindbox.I18n.Abstractions;
-using Newtonsoft.Json;
 
 namespace Mindbox.I18n.Analyzers;
 
@@ -16,7 +16,7 @@ internal class AnalyzerTranslationSource : IAnalyzerTranslationSource
 
 	public AnalyzerTranslationSource(string configurationFilePath)
 	{
-		var configuration = JsonConvert.DeserializeObject<AnalysisSettingsConfiguration>(
+		var configuration = JsonSerializer.Deserialize<AnalysisSettingsConfiguration>(
 			File.ReadAllText(configurationFilePath));
 
 		var solutionFilePath = Path.Combine(

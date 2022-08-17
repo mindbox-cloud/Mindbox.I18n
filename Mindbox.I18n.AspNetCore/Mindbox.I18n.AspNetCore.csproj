@@ -17,6 +17,6 @@
   </ItemGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <ProjectReference Include="..\Mindbox.I18n\Mindbox.I18n.csproj" />
+    <ProjectReference Include="../Mindbox.I18n/Mindbox.I18n.csproj" />
   </ItemGroup>
 </Project>
