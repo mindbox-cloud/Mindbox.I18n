@@ -1,0 +1,32 @@
+name: Main Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Setup .NET Core 6.0
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Build
+      run: dotnet build Mindbox.I18n.sln --configuration Release -v d
+      
+    - name: Test
+      run: dotnet test Mindbox.I18n.sln --no-build --configuration Release
+
+    - name: Pack
+      run: dotnet pack Mindbox.I18n.sln -c Release -p:BuildNumber=${{ github.run_number }}
+
+    - name: Publish
+      run: dotnet nuget push **/*.nupkg -k ${{secrets.MINDBOX_PRIVATE_NUGET_AUTH_TOKEN}} -s https://mindbox.myget.org/F/mindbox-private/auth/30bac00a-124d-42b7-9efd-482125bb1c5e/api/v3/index.json
