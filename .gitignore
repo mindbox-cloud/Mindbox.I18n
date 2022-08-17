@@ -261,3 +261,5 @@ Grammar/Quokka/.metadata/
 Grammar/Quokka/RemoteSystemsTempFiles/.project
 Grammar/RemoteSystemsTempFiles/.project
 Grammar/Quokka/target/generated-sources/antlr4/.gitignore
+
+.DS_Store

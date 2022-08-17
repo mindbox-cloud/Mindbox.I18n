@@ -1,13 +1,12 @@
-using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Mindbox.I18n.Analyzers;
 
-[DataContract]
 public class TranslationSourceConfigurationSection
 {
-	[DataMember(Name = "solutionFilePath")]
+	[JsonPropertyName("solutionFilePath")]
 	public string SolutionFilePath { get; set; }
 
-	[DataMember(Name = "locale")]
+	[JsonPropertyName("locale")]
 	public string Locale { get; set; }
 }

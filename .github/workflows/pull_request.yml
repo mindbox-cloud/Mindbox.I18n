@@ -6,30 +6,20 @@ jobs:
 
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
      
     - name: Checkout
       uses: actions/checkout@v1
-      
-    - name: Setup msbuild
-      uses: microsoft/setup-msbuild@v1.0.2
 
-    - name: Setup .NET Core SDK '6.0'
-      uses: actions/setup-dotnet@v1
+    - name: Setup .NET Core 6.0
+      uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: '6.0'
-
-    - name: Setup nuget
-      uses: nuget/setup-nuget@v1.0.5
-
-    - name: Restore packages
-      run: nuget restore Mindbox.I18n.sln
+        dotnet-version: 6.0.x
 
     - name: Build
-      continue-on-error: true
-      run: msbuild Mindbox.I18n.sln /m /nr:false /p:Configuration=Release;DeployOnBuild=true;DeployTarget=Package 
+      run: dotnet build Mindbox.I18n.sln --configuration Release -v d
       
     - name: Test
       run: dotnet test Mindbox.I18n.sln --no-build --configuration Release
