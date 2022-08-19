@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Simplification;
 
 namespace TestHelper;
-#nullable disable
+
 /// <summary>
 /// Diagnostic Producer class with extra methods dealing with applying codefixes
 /// All methods are static

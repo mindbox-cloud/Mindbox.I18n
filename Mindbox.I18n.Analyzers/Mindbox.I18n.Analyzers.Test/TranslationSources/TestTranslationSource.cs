@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 namespace Mindbox.I18n.Analyzers.Test;
-#nullable disable
+
 public class TestTranslationSource : IAnalyzerTranslationSource
 {
 	private readonly Dictionary<LocalizationKey, string> _translations

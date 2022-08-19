@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace TestHelper;
-#nullable disable
+
 /// <summary>
 /// Superclass of all Unit tests made for diagnostics with codefixes.
 /// Contains methods used to verify correctness of codefixes
