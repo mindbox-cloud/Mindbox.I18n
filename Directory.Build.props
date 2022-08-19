@@ -8,7 +8,7 @@
     <RepositoryUrl>https://github.com/mindbox-moscow/Mindbox.I18n</RepositoryUrl>
   </PropertyGroup>
   <PropertyGroup>
-    <VersionPrefix>3.0.1</VersionPrefix>
+    <VersionPrefix>3.0.2</VersionPrefix>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.2.32" PrivateAssets="all">
