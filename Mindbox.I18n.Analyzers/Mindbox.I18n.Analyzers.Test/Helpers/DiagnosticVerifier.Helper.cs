@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 
 namespace TestHelper;
-#nullable disable
+
 /// <summary>
 /// Class for turning strings into documents and getting the diagnostics on them
 /// All methods are static
