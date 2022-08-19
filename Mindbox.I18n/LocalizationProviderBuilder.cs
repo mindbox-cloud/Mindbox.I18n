@@ -8,8 +8,8 @@ namespace Mindbox.I18n;
 public class LocalizationProviderBuilder
 {
 	private readonly HashSet<string> _supportedLanguages = new();
-	private ILogger _logger;
-	private ITranslationSource _translationSource;
+	private ILogger? _logger;
+	private ITranslationSource? _translationSource;
 
 	public LocalizationProviderBuilder WithSupportedLanguage(string language)
 	{
@@ -40,8 +40,8 @@ public class LocalizationProviderBuilder
 		return new LocalizationProvider(new InitializationOptions
 		{
 			SupportedLanguages = _supportedLanguages.ToList(),
-			TranslationSource = _translationSource,
-			Logger = _logger
+			TranslationSource = _translationSource ?? throw new InvalidOperationException(nameof(_translationSource)),
+			Logger = _logger ?? throw new InvalidOperationException(nameof(_logger))
 		});
 	}
 }

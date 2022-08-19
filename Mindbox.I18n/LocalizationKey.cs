@@ -12,7 +12,7 @@ public class LocalizationKey : IEquatable<LocalizationKey>
 	public string Namespace { get; }
 	public string FullKey { get; }
 
-	public static LocalizationKey TryParse(string keyWithNamespace)
+	public static LocalizationKey? TryParse(string keyWithNamespace)
 	{
 		var match = _localizationKeyRegex.Match(keyWithNamespace);
 		if (!match.Success)

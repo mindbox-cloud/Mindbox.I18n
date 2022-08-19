@@ -3,7 +3,7 @@ using System.Text.Json;
 using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n.Analyzers;
-
+#nullable disable
 internal class AnalyzerTranslationSource : IAnalyzerTranslationSource
 {
 	private readonly ITranslationSource _translationSource;

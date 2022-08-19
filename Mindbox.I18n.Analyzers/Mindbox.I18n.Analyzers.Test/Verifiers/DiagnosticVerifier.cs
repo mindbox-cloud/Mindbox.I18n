@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
+#nullable disable
 namespace TestHelper;
 
 /// <summary>
@@ -84,7 +84,7 @@ public abstract partial class DiagnosticVerifier
 	}
 
 	/// <summary>
-	/// General method that gets a collection of actual diagnostics found in the source after the analyzer is run, 
+	/// General method that gets a collection of actual diagnostics found in the source after the analyzer is run,
 	/// then verifies each of them.
 	/// </summary>
 	/// <param name="sources">An array of strings to create source documents from to run the analyzers on</param>
@@ -189,7 +189,7 @@ public abstract partial class DiagnosticVerifier
 	}
 
 	/// <summary>
-	/// Helper method to VerifyDiagnosticResult that checks the 
+	/// Helper method to VerifyDiagnosticResult that checks the
 	/// location of a diagnostic and compares it with the location in the expected DiagnosticResult.
 	/// </summary>
 	/// <param name="analyzer">The analyzer that was being run on the sources</param>

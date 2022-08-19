@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -25,7 +26,7 @@ public static class SolutionFileParser
 				continue;
 
 			var projectFileRelativePath = projectMatch.Groups["RelativePath"].Value;
-			if (!projectFileRelativePath.EndsWith("csproj"))
+			if (!projectFileRelativePath.EndsWith("csproj", StringComparison.InvariantCultureIgnoreCase))
 				continue;
 
 			projectRelativePaths.Add(projectFileRelativePath);

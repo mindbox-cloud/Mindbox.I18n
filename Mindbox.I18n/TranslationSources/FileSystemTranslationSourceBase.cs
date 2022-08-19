@@ -56,7 +56,7 @@ public abstract class FileSystemTranslationSourceBase : ITranslationSource
 
 	protected abstract IEnumerable<string> GetTranslationFiles();
 
-	public string TryGetTranslation(ILocale locale, LocalizationKey localizationKey)
+	public string? TryGetTranslation(ILocale locale, LocalizationKey localizationKey)
 	{
 		if (!_translationsPerLocale.TryGetValue(locale.Name, out var translationData))
 		{

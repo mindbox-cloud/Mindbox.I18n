@@ -3,8 +3,6 @@ using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n;
 
-#nullable enable
-
 /// <inheritdoc />
 public class LocalizationContextAccessor : ILocalizationContextAccessor
 {

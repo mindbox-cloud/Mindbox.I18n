@@ -1,7 +1,7 @@
 using Microsoft.CodeAnalysis;
 
 namespace Mindbox.I18n.Analyzers;
-
+#pragma warning disable CA1724
 public static class Diagnostics
 {
 	private const string Category = "Localization";

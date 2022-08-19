@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 
 namespace Mindbox.I18n.Analyzers;
-
+#nullable disable
 public class TranslationSourceConfigurationSection
 {
 	[JsonPropertyName("solutionFilePath")]

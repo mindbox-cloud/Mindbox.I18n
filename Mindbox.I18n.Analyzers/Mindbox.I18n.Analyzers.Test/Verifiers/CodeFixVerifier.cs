@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace TestHelper;
-
+#nullable disable
 /// <summary>
 /// Superclass of all Unit tests made for diagnostics with codefixes.
 /// Contains methods used to verify correctness of codefixes
@@ -40,7 +40,7 @@ public abstract partial class CodeFixVerifier : DiagnosticVerifier
 	/// <param name="oldSource">A class in the form of a string before the CodeFix was applied to it</param>
 	/// <param name="newSource">A class in the form of a string after the CodeFix was applied to it</param>
 	/// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
-	/// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if 
+	/// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail if
 	/// the CodeFix introduces other warnings after being applied</param>
 	protected void VerifyCSharpFix(
 		string oldSource,
@@ -64,7 +64,7 @@ public abstract partial class CodeFixVerifier : DiagnosticVerifier
 	/// <param name="oldSource">A class in the form of a string before the CodeFix was applied to it</param>
 	/// <param name="newSource">A class in the form of a string after the CodeFix was applied to it</param>
 	/// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
-	/// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail 
+	/// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail
 	/// if the CodeFix introduces other warnings after being applied</param>
 	protected void VerifyBasicFix(
 		string oldSource,
@@ -94,7 +94,7 @@ public abstract partial class CodeFixVerifier : DiagnosticVerifier
 	/// <param name="oldSource">A class in the form of a string before the CodeFix was applied to it</param>
 	/// <param name="newSource">A class in the form of a string after the CodeFix was applied to it</param>
 	/// <param name="codeFixIndex">Index determining which codefix to apply if there are multiple</param>
-	/// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail 
+	/// <param name="allowNewCompilerDiagnostics">A bool controlling whether or not the test will fail
 	/// if the CodeFix introduces other warnings after being applied</param>
 	private void VerifyFix(
 		string language,

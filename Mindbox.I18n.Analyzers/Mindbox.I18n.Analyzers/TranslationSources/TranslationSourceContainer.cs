@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Mindbox.I18n.Analyzers;
-
+#nullable disable
 internal static class TranslationSourceContainer
 {
 	private const string ConfigurationFileName = "Mindbox.I18n.analysis-settings.json";
@@ -42,6 +42,8 @@ internal static class TranslationSourceContainer
 		return analyzerOptions.AdditionalFiles
 			.SingleOrDefault(file => Path.GetFileName(file.Path).Equals(
 				ConfigurationFileName,
+#pragma warning disable CA1309
 				StringComparison.InvariantCultureIgnoreCase));
+#pragma warning restore CA1309
 	}
 }

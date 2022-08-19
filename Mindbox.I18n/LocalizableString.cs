@@ -5,7 +5,7 @@ namespace Mindbox.I18n;
 
 public abstract class LocalizableString : ILocalizableString
 {
-	protected static ILogger Logger { get; private set; } = new NullI18NextLogger();
+	private static ILogger Logger { get; set; } = new NullI18NextLogger();
 
 	public static void InitializeLogger(ILogger logger)
 	{
@@ -26,15 +26,10 @@ public abstract class LocalizableString : ILocalizableString
 		return new LocaleIndependentString(localeIndependentString);
 	}
 
+#pragma warning disable CA2225
 	public static implicit operator LocalizableString(string key)
+#pragma warning restore CA2225
 	{
-		// Strictly speaking, this is illegal and will result in ArgumentNullException later.
-		if (key == null)
-		{
-			Logger.LogInvalidOperation($"Attempting to implicitly cast nulll to LocalizableString");
-			return null;
-		}
-
 		return new LocaleDependentString(key);
 	}
 
@@ -58,16 +53,16 @@ public abstract class LocalizableString : ILocalizableString
 		return this;
 	}
 
-	public TContext GetContext<TContext>() where TContext : class
+	public TContext? GetContext<TContext>() where TContext : class
 	{
 		if (_context == null)
 			return null;
-		if (_context is not TContext)
+		if (_context is not TContext context)
 			throw new InvalidOperationException(
 				$"Context is not empty, but can't cast it's value of type {_context.GetType()} to {typeof(TContext)}");
 
-		return (TContext)_context;
+		return context;
 	}
 
-	private object _context;
+	private object? _context;
 }
