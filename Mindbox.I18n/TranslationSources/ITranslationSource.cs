@@ -6,5 +6,5 @@ public interface ITranslationSource
 {
 	void Initialize();
 
-	string TryGetTranslation(ILocale locale, LocalizationKey localizationKey);
+	string? TryGetTranslation(ILocale locale, LocalizationKey localizationKey);
 }

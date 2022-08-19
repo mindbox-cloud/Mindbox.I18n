@@ -8,8 +8,8 @@ namespace Mindbox.I18n;
 
 public class DiscoveringFileSystemTranslationSource : FileSystemTranslationSourceBase
 {
-	protected readonly string BaseDirectory;
-	protected readonly IReadOnlyList<string> IgnoredPathRules;
+	private readonly string _baseDirectory;
+	private readonly IReadOnlyList<string> _ignoredPathRules;
 
 	public DiscoveringFileSystemTranslationSource(
 		string baseDirectory,
@@ -17,22 +17,22 @@ public class DiscoveringFileSystemTranslationSource : FileSystemTranslationSourc
 		IReadOnlyList<string> ignoredPathRules,
 		ILogger logger) : base(supportedLocales, logger)
 	{
-		BaseDirectory = baseDirectory;
-		IgnoredPathRules = ignoredPathRules;
+		_baseDirectory = baseDirectory;
+		_ignoredPathRules = ignoredPathRules;
 	}
 
 	protected override IEnumerable<string> GetTranslationFiles()
 	{
-		if (!Directory.Exists(BaseDirectory))
+		if (!Directory.Exists(_baseDirectory))
 		{
 			return Array.Empty<string>();
 		}
 
 		return Directory.GetFiles(
-				BaseDirectory,
+				_baseDirectory,
 				$"*{TranslationFileSuffix}",
 				SearchOption.AllDirectories)
-			.Where(path => !IgnoredPathRules.Any(
+			.Where(path => !_ignoredPathRules.Any(
 				ignoredPart => path.IndexOf(ignoredPart, StringComparison.InvariantCultureIgnoreCase) > 0))
 			.ToList();
 	}

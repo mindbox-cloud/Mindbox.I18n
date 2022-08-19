@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Mindbox.I18n.Analyzers;
-
+#nullable disable
 public static class SyntaxNodeExtensions
 {
 	public static IParameterSymbol DetermineParameter(

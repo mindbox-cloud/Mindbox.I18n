@@ -3,8 +3,9 @@ using System;
 namespace Mindbox.I18n;
 
 [AttributeUsage(AttributeTargets.Field)]
-public class LocalizableDisplayAttribute : Attribute
+public sealed class LocalizableDisplayAttribute : Attribute
 {
+#pragma warning disable CA1019
 	public LocalizableDisplayAttribute([LocalizationKey] string name)
 	{
 		LocalizableName = LocalizableString.ForKey(name);
@@ -15,9 +16,9 @@ public class LocalizableDisplayAttribute : Attribute
 		LocalizableName = LocalizableString.ForKey(name);
 		LocalizableDescription = LocalizableString.ForKey(description);
 	}
-
+#pragma warning restore CA1019
 
 	public LocalizableString LocalizableName { get; }
 
-	public LocalizableString LocalizableDescription { get; }
+	public LocalizableString? LocalizableDescription { get; }
 }

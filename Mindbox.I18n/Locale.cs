@@ -15,11 +15,13 @@ public static class Locales
 
 	public static ILocale GetByName(string name) => _localesByName[name];
 
-	public static ILocale TryGetByName(string name) => _localesByName.TryGetValue(name, out var locale)
+	public static ILocale? TryGetByName(string name) => _localesByName.TryGetValue(name, out var locale)
 		? locale
 		: null;
 
+#pragma warning disable CA1810
 	static Locales()
+#pragma warning restore CA1810
 	{
 		_localesByName = new[]
 		{

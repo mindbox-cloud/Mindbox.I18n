@@ -1,7 +1,5 @@
 namespace Mindbox.I18n.Abstractions;
 
-#nullable enable
-
 /// <summary>
 /// Контекст локализации в рамках запроса.
 /// </summary>

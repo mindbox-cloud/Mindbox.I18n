@@ -8,7 +8,7 @@ using System.Xml.Linq;
 using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n.Analyzers;
-
+#nullable disable
 public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationSourceBase, IDisposable
 {
 	private readonly string _solutionFilePath;

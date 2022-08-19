@@ -5,6 +5,8 @@ using Microsoft.CodeAnalysis;
 
 namespace Mindbox.I18n.Analyzers;
 
+#nullable disable
+
 public static class SymbolExtensions
 {
 	public static ImmutableArray<IParameterSymbol> GetParameters(this ISymbol symbol)
@@ -33,6 +35,8 @@ public static class SymbolExtensions
 
 	public static bool IsString(this ITypeSymbol symbolType)
 	{
+#pragma warning disable CA1309
 		return symbolType.Name.Equals("string", StringComparison.InvariantCultureIgnoreCase);
+#pragma warning restore CA1309
 	}
 }

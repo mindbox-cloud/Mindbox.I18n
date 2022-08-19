@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 
 namespace TestHelper;
-
+#nullable disable
 /// <summary>
 /// Class for turning strings into documents and getting the diagnostics on them
 /// All methods are static
@@ -32,7 +32,7 @@ public abstract partial class DiagnosticVerifier
 	#region  Get Diagnostics
 
 	/// <summary>
-	/// Given classes in the form of strings, their language, and an IDiagnosticAnalyzer to apply 
+	/// Given classes in the form of strings, their language, and an IDiagnosticAnalyzer to apply
 	/// to it, return the diagnostics found in the string after converting it to a document.
 	/// </summary>
 	/// <param name="sources">Classes in the form of strings</param>

@@ -29,7 +29,7 @@ internal class TranslationData
 			(ns, oldSet) => new TranslationSet(filePath, _logger));
 	}
 
-	internal string TryGetTranslation(LocalizationKey localizationKey)
+	internal string? TryGetTranslation(LocalizationKey localizationKey)
 	{
 		if (_translationSetsByNamespace.TryGetValue(localizationKey.Namespace, out var translationSet))
 		{
@@ -65,7 +65,8 @@ internal class TranslationData
 					try
 					{
 						using var stream = File.OpenRead(filePath);
-						return JsonSerializer.Deserialize<Dictionary<string, string>>(stream);
+						return JsonSerializer.Deserialize<Dictionary<string, string>>(stream)
+							?? throw new InvalidOperationException(nameof(stream));
 					}
 					catch (Exception e)
 					{

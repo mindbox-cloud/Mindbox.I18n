@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Operations;
 
 namespace Mindbox.I18n.Analyzers;
-
+#nullable disable
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class MindboxI18nAnalyzer : DiagnosticAnalyzer
 {
