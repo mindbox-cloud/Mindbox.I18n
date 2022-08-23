@@ -1,23 +1,25 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.Xml.XPath;
 using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n.Analyzers;
-#nullable disable
 public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationSourceBase, IDisposable
 {
+	private const string ProjectFileSuffix = ".csproj";
 	private readonly string _solutionFilePath;
 
-	private readonly ConcurrentDictionary<string, FileSystemWatcher> _projectFileWatchers =
-		new(8, 200);
+	private FileSystemWatcher? _projectFileWatcher;
+	private List<string> _projectFilePaths = null!;
+	private HashSet<string> _projectFileNames = null!;
 
-	private readonly ConcurrentDictionary<string, FileSystemWatcher> _localizationFileSystemWatchers =
-		new(8, 200);
+	private FileSystemWatcher? _localizationFileSystemWatcher;
+	private List<string> _localizationFilePaths = null!;
+	private HashSet<string> _localizationFileNames = null!;
 
 	public AnalyzerFileSystemTranslationSource(
 		string solutionFilePath,
@@ -30,93 +32,132 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 
 	public override void Initialize()
 	{
-		var projectFiles = GetProjectFilesFromSolution(_solutionFilePath);
-		LoadProjectFiles(projectFiles);
+		_projectFilePaths = GetProjectFilesFromSolution(_solutionFilePath).ToList();
+		_projectFileNames = new HashSet<string>(_projectFilePaths.Select(Path.GetFileName));
+		Console.WriteLine($"i18n: project files: {string.Join(", ", _projectFileNames)}");
+		LoadProjectFiles(_projectFilePaths);
 
-		var localizationFiles = GetLoadedProjectFiles()
+		_localizationFilePaths = _projectFilePaths
 			.Select(TryGetLocalizationFilesFromProjectFile)
 			.Where(files => files != null)
-			.SelectMany(files => files);
+			.SelectMany(files => files)
+			.ToList();
+		_localizationFileNames = new HashSet<string>(_localizationFilePaths.Select(Path.GetFileName));
+		Console.WriteLine($"i18n: localization files: {string.Join(", ", _localizationFileNames)}");
 
-		LoadLocalizationFiles(localizationFiles);
+		LoadLocalizationFiles(_localizationFilePaths);
 
 		base.Initialize();
 	}
 
-	private ICollection<string> GetLoadedProjectFiles()
+	private static string? GetGreatestCommonFilePath(IEnumerable<string> paths)
 	{
-		return _projectFileWatchers.Keys;
-	}
+		var directoryPaths = paths
+			.Select(Path.GetDirectoryName)
+			.Distinct()
+			.ToList();
 
-	private void LoadProjectFiles(IEnumerable<string> projectFiles)
-	{
-		foreach (var projectFile in projectFiles)
+		if (directoryPaths.Count == 1)
 		{
-			var watcher = new FileSystemWatcher
-			{
-				Path = Path.GetDirectoryName(projectFile),
-				Filter = Path.GetFileName(projectFile),
-				IncludeSubdirectories = false,
-				NotifyFilter = NotifyFilters.LastWrite
-			};
+			return directoryPaths[0];
+		}
 
-			watcher.Changed += (s, ea) => HandleProjectFileChange(projectFile);
-			watcher.Renamed += (s, ea) => HandleProjectFileChange(projectFile);
+		var pathsSegments = directoryPaths.Select(path => path.Split(Path.DirectorySeparatorChar))
+			.ToList();
 
-			if (_projectFileWatchers.TryAdd(projectFile, watcher))
+		var minimalLength = pathsSegments.Min(x => x.Length);
+		var samplePath = pathsSegments[0].Take(minimalLength).ToArray();
+		for (var index = minimalLength - 1; index >= 0; index--)
+		{
+			if (pathsSegments.All(pathSegments => pathSegments[index] == samplePath[index]))
 			{
-				watcher.EnableRaisingEvents = true;
-			}
-			else
-			{
-				watcher.Dispose();
+				return string.Join(Path.DirectorySeparatorChar.ToString(), samplePath.Take(index + 1));
 			}
 		}
+
+		return null;
 	}
 
-	private void LoadLocalizationFiles(IEnumerable<string> localizationFiles)
+	private void LoadProjectFiles(ICollection<string> projectFiles)
 	{
-		foreach (var localizationFile in localizationFiles)
+		Console.WriteLine($"i18n: registering {projectFiles.Count} project files");
+		var greatestCommonPath = GetGreatestCommonFilePath(projectFiles);
+		Console.WriteLine($"i18n: found greatest common path at {greatestCommonPath}");
+
+		var watcher = new FileSystemWatcher
 		{
-			var watcher = new FileSystemWatcher
-			{
-				Path = Path.GetDirectoryName(localizationFile),
-				Filter = Path.GetFileName(localizationFile),
-				IncludeSubdirectories = false,
-				NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName
-			};
+			Path = greatestCommonPath,
+			Filter = $"*{ProjectFileSuffix}",
+			IncludeSubdirectories = true,
+			NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName
+		};
 
-			watcher.Changed += (s, ea) => HandleLocalizationFileChange(localizationFile);
-			watcher.Renamed += (s, ea) => HandleLocalizationFileChange(localizationFile);
+		watcher.Changed += (_, eventArgs) => HandleProjectFileChange(eventArgs.FullPath);
 
-			if (_localizationFileSystemWatchers.TryAdd(localizationFile, watcher))
+		_projectFileWatcher = watcher;
+		_projectFileWatcher.EnableRaisingEvents = true;
+	}
+
+	private void LoadLocalizationFiles(ICollection<string> localizationFiles)
+	{
+		Console.WriteLine($"i18n: registering {localizationFiles.Count} localization files");
+		var greatestCommonPath = GetGreatestCommonFilePath(localizationFiles);
+		Console.WriteLine($"i18n: found greatest common path at {greatestCommonPath}");
+
+		var watcher = new FileSystemWatcher
+		{
+			Path = greatestCommonPath,
+			Filter = $"*{TranslationFileSuffix}",
+			IncludeSubdirectories = true,
+			NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName
+		};
+
+		watcher.Changed += (_, eventArgs) => HandleLocalizationFileChange(eventArgs.FullPath, eventArgs.ChangeType);
+
+		_localizationFileSystemWatcher = watcher;
+		_localizationFileSystemWatcher.EnableRaisingEvents = true;
+	}
+
+	private void HandleLocalizationFileChange(string localizationFile, WatcherChangeTypes changeTypes)
+	{
+		if (changeTypes.HasFlag(WatcherChangeTypes.Created))
+		{
+			var fileName = Path.GetFileName(localizationFile);
+			// ReSharper disable once InconsistentlySynchronizedField - reading does not require locking
+			if (_localizationFileNames.Contains(fileName))
 			{
-				watcher.EnableRaisingEvents = true;
+				return;
 			}
-			else
+
+			lock (_localizationFileNames)
 			{
-				watcher.Dispose();
+				_localizationFileNames.Add(fileName);
 			}
 		}
-	}
 
-	private void HandleLocalizationFileChange(string localizationFile)
-	{
+		Console.WriteLine($"i18n: handling change of localization file {localizationFile}");
 		LoadTranslationFile(localizationFile);
 	}
 
 	private void HandleProjectFileChange(string projectFile)
 	{
+		Console.WriteLine($"i18n: handling change of project file {projectFile}");
 		var localizationFilesFromProject = TryGetLocalizationFilesFromProjectFile(projectFile);
 		if (localizationFilesFromProject == null)
 			return;
 
-		var localizationFilesToAdd = localizationFilesFromProject.Except(_localizationFileSystemWatchers.Keys);
+		var localizationFilesToAdd = localizationFilesFromProject.Except(_localizationFilePaths).ToList();
+
 		LoadLocalizationFiles(localizationFilesToAdd);
 	}
 
-	private IEnumerable<string> TryGetLocalizationFilesFromProjectFile(string projectFile)
+	private IEnumerable<string>? TryGetLocalizationFilesFromProjectFile(string projectFile)
 	{
+		var projectFileDirectory = Path.GetDirectoryName(projectFile);
+
+		if (projectFileDirectory == null)
+			return null;
+
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
 		var projectFileContent = TryGetProjectFileContentAsync(projectFile).Result;
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
@@ -126,20 +167,14 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 		var document = XDocument.Parse(projectFileContent);
 
 		// TODO: It would be nice to reuse this code with the TranslationChecker, now it's a copy-paste.
-		return document.Descendants()
-			.Where(x => x.Name.LocalName == "ItemGroup")
-			.SelectMany(itemGroup => itemGroup.Descendants()
-				.Where(y =>
-					y.Attribute("Include")
-						?.Value
-						.EndsWith(TranslationFileSuffix, StringComparison.InvariantCultureIgnoreCase)
-					?? false)
-				.Select(node => node.Attribute("Include").Value)
-				.SelectMany(path =>
-					path.Contains("?") || path.Contains("*")
-					? GetFilesFromWildcard(Path.GetDirectoryName(projectFile), path)
-					: new[]{ Path.Combine(
-						Path.GetDirectoryName(projectFile), path) }));
+		return document.XPathSelectElements("//ItemGroup/Content/@Include/..")
+			.Select(node => node.Attribute("Include")!.Value)
+			.Where(include => include.EndsWith(TranslationFileSuffix, StringComparison.InvariantCultureIgnoreCase))
+			.SelectMany(
+				path => path.IndexOfAny(new []{'?', '*'}) >= 0
+					? GetFilesFromWildcard(projectFileDirectory, path)
+					: new[] {Path.Combine(PathHelpers.ConvertToUnixPath(projectFileDirectory), path)}
+			);
 	}
 
 	private static IEnumerable<string> GetFilesFromWildcard(string projectDirectory, string wildcard)
@@ -156,7 +191,7 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 		}
 	}
 
-	private static async Task<string> TryGetProjectFileContentAsync(string projectFile, int tryCounter = 0)
+	private static async Task<string?> TryGetProjectFileContentAsync(string projectFile, int tryCounter = 0)
 	{
 		if (tryCounter > 2)
 			return null;
@@ -190,21 +225,21 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 
 	protected override IEnumerable<string> GetTranslationFiles()
 	{
-		return _localizationFileSystemWatchers.Keys;
+		return _localizationFilePaths;
 	}
 
 	public void Dispose()
 	{
-		foreach (var localizationFileSystemWatcher in _localizationFileSystemWatchers.Values)
+		if (_projectFileWatcher != null)
 		{
-			localizationFileSystemWatcher.EnableRaisingEvents = false;
-			localizationFileSystemWatcher.Dispose();
+			_projectFileWatcher.EnableRaisingEvents = false;
+			_projectFileWatcher.Dispose();
 		}
 
-		foreach (var projectFileWatcher in _projectFileWatchers.Values)
+		if (_localizationFileSystemWatcher != null)
 		{
-			projectFileWatcher.EnableRaisingEvents = false;
-			projectFileWatcher.Dispose();
+			_localizationFileSystemWatcher.EnableRaisingEvents = false;
+			_localizationFileSystemWatcher.Dispose();
 		}
 	}
 }
