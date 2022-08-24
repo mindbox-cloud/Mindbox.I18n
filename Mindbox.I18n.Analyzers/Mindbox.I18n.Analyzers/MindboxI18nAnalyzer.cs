@@ -70,6 +70,12 @@ public class MindboxI18nAnalyzer : DiagnosticAnalyzer
 		context.RegisterOperationAction(
 			HandleConversionOperation,
 			OperationKind.Conversion);
+
+		context.RegisterCompilationAction(HandleCompilationAction);
+	}
+
+	private void HandleCompilationAction(CompilationAnalysisContext context)
+	{
 	}
 
 	private void HandleAssignmentOperation(OperationAnalysisContext context)

@@ -15,7 +15,6 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 
 	private FileSystemWatcher? _projectFileWatcher;
 	private List<string> _projectFilePaths = null!;
-	private HashSet<string> _projectFileNames = null!;
 
 	private FileSystemWatcher? _localizationFileSystemWatcher;
 	private List<string> _localizationFilePaths = null!;
@@ -33,8 +32,6 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 	public override void Initialize()
 	{
 		_projectFilePaths = GetProjectFilesFromSolution(_solutionFilePath).ToList();
-		_projectFileNames = new HashSet<string>(_projectFilePaths.Select(Path.GetFileName));
-		Console.WriteLine($"i18n: project files: {string.Join(", ", _projectFileNames)}");
 		LoadProjectFiles(_projectFilePaths);
 
 		_localizationFilePaths = _projectFilePaths
@@ -151,7 +148,7 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 		LoadLocalizationFiles(localizationFilesToAdd);
 	}
 
-	private IEnumerable<string>? TryGetLocalizationFilesFromProjectFile(string projectFile)
+	private static IEnumerable<string>? TryGetLocalizationFilesFromProjectFile(string projectFile)
 	{
 		var projectFileDirectory = Path.GetDirectoryName(projectFile);
 
@@ -166,12 +163,11 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 
 		var document = XDocument.Parse(projectFileContent);
 
-		// TODO: It would be nice to reuse this code with the TranslationChecker, now it's a copy-paste.
 		return document.XPathSelectElements("//ItemGroup/Content/@Include/..")
 			.Select(node => node.Attribute("Include")!.Value)
 			.Where(include => include.EndsWith(TranslationFileSuffix, StringComparison.InvariantCultureIgnoreCase))
 			.SelectMany(
-				path => path.IndexOfAny(new []{'?', '*'}) >= 0
+				path => path.IndexOfAny(new[]{'?', '*'}) >= 0
 					? GetFilesFromWildcard(projectFileDirectory, path)
 					: new[] {Path.Combine(PathHelpers.ConvertToUnixPath(projectFileDirectory), path)}
 			);
