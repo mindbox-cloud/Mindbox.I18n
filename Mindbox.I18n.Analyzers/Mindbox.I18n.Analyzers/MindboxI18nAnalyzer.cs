@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -76,6 +77,7 @@ public class MindboxI18nAnalyzer : DiagnosticAnalyzer
 
 	private void HandleCompilationAction(CompilationAnalysisContext context)
 	{
+		Debugger.Launch();
 	}
 
 	private void HandleAssignmentOperation(OperationAnalysisContext context)

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Mindbox.I18n.analysis-settings.json" />
@@ -11,6 +11,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mindbox.I18n\Mindbox.I18n.csproj" />
+    <ProjectReference Include="..\Mindbox.I18n.Analyzers\Mindbox.I18n.Analyzers\Mindbox.I18n.Analyzers.csproj" PrivateAssets="all"
+                      ReferenceOutputAssembly="false"
+                      OutputItemType="Analyzer" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Localization\Bands.ru-RU.i18n.json">
