@@ -38,6 +38,7 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 			.Select(TryGetLocalizationFilesFromProjectFile)
 			.Where(files => files != null)
 			.SelectMany(files => files)
+			.Union(GetLocalizationFilesFromProjectTargetDirectories())
 			.ToList();
 		_localizationFileNames = new HashSet<string>(_localizationFilePaths.Select(Path.GetFileName));
 		Console.WriteLine($"i18n: localization files: {string.Join(", ", _localizationFileNames)}");
@@ -47,6 +48,15 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 		base.Initialize();
 	}
 
+	private IEnumerable<string> GetLocalizationFilesFromProjectTargetDirectories()
+	{
+		return _projectFilePaths
+			.Select(path => Path.Combine(Path.GetDirectoryName(path), "bin"))
+			.Where(Directory.Exists)
+			.Select(path => Directory.GetFiles(path, $"*{TranslationFileSuffix}", SearchOption.AllDirectories))
+			.SelectMany(files => files);
+	}
+
 	private static string? GetGreatestCommonFilePath(IEnumerable<string> paths)
 	{
 		var directoryPaths = paths
@@ -54,10 +64,11 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 			.Distinct()
 			.ToList();
 
+		if (directoryPaths.Count == 0)
+			return null;
+
 		if (directoryPaths.Count == 1)
-		{
 			return directoryPaths[0];
-		}
 
 		var pathsSegments = directoryPaths.Select(path => path.Split(Path.DirectorySeparatorChar))
 			.ToList();
@@ -163,13 +174,13 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 
 		var document = XDocument.Parse(projectFileContent);
 
-		return document.XPathSelectElements("//ItemGroup/Content/@Include/..")
+		return document.XPathSelectElements("//ItemGroup//@Include/..")
 			.Select(node => node.Attribute("Include")!.Value)
 			.Where(include => include.EndsWith(TranslationFileSuffix, StringComparison.InvariantCultureIgnoreCase))
 			.SelectMany(
-				path => path.IndexOfAny(new[]{'?', '*'}) >= 0
+				path => path.IndexOfAny(new[] { '?', '*' }) >= 0
 					? GetFilesFromWildcard(projectFileDirectory, path)
-					: new[] {Path.Combine(PathHelpers.ConvertToUnixPath(projectFileDirectory), path)}
+					: new[] { Path.Combine(PathHelpers.ConvertToUnixPath(projectFileDirectory), path) }
 			);
 	}
 

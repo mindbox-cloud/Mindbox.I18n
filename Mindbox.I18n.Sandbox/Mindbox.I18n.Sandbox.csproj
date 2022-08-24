@@ -16,11 +16,11 @@
                       OutputItemType="Analyzer" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="Localization\Bands.ru-RU.i18n.json">
+    <Content Include="Localization\Bands.ru-RU.i18n.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Localization\Cars.ru-RU.i18n.json">
+    </Content>
+    <Content Include="Localization\Cars.ru-RU.i18n.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
 </Project>

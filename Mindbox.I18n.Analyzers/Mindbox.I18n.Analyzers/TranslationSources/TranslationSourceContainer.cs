@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 
 namespace Mindbox.I18n.Analyzers;
 #nullable disable
@@ -35,30 +34,16 @@ internal static class TranslationSourceContainer
 
 	private static string TryDiscoverAnalyzerConfigFilePath()
 	{
-		var entrypoints = new[]
+		var currentPath = Directory.GetCurrentDirectory();
+		while (currentPath != null)
 		{
-			Directory.GetCurrentDirectory(), Assembly.GetExecutingAssembly().Location,
-			AppContext.BaseDirectory
-		};
-
-		HashSet<string> visitedPaths = new();
-		foreach (var entrypoint in entrypoints)
-		{
-			var currentPath = entrypoint;
-			while (currentPath != null)
+			var configFileName = Path.Combine(currentPath, ConfigurationFileName);
+			if (File.Exists(configFileName))
 			{
-				if (visitedPaths.Contains(currentPath))
-					break;
-
-				var possibleConfigFileName = Path.Combine(currentPath, ConfigurationFileName);
-				if (File.Exists(possibleConfigFileName))
-				{
-					return possibleConfigFileName;
-				}
-
-				visitedPaths.Add(currentPath);
-				currentPath = Directory.GetParent(currentPath)?.FullName;
+				return configFileName;
 			}
+
+			currentPath = Directory.GetParent(currentPath)?.FullName;
 		}
 
 		return null;
