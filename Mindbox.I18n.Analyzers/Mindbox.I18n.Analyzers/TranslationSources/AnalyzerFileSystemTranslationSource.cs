@@ -41,8 +41,6 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 			.Where(files => files != null)
 			.SelectMany(files => files)
 			.Union(GetLocalizationFilesFromProjectTargetDirectories())
-			.GroupBy(Path.GetFileName)
-			.Select(group => group.First())
 			.ToList();
 		_localizationFileNames =
 			new ConcurrentDictionary<string, object?>(_localizationFilePaths.Select(Path.GetFileName)
