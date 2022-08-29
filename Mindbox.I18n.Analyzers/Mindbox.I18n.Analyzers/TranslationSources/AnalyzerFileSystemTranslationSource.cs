@@ -46,8 +46,6 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 			new ConcurrentDictionary<string, object?>(_localizationFilePaths.Select(Path.GetFileName)
 				.ToDictionary(x => x, _ => (object?)null));
 
-		Console.WriteLine($"i18n: localization files: {string.Join(", ", _localizationFileNames)}");
-
 		LoadLocalizationFiles(_localizationFilePaths);
 
 		base.Initialize();
@@ -98,7 +96,6 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 	{
 		Console.WriteLine($"i18n: registering {projectFiles.Count} project files");
 		var greatestCommonPath = GetGreatestCommonFilePath(projectFiles);
-		Console.WriteLine($"i18n: found greatest common path at {greatestCommonPath}");
 
 		var watcher = new FileSystemWatcher
 		{
@@ -118,7 +115,6 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 	{
 		Console.WriteLine($"i18n: registering {localizationFiles.Count} localization files");
 		var greatestCommonPath = GetGreatestCommonFilePath(localizationFiles);
-		Console.WriteLine($"i18n: found greatest common path at {greatestCommonPath}");
 
 		var watcher = new FileSystemWatcher
 		{
@@ -139,7 +135,6 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 		if (changeTypes.HasFlag(WatcherChangeTypes.Created))
 		{
 			var fileName = Path.GetFileName(localizationFile);
-			// ReSharper disable once InconsistentlySynchronizedField - reading does not require locking
 			if (_localizationFileNames.ContainsKey(fileName))
 			{
 				return;
