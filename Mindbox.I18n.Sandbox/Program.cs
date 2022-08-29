@@ -5,22 +5,22 @@ internal class Program
 	private static void Main(string[] _1)
 	{
 		// Incorrect key
-		_ = "Abacaba";
+		_ = LocalizableString.ForKey("Abacaba");
 
 		// Correct key, should be found
-		_ = "Cars:Bntl";
+		_ = LocalizableString.ForKey("Cars:Bntl");
 
 		// Correct key, should be found
-		_ = "Bands:DeathCab";
+		_ = LocalizableString.ForKey("Bands:DeathCab");
 
 		// Correct key but doesn't have a translation
-		_ = "Bands:SomeUnknownGuys";
+		_ = LocalizableString.ForKey("Bands:SomeUnknownGuys");
 
 		// Correct key but doesn't have a translation
-		_ = "Bands:UnknownAtTheBeginning";
+		_ = LocalizableString.ForKey("Bands:UnknownAtTheBeginning");
 
 		// Should be an error because the translation file is ignored by the configuration
-		_ = "Drinks:Coke";
-		_ = $"Try {"that"}";
+		_ = LocalizableString.ForKey("Drinks:Coke");
+		_ = LocalizableString.ForKey($"Try {"that"}");
 	}
 }

@@ -11,6 +11,7 @@
     <PackageTags>Mindbox, I18n, analyzers</PackageTags>
     <NoPackageAnalysis>false</NoPackageAnalysis>
     <NoWarn>$(NoWarn);NU5128</NoWarn>
+    <IsRoslynComponent>true</IsRoslynComponent>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../Mindbox.I18n/Mindbox.I18n.csproj" PrivateAssets="all" />

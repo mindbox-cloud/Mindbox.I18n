@@ -3,21 +3,23 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Xml.Linq;
+using System.Xml.XPath;
 using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n.Analyzers;
-#nullable disable
 public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationSourceBase, IDisposable
 {
+	private const string ProjectFileSuffix = ".csproj";
 	private readonly string _solutionFilePath;
 
-	private readonly ConcurrentDictionary<string, FileSystemWatcher> _projectFileWatchers =
-		new(8, 200);
+	private FileSystemWatcher? _projectFileWatcher;
+	private List<string> _projectFilePaths = null!;
 
-	private readonly ConcurrentDictionary<string, FileSystemWatcher> _localizationFileSystemWatchers =
-		new(8, 200);
+	private FileSystemWatcher? _localizationFileSystemWatcher;
+	private List<string> _localizationFilePaths = null!;
+	private ConcurrentDictionary<string, object?> _localizationFileNames = null!;
 
 	public AnalyzerFileSystemTranslationSource(
 		string solutionFilePath,
@@ -30,116 +32,154 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 
 	public override void Initialize()
 	{
-		var projectFiles = GetProjectFilesFromSolution(_solutionFilePath);
-		LoadProjectFiles(projectFiles);
+		_projectFilePaths = GetProjectFilesFromSolution(_solutionFilePath).ToList();
+		LoadProjectFiles(_projectFilePaths);
 
-		var localizationFiles = GetLoadedProjectFiles()
+		_localizationFilePaths = _projectFilePaths
+			.AsParallel()
 			.Select(TryGetLocalizationFilesFromProjectFile)
 			.Where(files => files != null)
-			.SelectMany(files => files);
+			.SelectMany(files => files)
+			.Union(GetLocalizationFilesFromProjectTargetDirectories())
+			.ToList();
+		_localizationFileNames =
+			new ConcurrentDictionary<string, object?>(_localizationFilePaths.Select(Path.GetFileName)
+				.ToDictionary(x => x, _ => (object?)null));
 
-		LoadLocalizationFiles(localizationFiles);
+		LoadLocalizationFiles(_localizationFilePaths);
 
 		base.Initialize();
 	}
 
-	private ICollection<string> GetLoadedProjectFiles()
+	private ParallelQuery<string> GetLocalizationFilesFromProjectTargetDirectories()
 	{
-		return _projectFileWatchers.Keys;
+		return _projectFilePaths
+			.AsParallel()
+			.Select(path => Path.Combine(Path.GetDirectoryName(path)!, "bin"))
+			.Where(Directory.Exists)
+			.Select(path => Directory.GetFiles(path, $"*{TranslationFileSuffix}", SearchOption.AllDirectories))
+			.SelectMany(files => files)
+			.GroupBy(Path.GetFileName)
+			.Select(x => x.First());
 	}
 
-	private void LoadProjectFiles(IEnumerable<string> projectFiles)
+	private static string? GetGreatestCommonFilePath(IEnumerable<string> paths)
 	{
-		foreach (var projectFile in projectFiles)
+		var directoryPaths = paths
+			.Select(Path.GetDirectoryName)
+			.Distinct()
+			.ToList();
+
+		if (directoryPaths.Count == 0)
+			return null;
+
+		if (directoryPaths.Count == 1)
+			return directoryPaths[0];
+
+		var pathsSegments = directoryPaths.Select(path => path.Split(Path.DirectorySeparatorChar))
+			.ToList();
+
+		var minimalLength = pathsSegments.Min(x => x.Length);
+		var samplePath = pathsSegments[0].Take(minimalLength).ToArray();
+		for (var index = minimalLength - 1; index >= 0; index--)
 		{
-			var watcher = new FileSystemWatcher
+			if (pathsSegments.All(pathSegments => pathSegments[index] == samplePath[index]))
 			{
-				Path = Path.GetDirectoryName(projectFile),
-				Filter = Path.GetFileName(projectFile),
-				IncludeSubdirectories = false,
-				NotifyFilter = NotifyFilters.LastWrite
-			};
-
-			watcher.Changed += (s, ea) => HandleProjectFileChange(projectFile);
-			watcher.Renamed += (s, ea) => HandleProjectFileChange(projectFile);
-
-			if (_projectFileWatchers.TryAdd(projectFile, watcher))
-			{
-				watcher.EnableRaisingEvents = true;
-			}
-			else
-			{
-				watcher.Dispose();
+				return string.Join(Path.DirectorySeparatorChar.ToString(), samplePath.Take(index + 1));
 			}
 		}
+
+		return null;
 	}
 
-	private void LoadLocalizationFiles(IEnumerable<string> localizationFiles)
+	private void LoadProjectFiles(ICollection<string> projectFiles)
 	{
-		foreach (var localizationFile in localizationFiles)
+		Console.WriteLine($"i18n: registering {projectFiles.Count} project files");
+		var greatestCommonPath = GetGreatestCommonFilePath(projectFiles);
+
+		var watcher = new FileSystemWatcher
 		{
-			var watcher = new FileSystemWatcher
-			{
-				Path = Path.GetDirectoryName(localizationFile),
-				Filter = Path.GetFileName(localizationFile),
-				IncludeSubdirectories = false,
-				NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName
-			};
+			Path = greatestCommonPath,
+			Filter = $"*{ProjectFileSuffix}",
+			IncludeSubdirectories = true,
+			NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName
+		};
 
-			watcher.Changed += (s, ea) => HandleLocalizationFileChange(localizationFile);
-			watcher.Renamed += (s, ea) => HandleLocalizationFileChange(localizationFile);
+		watcher.Changed += (_, eventArgs) => HandleProjectFileChange(eventArgs.FullPath);
 
-			if (_localizationFileSystemWatchers.TryAdd(localizationFile, watcher))
-			{
-				watcher.EnableRaisingEvents = true;
-			}
-			else
-			{
-				watcher.Dispose();
-			}
-		}
+		_projectFileWatcher = watcher;
+		_projectFileWatcher.EnableRaisingEvents = true;
 	}
 
-	private void HandleLocalizationFileChange(string localizationFile)
+	private void LoadLocalizationFiles(ICollection<string> localizationFiles)
 	{
+		Console.WriteLine($"i18n: registering {localizationFiles.Count} localization files");
+		var greatestCommonPath = GetGreatestCommonFilePath(localizationFiles);
+
+		var watcher = new FileSystemWatcher
+		{
+			Path = greatestCommonPath,
+			Filter = $"*{TranslationFileSuffix}",
+			IncludeSubdirectories = true,
+			NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName
+		};
+
+		watcher.Changed += (_, eventArgs) => HandleLocalizationFileChange(eventArgs.FullPath, eventArgs.ChangeType);
+
+		_localizationFileSystemWatcher = watcher;
+		_localizationFileSystemWatcher.EnableRaisingEvents = true;
+	}
+
+	private void HandleLocalizationFileChange(string localizationFile, WatcherChangeTypes changeTypes)
+	{
+		if (changeTypes.HasFlag(WatcherChangeTypes.Created))
+		{
+			var fileName = Path.GetFileName(localizationFile);
+			if (_localizationFileNames.ContainsKey(fileName))
+			{
+				return;
+			}
+
+			_localizationFileNames.TryAdd(fileName, null);
+		}
+
+		Console.WriteLine($"i18n: handling change of localization file {localizationFile}");
 		LoadTranslationFile(localizationFile);
 	}
 
 	private void HandleProjectFileChange(string projectFile)
 	{
+		Console.WriteLine($"i18n: handling change of project file {projectFile}");
 		var localizationFilesFromProject = TryGetLocalizationFilesFromProjectFile(projectFile);
 		if (localizationFilesFromProject == null)
 			return;
 
-		var localizationFilesToAdd = localizationFilesFromProject.Except(_localizationFileSystemWatchers.Keys);
+		var localizationFilesToAdd = localizationFilesFromProject.Except(_localizationFilePaths).ToList();
+
 		LoadLocalizationFiles(localizationFilesToAdd);
 	}
 
-	private IEnumerable<string> TryGetLocalizationFilesFromProjectFile(string projectFile)
+	private static IEnumerable<string>? TryGetLocalizationFilesFromProjectFile(string projectFile)
 	{
-#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
-		var projectFileContent = TryGetProjectFileContentAsync(projectFile).Result;
-#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+		var projectFileDirectory = Path.GetDirectoryName(projectFile);
+
+		if (projectFileDirectory == null)
+			return null;
+
+		var projectFileContent = TryGetProjectFileContent(projectFile);
 		if (projectFileContent == null)
 			return null;
 
 		var document = XDocument.Parse(projectFileContent);
 
-		// TODO: It would be nice to reuse this code with the TranslationChecker, now it's a copy-paste.
-		return document.Descendants()
-			.Where(x => x.Name.LocalName == "ItemGroup")
-			.SelectMany(itemGroup => itemGroup.Descendants()
-				.Where(y =>
-					y.Attribute("Include")
-						?.Value
-						.EndsWith(TranslationFileSuffix, StringComparison.InvariantCultureIgnoreCase)
-					?? false)
-				.Select(node => node.Attribute("Include").Value)
-				.SelectMany(path =>
-					path.Contains("?") || path.Contains("*")
-					? GetFilesFromWildcard(Path.GetDirectoryName(projectFile), path)
-					: new[]{ Path.Combine(
-						Path.GetDirectoryName(projectFile), path) }));
+		return document.XPathSelectElements("//ItemGroup//@Include/..")
+			.Select(node => node.Attribute("Include")!.Value)
+			.Where(include => include.EndsWith(TranslationFileSuffix, StringComparison.InvariantCultureIgnoreCase))
+			.SelectMany(
+				path => path.IndexOfAny(new[] { '?', '*' }) >= 0
+					? GetFilesFromWildcard(projectFileDirectory, path)
+					: new[] { Path.Combine(PathHelpers.ConvertToUnixPath(projectFileDirectory), path) }
+			);
 	}
 
 	private static IEnumerable<string> GetFilesFromWildcard(string projectDirectory, string wildcard)
@@ -156,24 +196,24 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 		}
 	}
 
-	private static async Task<string> TryGetProjectFileContentAsync(string projectFile, int tryCounter = 0)
+	private static string? TryGetProjectFileContent(string projectFile)
 	{
-		if (tryCounter > 2)
-			return null;
-
-		try
+		for (var tryCounter = 0; tryCounter < 3; tryCounter++)
 		{
-			return File.ReadAllText(projectFile);
-		}
-		catch (Exception e)
-		{
-			Console.WriteLine(e);
+			try
+			{
+				return File.ReadAllText(projectFile);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
 
-			// Sometimes VS locks the project files so we can't read from them. Maybe we should wait for a bit so we can read?
-			await Task.Delay(TimeSpan.FromMilliseconds(100));
-
-			return await TryGetProjectFileContentAsync(projectFile, tryCounter + 1);
+				// Sometimes VS locks the project files so we can't read from them. Maybe we should wait for a bit so we can read?
+				Thread.Sleep(100);
+			}
 		}
+
+		return null;
 	}
 
 	private IEnumerable<string> GetProjectFilesFromSolution(string solutionFilePath)
@@ -190,21 +230,21 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 
 	protected override IEnumerable<string> GetTranslationFiles()
 	{
-		return _localizationFileSystemWatchers.Keys;
+		return _localizationFilePaths;
 	}
 
 	public void Dispose()
 	{
-		foreach (var localizationFileSystemWatcher in _localizationFileSystemWatchers.Values)
+		if (_projectFileWatcher != null)
 		{
-			localizationFileSystemWatcher.EnableRaisingEvents = false;
-			localizationFileSystemWatcher.Dispose();
+			_projectFileWatcher.EnableRaisingEvents = false;
+			_projectFileWatcher.Dispose();
 		}
 
-		foreach (var projectFileWatcher in _projectFileWatchers.Values)
+		if (_localizationFileSystemWatcher != null)
 		{
-			projectFileWatcher.EnableRaisingEvents = false;
-			projectFileWatcher.Dispose();
+			_localizationFileSystemWatcher.EnableRaisingEvents = false;
+			_localizationFileSystemWatcher.Dispose();
 		}
 	}
 }

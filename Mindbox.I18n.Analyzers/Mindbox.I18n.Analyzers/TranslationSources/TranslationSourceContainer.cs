@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Mindbox.I18n.Analyzers;
 #nullable disable
@@ -16,34 +13,39 @@ internal static class TranslationSourceContainer
 
 	private static readonly object _sourcesLockToken = new();
 
-	public static IAnalyzerTranslationSource TryGetTranslationSourceFromAnalyzerOptions(AnalyzerOptions analyzerOptions)
+	public static IAnalyzerTranslationSource TryGetTranslationSource()
 	{
-		var configurationFile = TryGetConfigurationFile(analyzerOptions);
-		if (configurationFile == null)
+		var configurationFilePath = TryDiscoverAnalyzerConfigFilePath();
+		if (configurationFilePath == null)
 			return null;
-
-		string key = configurationFile.Path;
 
 		lock (_sourcesLockToken)
 		{
-			_translationSources.TryGetValue(key, out var translationSource);
+			_translationSources.TryGetValue(configurationFilePath, out var translationSource);
 			if (translationSource == null)
 			{
-				translationSource = new AnalyzerTranslationSource(configurationFile.Path);
-				_translationSources.Add(key, translationSource);
+				translationSource = new AnalyzerTranslationSource(configurationFilePath);
+				_translationSources.Add(configurationFilePath, translationSource);
 			}
 
 			return translationSource;
 		}
 	}
 
-	private static AdditionalText TryGetConfigurationFile(AnalyzerOptions analyzerOptions)
+	private static string TryDiscoverAnalyzerConfigFilePath()
 	{
-		return analyzerOptions.AdditionalFiles
-			.SingleOrDefault(file => Path.GetFileName(file.Path).Equals(
-				ConfigurationFileName,
-#pragma warning disable CA1309
-				StringComparison.InvariantCultureIgnoreCase));
-#pragma warning restore CA1309
+		var currentPath = Directory.GetCurrentDirectory();
+		while (currentPath != null)
+		{
+			var configFileName = Path.Combine(currentPath, ConfigurationFileName);
+			if (File.Exists(configFileName))
+			{
+				return configFileName;
+			}
+
+			currentPath = Directory.GetParent(currentPath)?.FullName;
+		}
+
+		return null;
 	}
 }

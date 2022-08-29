@@ -1,10 +1,6 @@
 {
 	"translationSource": {
-		"baseDirectory": "",
 		"locale": "ru-RU",
-		"ignorePaths": [
-			"\\bin\\",
-			"\\ToBeIgnored\\"
-		]
+		"solutionFilePath": "..\\AnalyzersSandbox.sln"
 	}
 }
