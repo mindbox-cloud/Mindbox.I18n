@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Mindbox.I18n.Analyzers;
 #nullable disable
@@ -13,39 +16,34 @@ internal static class TranslationSourceContainer
 
 	private static readonly object _sourcesLockToken = new();
 
-	public static IAnalyzerTranslationSource TryGetTranslationSource()
+	public static IAnalyzerTranslationSource TryGetTranslationSourceFromAnalyzerOptions(AnalyzerOptions analyzerOptions)
 	{
-		var configurationFilePath = TryDiscoverAnalyzerConfigFilePath();
-		if (configurationFilePath == null)
+		var configurationFile = TryGetConfigurationFile(analyzerOptions);
+		if (configurationFile == null)
 			return null;
+
+		string key = configurationFile.Path;
 
 		lock (_sourcesLockToken)
 		{
-			_translationSources.TryGetValue(configurationFilePath, out var translationSource);
+			_translationSources.TryGetValue(key, out var translationSource);
 			if (translationSource == null)
 			{
-				translationSource = new AnalyzerTranslationSource(configurationFilePath);
-				_translationSources.Add(configurationFilePath, translationSource);
+				translationSource = new AnalyzerTranslationSource(configurationFile.Path);
+				_translationSources.Add(key, translationSource);
 			}
 
 			return translationSource;
 		}
 	}
 
-	private static string TryDiscoverAnalyzerConfigFilePath()
+	private static AdditionalText TryGetConfigurationFile(AnalyzerOptions analyzerOptions)
 	{
-		var currentPath = Directory.GetCurrentDirectory();
-		while (currentPath != null)
-		{
-			var configFileName = Path.Combine(currentPath, ConfigurationFileName);
-			if (File.Exists(configFileName))
-			{
-				return configFileName;
-			}
-
-			currentPath = Directory.GetParent(currentPath)?.FullName;
-		}
-
-		return null;
+		return analyzerOptions.AdditionalFiles
+			.SingleOrDefault(file => Path.GetFileName(file.Path).Equals(
+				ConfigurationFileName,
+#pragma warning disable CA1309
+				StringComparison.InvariantCultureIgnoreCase));
+#pragma warning restore CA1309
 	}
 }
