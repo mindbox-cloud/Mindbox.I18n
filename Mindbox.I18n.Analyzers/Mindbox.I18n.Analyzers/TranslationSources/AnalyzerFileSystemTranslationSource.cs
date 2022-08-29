@@ -35,6 +35,7 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 		LoadProjectFiles(_projectFilePaths);
 
 		_localizationFilePaths = _projectFilePaths
+			.AsParallel()
 			.Select(TryGetLocalizationFilesFromProjectFile)
 			.Where(files => files != null)
 			.SelectMany(files => files)
@@ -48,13 +49,16 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 		base.Initialize();
 	}
 
-	private IEnumerable<string> GetLocalizationFilesFromProjectTargetDirectories()
+	private ParallelQuery<string> GetLocalizationFilesFromProjectTargetDirectories()
 	{
 		return _projectFilePaths
+			.AsParallel()
 			.Select(path => Path.Combine(Path.GetDirectoryName(path), "bin"))
 			.Where(Directory.Exists)
 			.Select(path => Directory.GetFiles(path, $"*{TranslationFileSuffix}", SearchOption.AllDirectories))
-			.SelectMany(files => files);
+			.SelectMany(files => files)
+			.GroupBy(Path.GetFileName)
+			.Select(x => x.First());
 	}
 
 	private static string? GetGreatestCommonFilePath(IEnumerable<string> paths)
@@ -166,9 +170,7 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 		if (projectFileDirectory == null)
 			return null;
 
-#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
-		var projectFileContent = TryGetProjectFileContentAsync(projectFile).Result;
-#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+		var projectFileContent = TryGetProjectFileContent(projectFile);
 		if (projectFileContent == null)
 			return null;
 
@@ -198,24 +200,24 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 		}
 	}
 
-	private static async Task<string?> TryGetProjectFileContentAsync(string projectFile, int tryCounter = 0)
+	private static string? TryGetProjectFileContent(string projectFile)
 	{
-		if (tryCounter > 2)
-			return null;
-
-		try
+		for (var tryCounter = 0; tryCounter < 3; tryCounter++)
 		{
-			return File.ReadAllText(projectFile);
-		}
-		catch (Exception e)
-		{
-			Console.WriteLine(e);
+			try
+			{
+				return File.ReadAllText(projectFile);
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
 
-			// Sometimes VS locks the project files so we can't read from them. Maybe we should wait for a bit so we can read?
-			await Task.Delay(TimeSpan.FromMilliseconds(100));
-
-			return await TryGetProjectFileContentAsync(projectFile, tryCounter + 1);
+				// Sometimes VS locks the project files so we can't read from them. Maybe we should wait for a bit so we can read?
+				Thread.Sleep(100);
+			}
 		}
+
+		return null;
 	}
 
 	private IEnumerable<string> GetProjectFilesFromSolution(string solutionFilePath)
