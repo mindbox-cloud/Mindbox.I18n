@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using Mindbox.I18n.Abstractions;
