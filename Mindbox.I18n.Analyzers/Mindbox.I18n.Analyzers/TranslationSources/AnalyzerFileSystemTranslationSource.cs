@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,7 +19,7 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 
 	private FileSystemWatcher? _localizationFileSystemWatcher;
 	private List<string> _localizationFilePaths = null!;
-	private HashSet<string> _localizationFileNames = null!;
+	private ConcurrentDictionary<string, object?> _localizationFileNames = null!;
 
 	public AnalyzerFileSystemTranslationSource(
 		string solutionFilePath,
@@ -41,7 +42,10 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 			.SelectMany(files => files)
 			.Union(GetLocalizationFilesFromProjectTargetDirectories())
 			.ToList();
-		_localizationFileNames = new HashSet<string>(_localizationFilePaths.Select(Path.GetFileName));
+		_localizationFileNames =
+			new ConcurrentDictionary<string, object?>(_localizationFilePaths.Select(Path.GetFileName)
+				.ToDictionary(x => x, _ => (object?)null));
+
 		Console.WriteLine($"i18n: localization files: {string.Join(", ", _localizationFileNames)}");
 
 		LoadLocalizationFiles(_localizationFilePaths);
@@ -53,7 +57,7 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 	{
 		return _projectFilePaths
 			.AsParallel()
-			.Select(path => Path.Combine(Path.GetDirectoryName(path), "bin"))
+			.Select(path => Path.Combine(Path.GetDirectoryName(path)!, "bin"))
 			.Where(Directory.Exists)
 			.Select(path => Directory.GetFiles(path, $"*{TranslationFileSuffix}", SearchOption.AllDirectories))
 			.SelectMany(files => files)
@@ -136,15 +140,12 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 		{
 			var fileName = Path.GetFileName(localizationFile);
 			// ReSharper disable once InconsistentlySynchronizedField - reading does not require locking
-			if (_localizationFileNames.Contains(fileName))
+			if (_localizationFileNames.ContainsKey(fileName))
 			{
 				return;
 			}
 
-			lock (_localizationFileNames)
-			{
-				_localizationFileNames.Add(fileName);
-			}
+			_localizationFileNames.TryAdd(fileName, null);
 		}
 
 		Console.WriteLine($"i18n: handling change of localization file {localizationFile}");
