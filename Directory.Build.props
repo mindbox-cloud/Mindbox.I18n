@@ -12,14 +12,12 @@
     <NoWarn>$NoWarn;1591;CA1014;CA1062;CA2007;CA1822</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
-    <VersionPrefix>4.1.1</VersionPrefix>
+    <VersionPrefix>4.2.0</VersionPrefix>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.3.44" PrivateAssets="all">
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.2.32" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Mindbox.Analyzers.V3" Version="5.0.10" PrivateAssets="all">
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <PackageReference Include="Mindbox.Analyzers.V3" Version="5.0.7" PrivateAssets="all" />
   </ItemGroup>
 </Project>

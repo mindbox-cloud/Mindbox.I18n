@@ -37,10 +37,14 @@ public class MindboxI18nAnalyzer : DiagnosticAnalyzer
 		context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 
 		context.EnableConcurrentExecution();
+		context.RegisterCompilationStartAction(OnCompilationStart);
+	}
 
+	private void OnCompilationStart(CompilationStartAnalysisContext context)
+	{
 		_diagnosticsContext = new DiagnosticsContext(
 			_explicitTranslationSource ??
-			TranslationSourceContainer.TryGetTranslationSource());
+				TranslationSourceContainer.TryGetTranslationSourceFromAnalyzerOptions(context.Options));
 
 		context.RegisterSyntaxNodeAction(
 			HandleAttributeSyntax,
