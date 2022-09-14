@@ -18,6 +18,9 @@ jobs:
       with:
         dotnet-version: 6.0.x
 
+    - name: Check License Lines
+      uses: kt3k/license_checker@v1.0.6
+    
     - name: Build
       run: dotnet build Mindbox.I18n.sln --configuration Release
       
