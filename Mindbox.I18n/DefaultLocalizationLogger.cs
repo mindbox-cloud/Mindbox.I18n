@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Microsoft.Extensions.Logging;
 using Mindbox.I18n.Abstractions;
 
-
-namespace Mindbox.I18n.AspNetCore;
+namespace Mindbox.I18n;
 
 internal class DefaultLocalizationLogger: Abstractions.ILogger
 {
