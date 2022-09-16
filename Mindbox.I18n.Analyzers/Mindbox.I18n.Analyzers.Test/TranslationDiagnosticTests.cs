@@ -1,11 +1,11 @@
 // Copyright 2022 Mindbox Ltd
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,11 +38,11 @@ public class TranslationDiagnosticTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
 			public LocalizableString Name => ""Marvin:HumanHate"";
 		}
@@ -54,7 +54,8 @@ public class TranslationDiagnosticTests : MindboxI18nAnalyzerTests
 			Message = "\"Marvin was humming ironically because he hated humans so much.\"",
 			Severity = DiagnosticSeverity.Info,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 8, 37)
 				}
 		};
@@ -66,11 +67,11 @@ public class TranslationDiagnosticTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
 			public LocalizableString Name => ""Marvin:HumanLove"";
 		}
@@ -82,7 +83,8 @@ public class TranslationDiagnosticTests : MindboxI18nAnalyzerTests
 			Message = "No translation found for key \"Marvin:HumanLove\"",
 			Severity = DiagnosticSeverity.Error,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 8, 37)
 				}
 		};
