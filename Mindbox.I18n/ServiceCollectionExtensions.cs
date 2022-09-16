@@ -32,7 +32,7 @@ public static class ServiceCollectionExtensions
 		return services;
 	}
 
-	private static LocalizationProvider CreateLocalizationProvider(
+	private static ILocalizationProvider CreateLocalizationProvider(
 		IServiceProvider serviceProvider,
 		Mindbox.I18n.Abstractions.ILogger? loggerOverride = null)
 	{
