@@ -1,11 +1,11 @@
 // Copyright 2022 Mindbox Ltd
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,13 +26,13 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
-			void TestMethod() 
+			void TestMethod()
 			{
 				LocalizableString s = ""Namespace:Key_Key"";
 			}
@@ -47,13 +47,13 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
-			void TestMethod() 
+			void TestMethod()
 			{
 				LocalizableString s;
 				s = ""Кириллическая строка"";
@@ -67,7 +67,8 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 			Message = BuildExpectedMessage("Кириллическая строка"),
 			Severity = DiagnosticSeverity.Error,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 11, 9)
 				}
 		};
@@ -79,13 +80,13 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
-			void TestMethod() 
+			void TestMethod()
 			{
 				LocalizableString s = ""Кириллическая строка"";
 			}
@@ -98,7 +99,8 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 			Message = BuildExpectedMessage("Кириллическая строка"),
 			Severity = DiagnosticSeverity.Error,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 10, 27)
 				}
 		};
@@ -110,13 +112,13 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
-			void TestMethod() 
+			void TestMethod()
 			{
 				LocalizableString s = ""KeyWithoutNamespace"";
 			}
@@ -129,7 +131,8 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 			Message = BuildExpectedMessage("KeyWithoutNamespace"),
 			Severity = DiagnosticSeverity.Error,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 10, 27)
 				}
 		};
@@ -141,13 +144,13 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
-			void TestMethod() 
+			void TestMethod()
 			{
 				LocalizableString s = ""Namespace : Key"";
 			}
@@ -160,7 +163,8 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 			Message = BuildExpectedMessage("Namespace : Key"),
 			Severity = DiagnosticSeverity.Error,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 10, 27)
 				}
 		};
@@ -172,17 +176,17 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
 			void SetName(LocalizableString localizableString)
 			{
 			}
 
-			void TestMethod() 
+			void TestMethod()
 			{
 				SetName(""Кириллическая строка"");
 			}
@@ -195,7 +199,8 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 			Message = BuildExpectedMessage("Кириллическая строка"),
 			Severity = DiagnosticSeverity.Error,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 14, 13)
 				}
 		};
@@ -207,11 +212,11 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
 			private LocalizableString Name = ""Кириллическая строка"";
 		}
@@ -223,7 +228,8 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 			Message = BuildExpectedMessage("Кириллическая строка"),
 			Severity = DiagnosticSeverity.Error,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 8, 37)
 				}
 		};
@@ -235,11 +241,11 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
 			private LocalizableString Name { get; set; } = ""Кириллическая строка"";
 		}
@@ -251,7 +257,8 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 			Message = BuildExpectedMessage("Кириллическая строка"),
 			Severity = DiagnosticSeverity.Error,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 8, 51)
 				}
 		};
@@ -263,15 +270,15 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
 			private LocalizableString Name { get; set; }
 
-			void TestMethod() 
+			void TestMethod()
 			{
 				Name = ""Кириллическая строка"";
 			}
@@ -284,7 +291,8 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 			Message = BuildExpectedMessage("Кириллическая строка"),
 			Severity = DiagnosticSeverity.Error,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 12, 12)
 				}
 		};
@@ -296,17 +304,17 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
 			public TestingClass(LocalizableString s)
 			{
 			}
 
-			void TestMethod() 
+			void TestMethod()
 			{
 				return new TestingClass(""Кириллическая строка"");
 			}
@@ -319,7 +327,8 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 			Message = BuildExpectedMessage("Кириллическая строка"),
 			Severity = DiagnosticSeverity.Error,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 14, 29)
 				}
 		};
@@ -331,13 +340,13 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
-			LocalizableString TestMethod() 
+			LocalizableString TestMethod()
 			{
 				return ""Кириллическая строка"";
 			}
@@ -350,7 +359,8 @@ public class InvalidKeyFormatDiagnosticTests : MindboxI18nAnalyzerTests
 			Message = BuildExpectedMessage("Кириллическая строка"),
 			Severity = DiagnosticSeverity.Error,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 10, 12)
 				}
 		};

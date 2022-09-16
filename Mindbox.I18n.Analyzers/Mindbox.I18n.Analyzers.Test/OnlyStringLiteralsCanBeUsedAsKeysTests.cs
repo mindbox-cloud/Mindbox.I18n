@@ -1,11 +1,11 @@
 // Copyright 2022 Mindbox Ltd
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,13 +26,13 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
-			void TestMethod() 
+			void TestMethod()
 			{
 				LocalizableString s = ""Namespace:Key_Key"";
 			}
@@ -47,13 +47,13 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
-			void TestMethod() 
+			void TestMethod()
 			{
 				LocalizableString s = true ? ""Namespace:Key_Key1"" : ""Namespace:Key_Key2"";
 			}
@@ -68,13 +68,13 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
-			void TestMethod() 
+			void TestMethod()
 			{
 				LocalizableString s = $""{DateTime.Now}"";
 			}
@@ -87,7 +87,8 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 			Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
 			Severity = DiagnosticSeverity.Error,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 10, 27)
 				}
 		};
@@ -99,13 +100,13 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+	using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
-			void TestMethod() 
+			void TestMethod()
 			{
 				LocalizableString s = string.Format(""{0}"", ""text"");
 			}
@@ -118,7 +119,8 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 			Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
 			Severity = DiagnosticSeverity.Error,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 10, 27)
 				}
 		};
@@ -130,12 +132,12 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
-			void TestMethod() 
+			void TestMethod()
 			{
 				string key = ""text"";
 				var str = (LocalizableString)key;
@@ -149,7 +151,8 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 			Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
 			Severity = DiagnosticSeverity.Error,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 10, 34)
 				}
 		};
@@ -161,12 +164,12 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
-			void TestMethod() 
+			void TestMethod()
 			{
 				string key = ""text"";
 				LocalizableString s = key;
@@ -180,7 +183,8 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 			Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
 			Severity = DiagnosticSeverity.Error,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 10, 27)
 				}
 		};
@@ -192,18 +196,18 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
-			void TestMethod2(LocalizableString s) 
+			void TestMethod2(LocalizableString s)
 			{
-				
+
 			}
 
-			void TestMethod() 
+			void TestMethod()
 			{
 				string key = ""text"";
 				TestMethod2(key);
@@ -217,7 +221,8 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 			Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
 			Severity = DiagnosticSeverity.Error,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 16, 17)
 				}
 		};
@@ -229,13 +234,13 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
-			void TestMethod() 
+			void TestMethod()
 			{
 				LocalizableString s = TestingClass.Key;
 			}
@@ -250,7 +255,8 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 			Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
 			Severity = DiagnosticSeverity.Error,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 10, 27)
 				}
 		};
@@ -262,13 +268,13 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
-			void TestMethod() 
+			void TestMethod()
 			{
 				(string, string)? tuple = (""a"", ""b"");
 				LocalizableString s = tuple?.Item1;
@@ -284,7 +290,8 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 			Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
 			Severity = DiagnosticSeverity.Error,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 11, 27)
 				}
 		};
@@ -296,13 +303,13 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
-			void TestMethod() 
+			void TestMethod()
 			{
 				LocalizableString s = ""pupa"" + ""lupa"";
 			}
@@ -315,7 +322,8 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 			Message = Diagnostics.OnlyStringLiteralsCanBeUsedAsKeys.MessageFormat.ToString(),
 			Severity = DiagnosticSeverity.Error,
 			Locations =
-				new[] {
+				new[]
+				{
 					new DiagnosticResultLocation("Test0.cs", 10, 27)
 				}
 		};
@@ -327,14 +335,14 @@ public class OnlyStringLiteralsCanBeUsedAsKeysTests : MindboxI18nAnalyzerTests
 	{
 #pragma warning disable Mindbox1002 // Отступы должны формироваться только с помощью табуляции
 		var test = @"
-	using Mindbox.I18n;
+    using Mindbox.I18n.Abstractions;;
 
     namespace ConsoleApplication1
     {
-		class TestingClass 
+		class TestingClass
 		{
-			void TestMethod() 
-			{				
+			void TestMethod()
+			{
 				LocalizableString s = ""Namespace:Key_Key"";
 				LocalizableString s2 = s;
 			}

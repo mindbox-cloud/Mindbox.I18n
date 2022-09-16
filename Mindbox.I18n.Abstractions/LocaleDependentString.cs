@@ -1,11 +1,11 @@
 // Copyright 2022 Mindbox Ltd
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -13,22 +13,21 @@
 // limitations under the License.
 
 using System.Diagnostics;
-using Mindbox.I18n.Abstractions;
 
-namespace Mindbox.I18n;
+namespace Mindbox.I18n.Abstractions;
 
 [DebuggerDisplay("{" + nameof(Key) + "}")]
-internal sealed class LocaleIndependentString : LocalizableString
+internal sealed class LocaleDependentString : LocalizableString
 {
-	internal LocaleIndependentString(string localeIndependentString)
-	{
-		Key = localeIndependentString;
-	}
-
 	public override string Key { get; }
+
+	internal LocaleDependentString(string key)
+	{
+		Key = key ?? throw new ArgumentNullException(nameof(key));
+	}
 
 	public override string Render(ILocalizationProvider localizationProvider, ILocale locale)
 	{
-		return Key;
+		return localizationProvider.Translate(locale, Key);
 	}
 }
