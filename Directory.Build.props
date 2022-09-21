@@ -18,6 +18,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.2.32" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Mindbox.Analyzers.V3" Version="5.0.7" PrivateAssets="all" />
+    <PackageReference Include="Mindbox.Analyzers.V3" Version="5.0.10" ExcludeAssets="all" />
   </ItemGroup>
 </Project>

@@ -13,7 +13,8 @@
     <NoWarn>$(NoWarn);NU5128</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../Mindbox.I18n/Mindbox.I18n.csproj" PrivateAssets="all" />
+    <ProjectReference Include="../../Mindbox.I18n/Mindbox.I18n.csproj" ExcludeAssets="all" />
+    <ProjectReference Include="../../Mindbox.I18n.Abstractions/Mindbox.I18n.Abstractions.csproj" ExcludeAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.2.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.2.0" PrivateAssets="all" />
     <PackageReference Include="System.Text.Json" Version="6.0.5" PrivateAssets="all" />
