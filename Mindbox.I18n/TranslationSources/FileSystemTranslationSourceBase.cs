@@ -38,7 +38,7 @@ public abstract class FileSystemTranslationSourceBase : ITranslationSource
 		Logger = logger;
 		_translationsPerLocale = supportedLocales.ToDictionary(
 			locale => locale.Name,
-			locale => new TranslationData(locale));
+			locale => new TranslationData(locale, logger));
 	}
 
 	public virtual void Initialize()
@@ -75,17 +75,10 @@ public abstract class FileSystemTranslationSourceBase : ITranslationSource
 
 	public string? TryGetTranslation(ILocale locale, LocalizationKey localizationKey)
 	{
-		if (!_translationsPerLocale.TryGetValue(locale.Name, out var translationData))
-		{
-			Logger.LogCritical($"Locale \"{locale.Name}\" was not found for key \"{localizationKey.FullKey}\".");
-			return null;
-		}
+		if (_translationsPerLocale.TryGetValue(locale.Name, out var translationData))
+			return translationData.TryGetTranslation(localizationKey);
 
-		if (!translationData.TryGetTranslation(localizationKey, out var translation, out var exception))
-		{
-			Logger.LogError(exception, exception?.Message);
-		}
-
-		return translation;
+		Logger.LogError($"Locale \"{locale.Name}\" was not found for key \"{localizationKey.FullKey}\".");
+		return null;
 	}
 }

@@ -18,16 +18,19 @@ using System.Collections.Generic;
 using System.IO;
 using Mindbox.I18n.Abstractions;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 
 namespace Mindbox.I18n;
 
 internal class TranslationData
 {
 	private readonly ILocale _locale;
+	private readonly ILogger _logger;
 
-	public TranslationData(ILocale locale)
+	public TranslationData(ILocale locale, ILogger logger)
 	{
 		_locale = locale;
+		_logger = logger;
 	}
 
 	private readonly ConcurrentDictionary<string, TranslationSet> _translationSetsByNamespace =
@@ -37,42 +40,37 @@ internal class TranslationData
 	{
 		_translationSetsByNamespace.AddOrUpdate(
 			@namespace,
-			ns => new TranslationSet(filePath),
-			(ns, oldSet) => new TranslationSet(filePath));
+			ns => new TranslationSet(filePath, _logger),
+			(ns, oldSet) => new TranslationSet(filePath, _logger));
 	}
 
-	internal bool TryGetTranslation(LocalizationKey localizationKey, out string? translation, out Exception? exception)
+	internal string? TryGetTranslation(LocalizationKey localizationKey)
 	{
-		translation = null;
-		exception = default;
-
 		if (!_translationSetsByNamespace.TryGetValue(localizationKey.Namespace, out var translationSet))
 		{
-			exception = TranslationException.MissingNamespace(_locale.Name, localizationKey.Namespace, localizationKey.FullKey);
-			return false;
+			MissingNamespaceLog(localizationKey.Namespace, localizationKey.FullKey);
+			return null;
 		}
 
-		try
-		{
-			if (translationSet.Data.Value.TryGetValue(localizationKey.FullKey, out translation))
-				return true;
-		}
-		catch (Exception e)
-		{
-			exception = e;
-			return false;
-		}
+		if (translationSet.Data.Value.TryGetValue(localizationKey.FullKey, out var translation))
+			return translation;
 
-		exception = TranslationException.MissingKey(_locale.Name, localizationKey.Namespace, localizationKey.FullKey);
+		MissingKeyLog(localizationKey.Namespace, localizationKey.FullKey);
 
-		return false;
+		return null;
 	}
+
+	private void MissingKeyLog(string @namespace, string key) =>
+		_logger.LogError($"Key \"{key}\" was not found in namespace \"{@namespace}\" for locale \"{_locale.Name}\".");
+
+	private void MissingNamespaceLog(string @namespace, string key) =>
+		_logger.LogError($"Namespace \"{@namespace}\" was not found for key \"{key}\" for locale \"{_locale.Name}\".");
 
 	private class TranslationSet
 	{
 		public Lazy<Dictionary<string, string>> Data { get; }
 
-		public TranslationSet(string filePath)
+		public TranslationSet(string filePath, ILogger logger)
 		{
 			Data = new Lazy<Dictionary<string, string>>(
 				() =>
@@ -85,7 +83,8 @@ internal class TranslationData
 					}
 					catch (Exception e)
 					{
-						throw new TranslationException($"Error loading file {filePath}", e);
+						logger.LogError($"Error loading file {filePath}", e);
+						return new Dictionary<string, string>();
 					}
 				});
 		}
