@@ -83,7 +83,7 @@ public abstract class FileSystemTranslationSourceBase : ITranslationSource
 
 		if (!translationData.TryGetTranslation(localizationKey, out var translation, out var exception))
 		{
-			Logger.LogCritical(exception, exception?.Message);
+			Logger.LogError(exception, exception?.Message);
 		}
 
 		return translation;

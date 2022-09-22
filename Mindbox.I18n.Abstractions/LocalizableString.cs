@@ -50,7 +50,7 @@ public abstract class LocalizableString
 
 	public override string ToString()
 	{
-		Logger?.LogCritical($"ToString() called on LocalizableString with key {Key}");
+		Logger?.LogError($"ToString() called on LocalizableString with key {Key}");
 		return Key;
 	}
 

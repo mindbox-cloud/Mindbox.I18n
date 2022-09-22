@@ -41,7 +41,7 @@ public class LocalizationProvider : ILocalizationProvider
 			var localizationKey = LocalizationKey.TryParse(key);
 			if (localizationKey == null)
 			{
-				InitializationOptions.Logger.LogCritical($"Key \"{key}\" is not a valid key.");
+				InitializationOptions.Logger.LogError($"Key \"{key}\" is not a valid key.");
 				return null;
 			}
 			return _translationSource.TryGetTranslation(locale, localizationKey);
