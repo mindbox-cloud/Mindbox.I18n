@@ -1,11 +1,11 @@
 // Copyright 2022 Mindbox Ltd
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,12 +24,10 @@ namespace Mindbox.I18n;
 internal class TranslationData
 {
 	private readonly ILocale _locale;
-	private readonly ILogger _logger;
 
-	public TranslationData(ILocale locale, ILogger logger)
+	public TranslationData(ILocale locale)
 	{
 		_locale = locale;
-		_logger = logger;
 	}
 
 	private readonly ConcurrentDictionary<string, TranslationSet> _translationSetsByNamespace =
@@ -39,40 +37,43 @@ internal class TranslationData
 	{
 		_translationSetsByNamespace.AddOrUpdate(
 			@namespace,
-			ns => new TranslationSet(filePath, _logger),
-			(ns, oldSet) => new TranslationSet(filePath, _logger));
+			ns => new TranslationSet(filePath),
+			(ns, oldSet) => new TranslationSet(filePath));
 	}
 
-	internal string? TryGetTranslation(LocalizationKey localizationKey)
+	internal bool TryGetTranslation(LocalizationKey localizationKey, out string? translation, out Exception? exception)
 	{
-		if (_translationSetsByNamespace.TryGetValue(localizationKey.Namespace, out var translationSet))
+		translation = null;
+		exception = default;
+
+		if (!_translationSetsByNamespace.TryGetValue(localizationKey.Namespace, out var translationSet))
 		{
-			if (translationSet.Data.Value.TryGetValue(localizationKey.FullKey, out string value))
-			{
-				return value;
-			}
-			else
-			{
-				_logger.LogMissingKey(_locale, localizationKey.Namespace, localizationKey.FullKey);
-			}
-		}
-		else
-		{
-			_logger.LogMissingNamespace(_locale, localizationKey.Namespace, localizationKey.FullKey);
+			exception = TranslationException.MissingNamespace(_locale.Name, localizationKey.Namespace, localizationKey.FullKey);
+			return false;
 		}
 
-		return null;
+		try
+		{
+			if (translationSet.Data.Value.TryGetValue(localizationKey.FullKey, out translation))
+				return true;
+		}
+		catch (Exception e)
+		{
+			exception = e;
+			return false;
+		}
+
+		exception = TranslationException.MissingKey(_locale.Name, localizationKey.Namespace, localizationKey.FullKey);
+
+		return false;
 	}
 
 	private class TranslationSet
 	{
-		public string FilePath { get; }
-
 		public Lazy<Dictionary<string, string>> Data { get; }
 
-		public TranslationSet(string filePath, ILogger logger)
+		public TranslationSet(string filePath)
 		{
-			FilePath = filePath;
 			Data = new Lazy<Dictionary<string, string>>(
 				() =>
 				{
@@ -84,8 +85,7 @@ internal class TranslationData
 					}
 					catch (Exception e)
 					{
-						logger.LogError(e, $"Error loading file {filePath}");
-						return new Dictionary<string, string>();
+						throw new TranslationException($"Error loading file {filePath}", e);
 					}
 				});
 		}

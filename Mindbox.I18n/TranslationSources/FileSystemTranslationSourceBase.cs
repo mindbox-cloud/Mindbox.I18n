@@ -1,11 +1,11 @@
 // Copyright 2022 Mindbox Ltd
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,6 +15,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
 using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n;
@@ -30,12 +31,14 @@ public abstract class FileSystemTranslationSourceBase : ITranslationSource
 	private readonly Dictionary<string, TranslationData> _translationsPerLocale;
 	protected ILogger Logger { get; }
 
-	protected FileSystemTranslationSourceBase(IReadOnlyList<ILocale> supportedLocales, ILogger logger)
+	protected FileSystemTranslationSourceBase(
+		IReadOnlyList<ILocale> supportedLocales,
+		ILogger logger)
 	{
 		Logger = logger;
 		_translationsPerLocale = supportedLocales.ToDictionary(
 			locale => locale.Name,
-			locale => new TranslationData(locale, Logger));
+			locale => new TranslationData(locale));
 	}
 
 	public virtual void Initialize()
@@ -74,10 +77,15 @@ public abstract class FileSystemTranslationSourceBase : ITranslationSource
 	{
 		if (!_translationsPerLocale.TryGetValue(locale.Name, out var translationData))
 		{
-			Logger.LogMissingLocale(locale, localizationKey.FullKey);
+			Logger.LogCritical($"Locale \"{locale.Name}\" was not found for key \"{localizationKey.FullKey}\".");
 			return null;
 		}
 
-		return translationData.TryGetTranslation(localizationKey);
+		if (!translationData.TryGetTranslation(localizationKey, out var translation, out var exception))
+		{
+			Logger.LogCritical(exception, exception?.Message);
+		}
+
+		return translation;
 	}
 }

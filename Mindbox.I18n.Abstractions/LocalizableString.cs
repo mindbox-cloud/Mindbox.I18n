@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Microsoft.Extensions.Logging;
+
 namespace Mindbox.I18n.Abstractions;
 
 public abstract class LocalizableString
@@ -48,7 +50,7 @@ public abstract class LocalizableString
 
 	public override string ToString()
 	{
-		Logger?.LogInvalidOperation($"ToString() called on LocalizableString with key {Key}");
+		Logger?.LogCritical($"ToString() called on LocalizableString with key {Key}");
 		return Key;
 	}
 
