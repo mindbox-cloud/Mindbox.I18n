@@ -1,11 +1,11 @@
 // Copyright 2022 Mindbox Ltd
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using Mindbox.I18n.Abstractions;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 
 namespace Mindbox.I18n;
 
@@ -45,34 +46,32 @@ internal class TranslationData
 
 	internal string? TryGetTranslation(LocalizationKey localizationKey)
 	{
-		if (_translationSetsByNamespace.TryGetValue(localizationKey.Namespace, out var translationSet))
+		if (!_translationSetsByNamespace.TryGetValue(localizationKey.Namespace, out var translationSet))
 		{
-			if (translationSet.Data.Value.TryGetValue(localizationKey.FullKey, out string value))
-			{
-				return value;
-			}
-			else
-			{
-				_logger.LogMissingKey(_locale, localizationKey.Namespace, localizationKey.FullKey);
-			}
+			MissingNamespaceLog(localizationKey.Namespace, localizationKey.FullKey);
+			return null;
 		}
-		else
-		{
-			_logger.LogMissingNamespace(_locale, localizationKey.Namespace, localizationKey.FullKey);
-		}
+
+		if (translationSet.Data.Value.TryGetValue(localizationKey.FullKey, out var translation))
+			return translation;
+
+		MissingKeyLog(localizationKey.Namespace, localizationKey.FullKey);
 
 		return null;
 	}
 
+	private void MissingKeyLog(string @namespace, string key) =>
+		_logger.LogError($"Key \"{key}\" was not found in namespace \"{@namespace}\" for locale \"{_locale.Name}\".");
+
+	private void MissingNamespaceLog(string @namespace, string key) =>
+		_logger.LogError($"Namespace \"{@namespace}\" was not found for key \"{key}\" for locale \"{_locale.Name}\".");
+
 	private class TranslationSet
 	{
-		public string FilePath { get; }
-
 		public Lazy<Dictionary<string, string>> Data { get; }
 
 		public TranslationSet(string filePath, ILogger logger)
 		{
-			FilePath = filePath;
 			Data = new Lazy<Dictionary<string, string>>(
 				() =>
 				{
@@ -84,7 +83,7 @@ internal class TranslationData
 					}
 					catch (Exception e)
 					{
-						logger.LogError(e, $"Error loading file {filePath}");
+						logger.LogError($"Error loading file {filePath}", e);
 						return new Dictionary<string, string>();
 					}
 				});

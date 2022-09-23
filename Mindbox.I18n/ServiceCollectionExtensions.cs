@@ -25,7 +25,7 @@ public static class ServiceCollectionExtensions
 {
 	public static IServiceCollection AddDefaultLocalizationProvider(
 		this IServiceCollection services,
-		Mindbox.I18n.Abstractions.ILogger? loggerOverride = null)
+		ILogger? loggerOverride = null)
 	{
 		services.AddSingleton(sp => CreateLocalizationProvider(sp, loggerOverride));
 
@@ -34,7 +34,7 @@ public static class ServiceCollectionExtensions
 
 	private static ILocalizationProvider CreateLocalizationProvider(
 		IServiceProvider serviceProvider,
-		Mindbox.I18n.Abstractions.ILogger? loggerOverride = null)
+		ILogger? loggerOverride = null)
 	{
 		var assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 		var localizationDirectory = Path.Combine(assemblyDirectory!, "Resources", "Localization");
@@ -46,8 +46,9 @@ public static class ServiceCollectionExtensions
 		};
 
 		var localizationLogger = loggerOverride
-		                         ?? new DefaultLocalizationLogger(serviceProvider
-			                         .GetRequiredService<ILogger<DefaultLocalizationLogger>>());
+		                         ?? serviceProvider
+			                         .GetRequiredService<ILoggerFactory>()
+			                         .CreateLogger("DefaultLocalizationLogger");
 
 		LocalizableString.InitializeLogger(localizationLogger);
 
