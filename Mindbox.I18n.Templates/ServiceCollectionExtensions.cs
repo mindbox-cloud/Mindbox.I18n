@@ -25,13 +25,19 @@ public static class ServiceCollectionExtensions
 {
 	public static IServiceCollection AddDefaultLocalization(
 		this IServiceCollection services,
-		ILogger? loggerOverride = null)
-	{
-		return services
+		ILogger? loggerOverride = null) =>
+		services
 			.AddSingleton<ILocalizationProvider, LocalizationProvider>(
 				serviceProvider => CreateLocalizationProvider(serviceProvider, loggerOverride))
 			.AddSingleton<ILocalizer, Localizer>();
-	}
+
+	public static IServiceCollection AddDefaultLocalizer(this IServiceCollection services) =>
+		services.AddSingleton<ILocalizer, Localizer>();
+
+	public static IServiceCollection AddDefaultLocalizationProvider(
+		this IServiceCollection services,
+		ILogger? loggerOverride = null) =>
+		services.AddSingleton(sp => CreateLocalizationProvider(sp, loggerOverride));
 
 	private static LocalizationProvider CreateLocalizationProvider(
 		IServiceProvider serviceProvider,
