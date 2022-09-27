@@ -13,7 +13,10 @@
 // limitations under the License.
 
 using System;
+using System.IO;
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n.Template;
@@ -22,21 +25,43 @@ public static class ServiceCollectionExtensions
 {
 	public static IServiceCollection AddDefaultLocalization(
 		this IServiceCollection services,
-		InitializationOptions localizationProviderOptions) =>
-		services
-			.AddSingleton<ILocalizationProvider, LocalizationProvider>(_ => new LocalizationProvider(localizationProviderOptions))
-			.AddSingleton<ILocalizer, Localizer>();
-
-	public static IServiceCollection AddDefaultLocalization(
-		this IServiceCollection services,
-		Action<LocalizationProviderBuilder> localizationProviderBuilder)
+		ILogger? loggerOverride = null)
 	{
-		var builder = new LocalizationProviderBuilder();
-		localizationProviderBuilder(builder);
-		var localizationProvider = builder.Build();
-
 		return services
-			.AddSingleton<ILocalizationProvider, LocalizationProvider>(_ => localizationProvider)
+			.AddSingleton<ILocalizationProvider, LocalizationProvider>(
+				serviceProvider => CreateLocalizationProvider(serviceProvider, loggerOverride))
 			.AddSingleton<ILocalizer, Localizer>();
+	}
+
+	private static LocalizationProvider CreateLocalizationProvider(
+		IServiceProvider serviceProvider,
+		ILogger? loggerOverride = null)
+	{
+		var assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+		var localizationDirectory = Path.Combine(assemblyDirectory!, "Resources", "Localization");
+
+		var supportedLocales = new[]
+		{
+			Locales.ruRU,
+			Locales.enUS
+		};
+
+		var localizationLogger = loggerOverride
+		                         ?? serviceProvider
+			                         .GetRequiredService<ILoggerFactory>()
+			                         .CreateLogger("DefaultLocalizationLogger");
+
+		LocalizableString.InitializeLogger(localizationLogger);
+
+		var translationSource = new DiscoveringFileSystemTranslationSource(
+			localizationDirectory,
+			supportedLocales,
+			Array.Empty<string>(),
+			localizationLogger);
+
+		return new LocalizationProviderBuilder()
+			.WithTranslationSource(translationSource)
+			.WithLogger(localizationLogger)
+			.Build();
 	}
 }
