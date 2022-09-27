@@ -19,20 +19,27 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Mindbox.I18n.Abstractions;
 
-namespace Mindbox.I18n;
+namespace Mindbox.I18n.Template;
 
 public static class ServiceCollectionExtensions
 {
+	public static IServiceCollection AddDefaultLocalization(
+		this IServiceCollection services,
+		ILogger? loggerOverride = null) =>
+		services
+			.AddSingleton<ILocalizationProvider, LocalizationProvider>(
+				serviceProvider => CreateLocalizationProvider(serviceProvider, loggerOverride))
+			.AddSingleton<ILocalizer, Localizer>();
+
+	public static IServiceCollection AddDefaultLocalizer(this IServiceCollection services) =>
+		services.AddSingleton<ILocalizer, Localizer>();
+
 	public static IServiceCollection AddDefaultLocalizationProvider(
 		this IServiceCollection services,
-		ILogger? loggerOverride = null)
-	{
+		ILogger? loggerOverride = null) =>
 		services.AddSingleton(sp => CreateLocalizationProvider(sp, loggerOverride));
 
-		return services;
-	}
-
-	private static ILocalizationProvider CreateLocalizationProvider(
+	private static LocalizationProvider CreateLocalizationProvider(
 		IServiceProvider serviceProvider,
 		ILogger? loggerOverride = null)
 	{
