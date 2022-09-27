@@ -2,6 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Copyright>Copyright Mindbox 2022</Copyright>
+        <PackageTags>Mindbox, I18n, template</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
