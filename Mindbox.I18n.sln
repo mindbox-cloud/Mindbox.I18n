@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mindbox.I18n.AspNetCore.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mindbox.I18n.Abstractions", "Mindbox.I18n.Abstractions\Mindbox.I18n.Abstractions.csproj", "{32D48396-0A59-4931-99F2-D6C985696DFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mindbox.I18n.Template", "Mindbox.I18n.Template\Mindbox.I18n.Template.csproj", "{02081462-D630-4060-8055-413FBF831E28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mindbox.I18n.Template", "Mindbox.I18n.Templates\Mindbox.I18n.Template.csproj", "{A47F9B1A-690E-481A-9232-EFE70CCE4989}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +53,10 @@ Global
 		{32D48396-0A59-4931-99F2-D6C985696DFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32D48396-0A59-4931-99F2-D6C985696DFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32D48396-0A59-4931-99F2-D6C985696DFC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{02081462-D630-4060-8055-413FBF831E28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{02081462-D630-4060-8055-413FBF831E28}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{02081462-D630-4060-8055-413FBF831E28}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{02081462-D630-4060-8055-413FBF831E28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A47F9B1A-690E-481A-9232-EFE70CCE4989}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A47F9B1A-690E-481A-9232-EFE70CCE4989}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A47F9B1A-690E-481A-9232-EFE70CCE4989}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A47F9B1A-690E-481A-9232-EFE70CCE4989}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
