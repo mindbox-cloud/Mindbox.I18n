@@ -6,10 +6,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Mindbox.I18n.Abstractions\Mindbox.I18n.Abstractions.csproj" />
+      <ProjectReference Include="..\Mindbox.I18n\Mindbox.I18n.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+      <PackageReference Include="Mindbox.Quokka.Abstractions" Version="4.10.0" />
     </ItemGroup>
 
 </Project>

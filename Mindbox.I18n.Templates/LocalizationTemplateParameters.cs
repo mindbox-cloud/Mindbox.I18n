@@ -12,14 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Mindbox.I18n.Abstractions;
+using System.Collections.Generic;
+using System.Linq;
+using Mindbox.Quokka;
 
-public interface ILocalizer
+namespace Mindbox.I18n.Template;
+
+public sealed class LocalizationTemplateParameters
 {
-	string GetLocalizedString(
-		ILocale locale,
-		LocalizableString localizableString,
-		LocalizationTemplateParameters? localizationTemplateParameters = null);
+	public Dictionary<string, string> Fields { get; } = new();
 
-	string GetLocalizedEnum(ILocale locale, Enum value);
+	public LocalizationTemplateParameters WithField(string fieldName, string value)
+	{
+		Fields.Add(fieldName, value);
+		return this;
+	}
+
+	public ICompositeModelValue ToCompositeModelValue()
+		=> new CompositeModelValue(Fields.Select(f => new ModelField(f.Key, new PrimitiveModelValue(f.Value))));
 }

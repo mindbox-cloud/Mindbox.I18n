@@ -13,18 +13,16 @@
 // limitations under the License.
 
 using System;
-using Microsoft.Extensions.DependencyInjection;
 using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n.Template;
 
-public static class DiSettings
+public interface ILocalizer
 {
-	public static IServiceCollection AddDefaultLocalizer(this IServiceCollection services) =>
-		services.AddSingleton<ILocalizer, Localizer>();
+	string GetLocalizedString(
+		ILocale locale,
+		LocalizableString localizableString,
+		LocalizationTemplateParameters? localizationTemplateParameters = null);
 
-	public static IServiceCollection AddDefaultLocalizer(
-		this IServiceCollection services,
-		Func<IServiceProvider, Localizer> settings) =>
-		services.AddSingleton<ILocalizer, Localizer>(settings);
+	string GetLocalizedEnum(ILocale locale, Enum value);
 }

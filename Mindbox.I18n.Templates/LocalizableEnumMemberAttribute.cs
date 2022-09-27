@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Mindbox.Quokka;
+using System;
+using Mindbox.I18n.Abstractions;
 
-namespace Mindbox.I18n.Abstractions;
+namespace Mindbox.I18n.Template;
 
-public sealed class LocalizationTemplateParameters
+[AttributeUsage(AttributeTargets.Field)]
+public sealed class LocalizableEnumMemberAttribute : Attribute
 {
-	public Dictionary<string, string> Fields { get; } = new();
+	public LocalizableString LocalizableString { get; }
 
-	public LocalizationTemplateParameters WithField(string fieldName, string value)
-	{
-		Fields.Add(fieldName, value);
-		return this;
-	}
-
-	public ICompositeModelValue ToCompositeModelValue()
-		=> new CompositeModelValue(Fields.Select(f => new ModelField(f.Key, new PrimitiveModelValue(f.Value))));
+#pragma warning disable CA1019
+	public LocalizableEnumMemberAttribute([LocalizationKey] string localizationKey)
+#pragma warning restore CA1019
+		=> LocalizableString = LocalizableString.ForKey(localizationKey);
 }
