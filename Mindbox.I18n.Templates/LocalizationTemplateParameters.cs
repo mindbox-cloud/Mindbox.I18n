@@ -20,9 +20,9 @@ namespace Mindbox.I18n.Template;
 
 public sealed class LocalizationTemplateParameters
 {
-	public Dictionary<string, string> Fields { get; } = new();
+	public Dictionary<string, object> Fields { get; } = new();
 
-	public LocalizationTemplateParameters WithField(string fieldName, string value)
+	public LocalizationTemplateParameters WithField(string fieldName, object value)
 	{
 		Fields.Add(fieldName, value);
 		return this;
