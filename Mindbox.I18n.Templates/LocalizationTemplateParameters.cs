@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Mindbox.Quokka;
@@ -20,14 +21,99 @@ namespace Mindbox.I18n.Template;
 
 public sealed class LocalizationTemplateParameters
 {
-	public Dictionary<string, object> Fields { get; } = new();
+	private Dictionary<string, IModelValue> Fields { get; } = new();
 
-	public LocalizationTemplateParameters WithField(string fieldName, object value)
+	public LocalizationTemplateParameters WithField(
+		string fieldName,
+		bool value)
 	{
-		Fields.Add(fieldName, value);
-		return this;
+		return WithFieldCore(fieldName, value);
+	}
+
+	public LocalizationTemplateParameters WithField(
+		string fieldName,
+		bool? value)
+	{
+		return WithFieldCore(fieldName, value);
+	}
+
+	public LocalizationTemplateParameters WithField(
+		string fieldName,
+		DateTime value)
+	{
+		return WithFieldCore(fieldName, value);
+	}
+
+	public LocalizationTemplateParameters WithField(
+		string fieldName,
+		DateTime? value)
+	{
+		return WithFieldCore(fieldName, value);
+	}
+
+	public LocalizationTemplateParameters WithField(
+		string fieldName,
+		int value)
+	{
+		return WithFieldCore(fieldName, value);
+	}
+
+	public LocalizationTemplateParameters WithField(
+		string fieldName,
+		int? value)
+	{
+		return WithFieldCore(fieldName, value);
+	}
+
+	public LocalizationTemplateParameters WithField(
+		string fieldName,
+		string value)
+	{
+		return WithFieldCore(fieldName, value);
+	}
+
+	public LocalizationTemplateParameters WithField(
+		string fieldName,
+		TimeSpan value)
+	{
+		return WithFieldCore(fieldName, value);
+	}
+
+	public LocalizationTemplateParameters WithField(
+		string fieldName,
+		TimeSpan? value)
+	{
+		return WithFieldCore(fieldName, value);
+	}
+
+	public LocalizationTemplateParameters WithField(
+		string fieldName,
+		decimal value)
+	{
+		return WithFieldCore(fieldName, value);
+	}
+
+	public LocalizationTemplateParameters WithField(
+		string fieldName,
+		decimal? value)
+	{
+		return WithFieldCore(fieldName, value);
 	}
 
 	public ICompositeModelValue ToCompositeModelValue()
-		=> new CompositeModelValue(Fields.Select(f => new ModelField(f.Key, new PrimitiveModelValue(f.Value))));
+	{
+		return new CompositeModelValue(Fields.Select(f => new ModelField(f.Key, f.Value)));
+	}
+
+	private LocalizationTemplateParameters WithFieldCore<TEntityType>(
+		string fieldName,
+		TEntityType value)
+	{
+		if (string.IsNullOrWhiteSpace(fieldName))
+			throw new ArgumentNullException(nameof(fieldName));
+
+		Fields.Add(fieldName, new PrimitiveModelValue(value));
+
+		return this;
+	}
 }
