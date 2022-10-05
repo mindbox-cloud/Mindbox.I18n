@@ -18,7 +18,7 @@ public sealed class LocalizationTemplateParameters
 {
 	private readonly Dictionary<string, object?> _fields = new();
 
-	internal IReadOnlyDictionary<string, object?> Fields => _fields;
+	public IReadOnlyDictionary<string, object?> Fields => _fields;
 
 	public LocalizationTemplateParameters WithField(
 		string fieldName,
