@@ -12,16 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Mindbox.Quokka;
-
-namespace Mindbox.I18n.Template;
+namespace Mindbox.I18n.Abstractions;
 
 public sealed class LocalizationTemplateParameters
 {
-	private Dictionary<string, IModelValue> Fields { get; } = new();
+	private readonly Dictionary<string, object?> _fields = new();
+
+	public IReadOnlyDictionary<string, object?> Fields => _fields;
 
 	public LocalizationTemplateParameters WithField(
 		string fieldName,
@@ -100,19 +97,14 @@ public sealed class LocalizationTemplateParameters
 		return WithFieldCore(fieldName, value);
 	}
 
-	public ICompositeModelValue ToCompositeModelValue()
-	{
-		return new CompositeModelValue(Fields.Select(f => new ModelField(f.Key, f.Value)));
-	}
-
-	private LocalizationTemplateParameters WithFieldCore<TEntityType>(
+	private LocalizationTemplateParameters WithFieldCore(
 		string fieldName,
-		TEntityType value)
+		object? value)
 	{
 		if (string.IsNullOrWhiteSpace(fieldName))
 			throw new ArgumentNullException(nameof(fieldName));
 
-		Fields.Add(fieldName, new PrimitiveModelValue(value));
+		_fields.Add(fieldName, value);
 
 		return this;
 	}

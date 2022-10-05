@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Mindbox.I18n.Abstractions;
@@ -47,7 +48,11 @@ public sealed class Localizer : ILocalizer
 			return @string;
 
 		var template = _templateFactory.CreateTemplate(@string);
-		return template.Render(localizationTemplateParameters.ToCompositeModelValue());
+		var compositeModel = new CompositeModelValue(localizationTemplateParameters
+			.Fields
+			.Select(f => new ModelField(f.Key, f.Value)));
+
+		return template.Render(compositeModel);
 	}
 
 	public string GetLocalizedEnum(ILocale locale, Enum value)
