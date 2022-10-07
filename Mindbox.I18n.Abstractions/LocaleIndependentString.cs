@@ -17,7 +17,7 @@ using System.Diagnostics;
 namespace Mindbox.I18n.Abstractions;
 
 [DebuggerDisplay("{" + nameof(Key) + "}")]
-internal sealed class LocaleIndependentString : LocalizableString
+public sealed class LocaleIndependentString : LocalizableString
 {
 	internal LocaleIndependentString(string localeIndependentString)
 	{
@@ -25,9 +25,4 @@ internal sealed class LocaleIndependentString : LocalizableString
 	}
 
 	public override string Key { get; }
-
-	public override string Render(ILocalizationProvider localizationProvider, ILocale locale)
-	{
-		return Key;
-	}
 }
