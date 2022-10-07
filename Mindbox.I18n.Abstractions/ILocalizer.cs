@@ -12,10 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using Mindbox.I18n.Abstractions;
-
-namespace Mindbox.I18n.Template;
+namespace Mindbox.I18n.Abstractions;
 
 public interface ILocalizer
 {
