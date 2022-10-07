@@ -27,19 +27,19 @@ public static class ServiceCollectionExtensions
 		this IServiceCollection services,
 		ILogger? loggerOverride = null) =>
 		services
-			.AddSingleton<ILocalizationProvider, LocalizationProvider>(
-				serviceProvider => CreateLocalizationProvider(serviceProvider, loggerOverride))
+			.AddSingleton(
+				serviceProvider => CreateLocalizationInitializationOptions(serviceProvider, loggerOverride))
 			.AddSingleton<ILocalizer, Localizer>();
 
 	public static IServiceCollection AddDefaultLocalizer(this IServiceCollection services) =>
 		services.AddSingleton<ILocalizer, Localizer>();
 
-	public static IServiceCollection AddDefaultLocalizationProvider(
+	public static IServiceCollection AddDefaultLocalizationInitializationOptions(
 		this IServiceCollection services,
 		ILogger? loggerOverride = null) =>
-		services.AddSingleton(sp => CreateLocalizationProvider(sp, loggerOverride));
+		services.AddSingleton(sp => CreateLocalizationInitializationOptions(sp, loggerOverride));
 
-	private static LocalizationProvider CreateLocalizationProvider(
+	private static InitializationOptions CreateLocalizationInitializationOptions(
 		IServiceProvider serviceProvider,
 		ILogger? loggerOverride = null)
 	{
@@ -65,9 +65,10 @@ public static class ServiceCollectionExtensions
 			Array.Empty<string>(),
 			localizationLogger);
 
-		return new LocalizationProviderBuilder()
-			.WithTranslationSource(translationSource)
-			.WithLogger(localizationLogger)
-			.Build();
+		return new InitializationOptions()
+		{
+			TranslationSource = translationSource,
+			Logger = localizationLogger
+		};
 	}
 }

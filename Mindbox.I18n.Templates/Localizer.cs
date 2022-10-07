@@ -27,11 +27,11 @@ public sealed class Localizer : ILocalizer
 	private readonly ILogger<Localizer> _logger;
 
 	public Localizer(
-		ILocalizationProvider localizationProvider,
+		InitializationOptions options,
 		ITemplateFactory templateFactory,
 		ILogger<Localizer> logger)
 	{
-		_localizationProvider = localizationProvider;
+		_localizationProvider = new LocalizationProvider(options);
 		_templateFactory = templateFactory;
 		_logger = logger;
 	}
@@ -41,7 +41,11 @@ public sealed class Localizer : ILocalizer
 		LocalizableString localizableString,
 		LocalizationTemplateParameters? localizationTemplateParameters = null)
 	{
-		var @string = localizableString.Render(_localizationProvider, locale);
+		var @string = localizableString switch
+		{
+			LocaleIndependentString => localizableString.Key,
+			_ => _localizationProvider.Translate(locale, localizableString.Key)
+		};
 
 		if (localizationTemplateParameters is null)
 			return @string;
@@ -68,6 +72,5 @@ public sealed class Localizer : ILocalizer
 			value.GetType());
 
 		return value.ToString();
-
 	}
 }
