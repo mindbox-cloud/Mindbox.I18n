@@ -2,7 +2,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IncludeBuildOutput>true</IncludeBuildOutput>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>    
   </PropertyGroup>
   <PropertyGroup>
     <PackageId>Mindbox.I18n</PackageId>
@@ -20,5 +19,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mindbox.I18n.Abstractions\Mindbox.I18n.Abstractions.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).Template" />
   </ItemGroup>
 </Project>

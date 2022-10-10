@@ -18,7 +18,7 @@ using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n;
 
-public class LocalizationProvider : ILocalizationProvider
+internal class LocalizationProvider : ILocalizationProvider
 {
 	public InitializationOptions InitializationOptions { get; }
 

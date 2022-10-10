@@ -25,9 +25,4 @@ internal sealed class LocaleDependentString : LocalizableString
 	{
 		Key = key ?? throw new ArgumentNullException(nameof(key));
 	}
-
-	public override string Render(ILocalizationProvider localizationProvider, ILocale locale)
-	{
-		return localizationProvider.Translate(locale, Key);
-	}
 }

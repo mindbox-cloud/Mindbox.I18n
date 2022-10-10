@@ -1,4 +1,4 @@
-// Copyright 2022 Mindbox Ltd
+﻿// Copyright 2022 Mindbox Ltd
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,17 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Diagnostics;
+using System.Linq;
+using Mindbox.I18n.Abstractions;
+using Mindbox.Quokka;
 
-namespace Mindbox.I18n.Abstractions;
+namespace Mindbox.I18n.Template;
 
-[DebuggerDisplay("{" + nameof(Key) + "}")]
-public sealed class LocaleIndependentString : LocalizableString
+public static class LocalizationTemplateParametersExtensions
 {
-	internal LocaleIndependentString(string localeIndependentString)
+	public static ICompositeModelValue ToCompositeModelValue(this LocalizationTemplateParameters parameters)
 	{
-		Key = localeIndependentString;
+		return new CompositeModelValue(parameters.Fields.Select(f => new ModelField(f.Key, f.Value)));
 	}
-
-	public override string Key { get; }
 }

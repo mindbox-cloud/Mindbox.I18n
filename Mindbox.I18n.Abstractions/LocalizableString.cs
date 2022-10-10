@@ -54,8 +54,6 @@ public abstract class LocalizableString
 		return Key;
 	}
 
-	public abstract string Render(ILocalizationProvider localizationProvider, ILocale locale);
-
 	public LocalizableString WithContext<TContext>(TContext context) where TContext : class
 	{
 		if (_context != null)
