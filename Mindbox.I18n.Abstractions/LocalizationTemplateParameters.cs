@@ -16,8 +16,7 @@ namespace Mindbox.I18n.Abstractions;
 
 public sealed class LocalizationTemplateParameters
 {
-	private readonly Dictionary<string, object?> _fields = new();
-	public IReadOnlyDictionary<string, object?> Fields => _fields;
+	public Dictionary<string, object?> Fields { get; } = new();
 
 	public LocalizationTemplateParameters WithField(
 		string fieldName,
@@ -103,7 +102,7 @@ public sealed class LocalizationTemplateParameters
 		if (string.IsNullOrWhiteSpace(fieldName))
 			throw new ArgumentNullException(nameof(fieldName));
 
-		_fields.Add(fieldName, value);
+		Fields.Add(fieldName, value);
 
 		return this;
 	}
