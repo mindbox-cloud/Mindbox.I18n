@@ -16,7 +16,7 @@ using System;
 using Microsoft.Extensions.Logging;
 using Mindbox.I18n.Abstractions;
 
-namespace Mindbox.I18n.Template;
+namespace Mindbox.I18n;
 
 internal class LocalizationProvider : ILocalizationProvider
 {

@@ -21,4 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Mindbox.I18n.Abstractions\Mindbox.I18n.Abstractions.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).Template" />
+  </ItemGroup>
 </Project>
