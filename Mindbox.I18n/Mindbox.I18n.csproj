@@ -2,7 +2,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IncludeBuildOutput>true</IncludeBuildOutput>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>    
   </PropertyGroup>
   <PropertyGroup>
     <PackageId>Mindbox.I18n</PackageId>
