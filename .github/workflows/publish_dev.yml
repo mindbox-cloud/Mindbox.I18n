@@ -29,7 +29,7 @@ jobs:
       run: dotnet test Mindbox.I18n.sln --no-build --configuration Release
 
     - name: Pack
-      run: dotnet pack Mindbox.I18n.sln -c Release -p:BuildNumber=${{ github.run_number }} -p:VersionTag="dev"
+      run: dotnet pack Mindbox.I18n.sln -c Release -p:BuildNumber=${{ github.run_number }} -p:VersionTag="-dev"
 
     - name: Publish
       run: dotnet nuget push **/*.nupkg -k ${{secrets.MINDBOX_NUGET_AUTH_TOKEN}} -s https://www.nuget.org/api/v2/package
