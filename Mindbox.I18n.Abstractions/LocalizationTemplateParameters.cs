@@ -106,4 +106,22 @@ public sealed class LocalizationTemplateParameters
 
 		return this;
 	}
+
+	public static LocalizationTemplateParameters Union(params LocalizationTemplateParameters[] localizationTemplateParameters)
+	{
+		var result = new LocalizationTemplateParameters();
+
+		foreach (var parameters in localizationTemplateParameters)
+		{
+			foreach (var field in parameters.Fields)
+			{
+				if (result.Fields.ContainsKey(field.Key))
+					throw new InvalidOperationException($"Localization parameter with key {field.Key} has already been added");
+
+				result.Fields.Add(field.Key, field.Value);
+			}
+		}
+
+		return result;
+	}
 }
