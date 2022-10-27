@@ -25,28 +25,20 @@ public abstract class LocalizableString
 		Logger = logger;
 	}
 
-	public static LocalizableString ForKey([LocalizationKey] string key)
-	{
-		if (key == null)
-		{
-			throw new ArgumentNullException(nameof(key));
-		}
-		return new LocaleDependentString(key);
-	}
+	public static LocalizableString ForKey([LocalizationKey] string key) =>
+		new LocaleDependentString(key ?? throw new ArgumentNullException(nameof(key)));
 
-	public static LocalizableString LocaleIndependent(string localeIndependentString)
-	{
-		return new LocaleIndependentString(localeIndependentString);
-	}
+	public static LocalizableString LocaleIndependent(string localeIndependentString) =>
+		new LocaleIndependentString(localeIndependentString);
 
 #pragma warning disable CA2225
-	public static implicit operator LocalizableString(string key)
+	public static implicit operator LocalizableString(string key) =>
+		new LocaleDependentString(key);
 #pragma warning restore CA2225
-	{
-		return new LocaleDependentString(key);
-	}
 
 	public abstract string Key { get; }
+
+	public LocalizationTemplateParameters? LocalizationParameters { get; set; }
 
 	public override string ToString()
 	{
@@ -54,26 +46,15 @@ public abstract class LocalizableString
 		return Key;
 	}
 
-	public LocalizableString WithContext<TContext>(TContext context) where TContext : class
+	public LocalizableString WithParameters(Action<LocalizationTemplateParameters> configureParameters)
 	{
-		if (_context != null)
-			throw new InvalidOperationException($"Context has already been set");
+		if (configureParameters == null)
+			throw new ArgumentNullException(nameof(configureParameters));
 
-		_context = context ?? throw new ArgumentNullException(nameof(context));
+		var parameters = new LocalizationTemplateParameters();
+		configureParameters?.Invoke(parameters);
+		LocalizationParameters = parameters;
 
 		return this;
 	}
-
-	public TContext? GetContext<TContext>() where TContext : class
-	{
-		if (_context == null)
-			return null;
-		if (_context is not TContext context)
-			throw new InvalidOperationException(
-				$"Context is not empty, but can't cast it's value of type {_context.GetType()} to {typeof(TContext)}");
-
-		return context;
-	}
-
-	private object? _context;
 }
