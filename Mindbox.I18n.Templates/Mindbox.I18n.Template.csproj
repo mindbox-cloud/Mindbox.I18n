@@ -15,5 +15,9 @@
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
       <PackageReference Include="Mindbox.Quokka.Abstractions" Version="4.10.0" />
     </ItemGroup>
+  
+    <ItemGroup>
+      <InternalsVisibleTo Include="Mindbox.I18n.Tests" />
+    </ItemGroup>
 
 </Project>
