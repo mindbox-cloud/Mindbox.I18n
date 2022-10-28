@@ -107,6 +107,21 @@ public sealed class LocalizationTemplateParameters
 		return this;
 	}
 
+	public static LocalizationTemplateParameters? Contact(
+		LocalizationTemplateParameters? first,
+		LocalizationTemplateParameters? second)
+	{
+		if (first is null && second is null)
+			return null;
+
+		if (first is not null && second is null)
+			return first;
+		if (first is null && second is not null)
+			return second;
+
+		return Union(first!, second!);
+	}
+
 	public static LocalizationTemplateParameters Union(params LocalizationTemplateParameters[] localizationTemplateParameters)
 	{
 		var result = new LocalizationTemplateParameters();

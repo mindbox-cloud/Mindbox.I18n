@@ -17,10 +17,54 @@ namespace Mindbox.I18n.Tests;
 [TestClass]
 public class LocalizationTemplateParametersTests
 {
-	public const string FirstKey = "firstKey";
-	public const string SecondKey = "secondKey";
-	public const string DefaultStringValue = "value";
-	public const int DefaultIntValue = 123;
+	private const string FirstKey = "firstKey";
+	private const string SecondKey = "secondKey";
+	private const string DefaultStringValue = "value";
+	private const int DefaultIntValue = 123;
+
+	[TestMethod]
+	public void Contact_AllIsNull_ReturnNull()
+	{
+		var result = LocalizationTemplateParameters.Contact(null, null);
+
+		Assert.IsNull(result);
+	}
+
+	[TestMethod]
+	public void Contact_SecondIsNull_ReturnFirst()
+	{
+		var firstParameters = new LocalizationTemplateParameters().WithField(FirstKey, DefaultStringValue);
+
+		var result = LocalizationTemplateParameters.Contact(firstParameters, null);
+
+		Assert.IsNotNull(result);
+		Assert.AreEqual(result, firstParameters);
+	}
+
+	[TestMethod]
+	public void Contact_FirstIsNull_ReturnSecond()
+	{
+		var secondParameters = new LocalizationTemplateParameters().WithField(SecondKey, DefaultIntValue);
+
+		var result = LocalizationTemplateParameters.Contact(null, secondParameters);
+
+		Assert.IsNotNull(result);
+		Assert.AreEqual(result, secondParameters);
+	}
+
+	[TestMethod]
+	public void Contact_AllReturned()
+	{
+		var firstParameters = new LocalizationTemplateParameters().WithField(FirstKey, DefaultStringValue);
+		var secondParameters = new LocalizationTemplateParameters().WithField(SecondKey, DefaultIntValue);
+
+		var result = LocalizationTemplateParameters.Contact(firstParameters, secondParameters);
+
+		Assert.IsNotNull(result);
+		Assert.AreEqual(2, result.Fields.Count);
+		Assert.AreEqual(DefaultStringValue, result.Fields[FirstKey]);
+		Assert.AreEqual(DefaultIntValue, result.Fields[SecondKey]);
+	}
 
 	[TestMethod]
 	public void Union_WithUniqueValues_Works()
