@@ -36,6 +36,16 @@ public sealed class Localizer : ILocalizer
 		_logger = logger;
 	}
 
+	internal Localizer(
+		ILocalizationProvider localizationProvider,
+		ITemplateFactory templateFactory,
+		ILogger<Localizer> logger)
+	{
+		_localizationProvider = localizationProvider;
+		_templateFactory = templateFactory;
+		_logger = logger;
+	}
+
 	public string? TryGetParameterizedLocalizedString(
 		ILocale locale,
 		LocalizableString localizableString,
