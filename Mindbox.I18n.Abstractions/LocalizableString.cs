@@ -48,11 +48,8 @@ public abstract class LocalizableString
 
 	public LocalizableString WithParameters(Action<LocalizationTemplateParameters> configureParameters)
 	{
-		if (configureParameters == null)
-			throw new ArgumentNullException(nameof(configureParameters));
-
 		var parameters = new LocalizationTemplateParameters();
-		configureParameters?.Invoke(parameters);
+		configureParameters.Invoke(parameters);
 		LocalizationParameters = parameters;
 
 		return this;
