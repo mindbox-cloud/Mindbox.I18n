@@ -27,7 +27,7 @@ public class LocalizerTests
 			mockTemplateFactory.Object,
 			NullLogger<Localizer>.Instance);
 
-		var localizableString = LocalizableString.ForKey(LocalizationProviderStub.SimpleLocalizableStringKey);
+		var localizableString = LocalizableString.ForKey(DefaultValues.SimpleLocalizableStringKey);
 
 		var result = localizer.TryGetParameterizedLocalizedString(Locales.enUS, localizableString);
 
@@ -37,14 +37,14 @@ public class LocalizerTests
 	[TestMethod]
 	public void TryGetParameterizedLocalizedString_TemplateNotAccepted_ReturnNull()
 	{
-		var compositeModelDefinitionStub = new CompositeModelDefinitionStub();
+		var compositeModelDefinitionStub = new CompositeModelDefinitionStub(DefaultValues.CompositeModelDefinitionFields);
 		var template = new TemplateStub(compositeModelDefinitionStub);
 
 		var mockTemplateFactory = new Mock<ITemplateFactory>();
 		mockTemplateFactory
 			.Setup(x =>
 				x.CreateTemplate(It.Is<string>(inputString =>
-					inputString == LocalizationProviderStub.ParameterizedLocalizableStringValue)))
+					inputString == DefaultValues.ParameterizedLocalizableStringValue)))
 			.Returns(template);
 
 		var localizer = new Localizer(
@@ -53,7 +53,7 @@ public class LocalizerTests
 			NullLogger<Localizer>.Instance);
 
 		var localizableString = LocalizableString
-			.ForKey(LocalizationProviderStub.ParameterizedLocalizableStringKey)
+			.ForKey(DefaultValues.ParameterizedLocalizableStringKey)
 			.WithParameters(parameters => parameters.WithField("firstParam", 1));
 
 		var result = localizer.TryGetParameterizedLocalizedString(Locales.enUS, localizableString);
@@ -66,22 +66,17 @@ public class LocalizerTests
 	[TestMethod]
 	public void TryGetParameterizedLocalizedString_TemplateAccepted_ReturnString()
 	{
-		var compositeModelDefinitionStub = new CompositeModelDefinitionStub(
-			new Dictionary<string, IModelDefinition>()
-			{
-				["firstParam"] = Mock.Of<IModelDefinition>(),
-				["secondParam"] = Mock.Of<IModelDefinition>()
-			});
+		var compositeModelDefinitionStub = new CompositeModelDefinitionStub(DefaultValues.CompositeModelDefinitionFields);
 		var mockTemplate = new Mock<TemplateStub>(compositeModelDefinitionStub);
 		mockTemplate.Setup(x =>
 				x.Render(It.IsAny<ICompositeModelValue>(), It.IsAny<ICallContextContainer?>()))
-			.Returns(LocalizationProviderStub.ParameterizedLocalizableStringValue);
+			.Returns(DefaultValues.ParameterizedLocalizableStringValue);
 
 		var mockTemplateFactory = new Mock<ITemplateFactory>();
 		mockTemplateFactory
 			.Setup(x =>
 				x.CreateTemplate(It.Is<string>(inputString =>
-					inputString == LocalizationProviderStub.ParameterizedLocalizableStringValue)))
+					inputString == DefaultValues.ParameterizedLocalizableStringValue)))
 			.Returns(mockTemplate.Object);
 
 		var localizer = new Localizer(
@@ -90,7 +85,7 @@ public class LocalizerTests
 			NullLogger<Localizer>.Instance);
 
 		var localizableString = LocalizableString
-			.ForKey(LocalizationProviderStub.ParameterizedLocalizableStringKey)
+			.ForKey(DefaultValues.ParameterizedLocalizableStringKey)
 			.WithParameters(parameters => parameters
 				.WithField("firstParam", 1)
 				.WithField("secondParam", 2));
@@ -99,6 +94,6 @@ public class LocalizerTests
 
 		mockTemplate.Verify();
 		Assert.IsNotNull(result);
-		Assert.AreEqual(LocalizationProviderStub.ParameterizedLocalizableStringValue, result);
+		Assert.AreEqual(DefaultValues.ParameterizedLocalizableStringValue, result);
 	}
 }

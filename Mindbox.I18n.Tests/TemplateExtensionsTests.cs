@@ -20,7 +20,7 @@ public class TemplateExtensionsTests
 	[TestMethod]
 	public void Accepts_DifferentCountOfFields_ReturnFalse()
 	{
-		var compositeModelDefinition = new CompositeModelDefinitionStub();
+		var compositeModelDefinition = new CompositeModelDefinitionStub(DefaultValues.CompositeModelDefinitionFields);
 		var template = new TemplateStub(compositeModelDefinition);
 		var localizationTemplateParameters = new LocalizationTemplateParameters().WithField("param", "value");
 
@@ -32,7 +32,7 @@ public class TemplateExtensionsTests
 	[TestMethod]
 	public void Accepts_DifferentFields_ReturnFalse()
 	{
-		var compositeModelDefinition = new CompositeModelDefinitionStub();
+		var compositeModelDefinition = new CompositeModelDefinitionStub(DefaultValues.CompositeModelDefinitionFields);
 		var template = new TemplateStub(compositeModelDefinition);
 		var localizationTemplateParameters = new LocalizationTemplateParameters()
 			.WithField("param1", "value1")

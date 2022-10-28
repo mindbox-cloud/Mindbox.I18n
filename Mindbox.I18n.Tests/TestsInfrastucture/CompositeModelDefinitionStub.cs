@@ -21,15 +21,6 @@ public class CompositeModelDefinitionStub : ICompositeModelDefinition
 	public IReadOnlyDictionary<IMethodCallDefinition, IModelDefinition> Methods =>
 		new Dictionary<IMethodCallDefinition, IModelDefinition>();
 
-	public CompositeModelDefinitionStub()
-	{
-		Fields = new Dictionary<string, IModelDefinition>()
-		{
-			["firstParam"] = Mock.Of<IModelDefinition>(),
-			["secondParam"] = Mock.Of<IModelDefinition>()
-		};
-	}
-
 	public CompositeModelDefinitionStub(IReadOnlyDictionary<string, IModelDefinition> fields)
 	{
 		Fields = fields ?? throw new ArgumentNullException(nameof(fields));

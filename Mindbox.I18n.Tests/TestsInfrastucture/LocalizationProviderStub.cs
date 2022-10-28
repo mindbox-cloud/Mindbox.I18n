@@ -16,11 +16,6 @@ namespace Mindbox.I18n.Tests;
 
 public class LocalizationProviderStub : ILocalizationProvider
 {
-	public const string SimpleLocalizableStringKey = "Test:SimpleLocalizableStringKey";
-	public const string SimpleLocalizableStringValue = "Test message";
-	public const string ParameterizedLocalizableStringKey = "Test:ParameterizedLocalizableStringKey";
-	public const string ParameterizedLocalizableStringValue = "Test with message: ${firstParam} and ${secondParam}";
-
 	public string Translate(ILocale locale, string key)
 	{
 		if (locale.Name != Locales.enUS.Name)
@@ -28,8 +23,8 @@ public class LocalizationProviderStub : ILocalizationProvider
 
 		return key switch
 		{
-			SimpleLocalizableStringKey => SimpleLocalizableStringValue,
-			ParameterizedLocalizableStringKey => ParameterizedLocalizableStringValue,
+			DefaultValues.SimpleLocalizableStringKey => DefaultValues.SimpleLocalizableStringValue,
+			DefaultValues.ParameterizedLocalizableStringKey => DefaultValues.ParameterizedLocalizableStringValue,
 			_ => throw new InvalidOperationException()
 		};
 	}
