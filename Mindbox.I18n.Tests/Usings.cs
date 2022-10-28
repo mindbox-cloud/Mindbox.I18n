@@ -14,3 +14,8 @@
 
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
 global using Mindbox.I18n.Abstractions;
+global using Mindbox.I18n.Template;
+global using Mindbox.Quokka;
+global using Microsoft.Extensions.Logging.Abstractions;
+global using Moq;
+
