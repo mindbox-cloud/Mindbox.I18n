@@ -35,13 +35,6 @@ public class LocalizableStringTests
 	}
 
 	[TestMethod]
-	public void ForKey_WithParameters_ThrowException_WhenNull()
-	{
-		Assert.ThrowsException<ArgumentNullException>(() =>
-			LocalizableString.ForKey(DefaultKey).WithParameters(null!));
-	}
-
-	[TestMethod]
 	public void ForKey_WithParameters()
 	{
 		var firstParameter = 123;
