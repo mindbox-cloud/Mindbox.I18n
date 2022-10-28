@@ -17,7 +17,7 @@ namespace Mindbox.I18n.Tests;
 [TestClass]
 public class LocalizableStringTests
 {
-	public const string DefaultKey = "Prefix:key";
+	private const string DefaultKey = "Prefix:key";
 
 	[TestMethod]
 	public void ForKey_NullValue_ThrowException()
