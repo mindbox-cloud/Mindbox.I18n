@@ -16,6 +16,11 @@ namespace Mindbox.I18n.Abstractions;
 
 public interface ILocalizer
 {
+	string? TryGetParameterizedLocalizedString(
+		ILocale locale,
+		LocalizableString localizableString,
+		LocalizationTemplateParameters? localizationTemplateParameters = null);
+
 	string GetLocalizedString(
 		ILocale locale,
 		LocalizableString localizableString,

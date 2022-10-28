@@ -36,6 +36,34 @@ public sealed class Localizer : ILocalizer
 		_logger = logger;
 	}
 
+	public string? TryGetParameterizedLocalizedString(
+		ILocale locale,
+		LocalizableString localizableString,
+		LocalizationTemplateParameters? localizationTemplateParameters = null)
+	{
+		if (localizationTemplateParameters is null && localizableString.LocalizationParameters is null)
+			return null;
+
+		var @string = localizableString switch
+		{
+			LocaleIndependentString => localizableString.Key,
+			_ => _localizationProvider.Translate(locale, localizableString.Key)
+		};
+
+		var localizationParameters = LocalizationTemplateParameters.Contact(
+			localizableString.LocalizationParameters,
+			localizationTemplateParameters);
+
+		if (localizationParameters is null)
+			return null;
+
+		var template = _templateFactory.CreateTemplate(@string);
+
+		return template.Accepts(localizationParameters)
+			? template.Render(localizationParameters.ToCompositeModelValue())
+			: null;
+	}
+
 	public string GetLocalizedString(
 		ILocale locale,
 		LocalizableString localizableString,
