@@ -62,8 +62,8 @@ public class LocalizationTemplateParametersTests
 
 		Assert.IsNotNull(result);
 		Assert.AreEqual(2, result.Fields.Count);
-		Assert.AreEqual(DefaultStringValue, result.Fields[FirstKey]);
-		Assert.AreEqual(DefaultIntValue, result.Fields[SecondKey]);
+		Assert.AreEqual(DefaultStringValue, (result.Fields[FirstKey] as PrimitiveParameter)!.Value);
+		Assert.AreEqual(DefaultIntValue, (result.Fields[SecondKey] as PrimitiveParameter)!.Value);
 	}
 
 	[TestMethod]
@@ -75,8 +75,8 @@ public class LocalizationTemplateParametersTests
 		var result = LocalizationTemplateParameters.Union(firstParameters, secondParameters);
 
 		Assert.AreEqual(2, result.Fields.Count);
-		Assert.AreEqual(DefaultStringValue, result.Fields[FirstKey]);
-		Assert.AreEqual(DefaultIntValue, result.Fields[SecondKey]);
+		Assert.AreEqual(DefaultStringValue, (result.Fields[FirstKey] as PrimitiveParameter)!.Value);
+		Assert.AreEqual(DefaultIntValue, (result.Fields[SecondKey] as PrimitiveParameter)!.Value);
 	}
 
 	[TestMethod]
@@ -91,5 +91,34 @@ public class LocalizationTemplateParametersTests
 
 		Assert.ThrowsException<InvalidOperationException>(() =>
 			LocalizationTemplateParameters.Union(firstParameters, secondParameters));
+	}
+
+	[TestMethod]
+	public void ToCompositeModelValue_ContainsAllFields()
+	{
+		const string subFiledKey = "subKey";
+
+		var parameters = new LocalizationTemplateParameters()
+			.WithField(FirstKey, DefaultStringValue)
+			.WithField(SecondKey, new LocalizationTemplateParameters()
+				.WithField(subFiledKey, DefaultIntValue));
+
+		var compositeModel = parameters.ToCompositeModelValue();
+
+		Assert.AreEqual(2, compositeModel.Fields.Count());
+
+		var firstField = compositeModel.Fields.FirstOrDefault(x => x.Name == FirstKey)?.Value as IPrimitiveModelValue;
+
+		Assert.IsNotNull(firstField);
+		Assert.AreEqual(DefaultStringValue, firstField.Value);
+
+		var secondFiled = compositeModel.Fields.FirstOrDefault(x => x.Name == SecondKey)?.Value as ICompositeModelValue;
+
+		Assert.IsNotNull(secondFiled);
+
+		var subFiled = secondFiled.Fields.FirstOrDefault(x => x.Name == subFiledKey)?.Value as IPrimitiveModelValue;
+
+		Assert.IsNotNull(subFiled);
+		Assert.AreEqual(DefaultIntValue, subFiled.Value);
 	}
 }
