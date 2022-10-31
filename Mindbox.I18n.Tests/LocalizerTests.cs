@@ -18,7 +18,7 @@ namespace Mindbox.I18n.Tests;
 public class LocalizerTests
 {
 	[TestMethod]
-	public void TryGetParameterizedLocalizedString_AllLocalizationParametersEmpty_ReturnNull()
+	public void TryGetLocalizedString_AllLocalizationParametersEmpty_ReturnLocalizedValue()
 	{
 		var mockTemplateFactory = new Mock<ITemplateFactory>();
 
@@ -29,13 +29,14 @@ public class LocalizerTests
 
 		var localizableString = LocalizableString.ForKey(DefaultValues.SimpleLocalizableStringKey);
 
-		var result = localizer.TryGetParameterizedLocalizedString(Locales.enUS, localizableString);
+		var result = localizer.TryGetLocalizedString(Locales.enUS, localizableString);
 
-		Assert.IsNull(result);
+		Assert.IsNotNull(result);
+		Assert.AreEqual(DefaultValues.SimpleLocalizableStringValue, result);
 	}
 
 	[TestMethod]
-	public void TryGetParameterizedLocalizedString_TemplateNotAccepted_ReturnNull()
+	public void TryGetLocalizedString_TemplateNotAccepted_ReturnNull()
 	{
 		var compositeModelDefinitionStub = new CompositeModelDefinitionStub(DefaultValues.CompositeModelDefinitionFields);
 		var template = new TemplateStub(compositeModelDefinitionStub);
@@ -56,7 +57,7 @@ public class LocalizerTests
 			.ForKey(DefaultValues.ParameterizedLocalizableStringKey)
 			.WithParameters(parameters => parameters.WithField("firstParam", 1));
 
-		var result = localizer.TryGetParameterizedLocalizedString(Locales.enUS, localizableString);
+		var result = localizer.TryGetLocalizedString(Locales.enUS, localizableString);
 
 		mockTemplateFactory.Verify();
 		Assert.IsNull(result);
@@ -64,7 +65,7 @@ public class LocalizerTests
 
 
 	[TestMethod]
-	public void TryGetParameterizedLocalizedString_TemplateAccepted_ReturnString()
+	public void TryGetLocalizedString_TemplateAccepted_ReturnString()
 	{
 		var compositeModelDefinitionStub = new CompositeModelDefinitionStub(DefaultValues.CompositeModelDefinitionFields);
 		var mockTemplate = new Mock<TemplateStub>(compositeModelDefinitionStub);
@@ -90,7 +91,7 @@ public class LocalizerTests
 				.WithField("firstParam", 1)
 				.WithField("secondParam", 2));
 
-		var result = localizer.TryGetParameterizedLocalizedString(Locales.enUS, localizableString);
+		var result = localizer.TryGetLocalizedString(Locales.enUS, localizableString);
 
 		mockTemplate.Verify();
 		Assert.IsNotNull(result);

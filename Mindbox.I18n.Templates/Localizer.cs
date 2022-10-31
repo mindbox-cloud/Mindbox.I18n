@@ -46,26 +46,19 @@ public sealed class Localizer : ILocalizer
 		_logger = logger;
 	}
 
-	public string? TryGetParameterizedLocalizedString(
+	public string? TryGetLocalizedString(
 		ILocale locale,
 		LocalizableString localizableString,
 		LocalizationTemplateParameters? localizationTemplateParameters = null)
 	{
-		if (localizationTemplateParameters is null && localizableString.LocalizationParameters is null)
-			return null;
-
-		var @string = localizableString switch
-		{
-			LocaleIndependentString => localizableString.Key,
-			_ => _localizationProvider.Translate(locale, localizableString.Key)
-		};
+		var @string = GetTranslate(locale, localizableString);
 
 		var localizationParameters = LocalizationTemplateParameters.Contact(
 			localizableString.LocalizationParameters,
 			localizationTemplateParameters);
 
 		if (localizationParameters is null)
-			return null;
+			return @string;
 
 		var template = _templateFactory.CreateTemplate(@string);
 
@@ -79,17 +72,8 @@ public sealed class Localizer : ILocalizer
 		LocalizableString localizableString,
 		LocalizationTemplateParameters? localizationTemplateParameters = null)
 	{
-		var @string = localizableString switch
-		{
-			LocaleIndependentString => localizableString.Key,
-			_ => _localizationProvider.Translate(locale, localizableString.Key)
-		};
-
-		if (localizationTemplateParameters is null)
-			return @string;
-
-		var template = _templateFactory.CreateTemplate(@string);
-		return template.Render(localizationTemplateParameters.ToCompositeModelValue());
+		return TryGetLocalizedString(locale, localizableString, localizationTemplateParameters)
+		       ?? GetTranslate(locale, localizableString);
 	}
 
 	public string GetLocalizedEnum(ILocale locale, Enum value)
@@ -111,4 +95,10 @@ public sealed class Localizer : ILocalizer
 
 		return value.ToString();
 	}
+
+	private string GetTranslate(ILocale locale, LocalizableString localizableString) => localizableString switch
+	{
+		LocaleIndependentString => localizableString.Key,
+		_ => _localizationProvider.Translate(locale, localizableString.Key)
+	};
 }
