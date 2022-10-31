@@ -13,7 +13,7 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-      <PackageReference Include="Mindbox.Quokka.Abstractions" Version="4.10.0" />
+      <PackageReference Include="Mindbox.Quokka.Abstractions" Version="5.0.0" />
     </ItemGroup>
   
     <ItemGroup>
