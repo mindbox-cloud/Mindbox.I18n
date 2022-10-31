@@ -63,7 +63,6 @@ public class LocalizerTests
 		Assert.IsNull(result);
 	}
 
-
 	[TestMethod]
 	public void TryGetLocalizedString_TemplateAccepted_ReturnString()
 	{
