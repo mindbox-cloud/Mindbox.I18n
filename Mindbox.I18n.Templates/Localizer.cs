@@ -62,9 +62,21 @@ public sealed class Localizer : ILocalizer
 
 		var template = _templateFactory.CreateTemplate(@string);
 
-		return template.Accepts(localizationParameters)
-			? template.Render(localizationParameters.ToCompositeModelValue())
-			: null;
+		try
+		{
+			return template.Accepts(localizationParameters)
+				? template.Render(localizationParameters.ToCompositeModelValue())
+				: null;
+		}
+		catch (TemplateException ex)
+		{
+			_logger.LogWarning(ex,
+				"Rendering template for key {Key} in locale {Locale} threw an exception.",
+				localizableString.Key,
+				locale.Name);
+
+			return null;
+		}
 	}
 
 	public string GetLocalizedString(
