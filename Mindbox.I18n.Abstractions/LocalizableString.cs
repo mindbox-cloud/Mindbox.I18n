@@ -38,7 +38,7 @@ public abstract class LocalizableString
 
 	public abstract string Key { get; }
 
-	public LocalizationTemplateParameters? LocalizationParameters { get; set; }
+	public LocalizationTemplateParameters? LocalizationParameters { get; private set; }
 
 	public override string ToString()
 	{
