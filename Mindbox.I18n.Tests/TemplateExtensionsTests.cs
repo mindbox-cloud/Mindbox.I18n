@@ -43,7 +43,6 @@ public class TemplateExtensionsTests
 		Assert.IsFalse(result);
 	}
 
-
 	[TestMethod]
 	public void Accepts_FieldsAreSame_ReturnTrue()
 	{

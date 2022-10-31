@@ -16,7 +16,7 @@ namespace Mindbox.I18n.Abstractions;
 
 public sealed class LocalizationTemplateParameters
 {
-	public Dictionary<string, ParameterValue> Fields { get; } = new();
+	public Dictionary<string, ParameterValue> Fields { get; } = new(StringComparer.OrdinalIgnoreCase);
 
 	public LocalizationTemplateParameters WithField(
 		string fieldName,
@@ -119,7 +119,7 @@ public sealed class LocalizationTemplateParameters
 	}
 
 #pragma warning disable CA2225
-	public static implicit operator ParameterValue(LocalizationTemplateParameters localizationTemplateParameters)
+	public static implicit operator CompositeParameter(LocalizationTemplateParameters localizationTemplateParameters)
 #pragma warning restore CA2225
 	{
 		var parameterFields = localizationTemplateParameters

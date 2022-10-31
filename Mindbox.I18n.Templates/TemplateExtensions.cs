@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Linq;
 using Mindbox.I18n.Abstractions;
 using Mindbox.Quokka;
 
@@ -21,14 +22,28 @@ public static class TemplateExtensions
 {
 	public static bool Accepts(this ITemplate template, LocalizationTemplateParameters localizationTemplateParameters)
 	{
-		var requiredFields = template.GetModelDefinition().Fields;
+		return template.GetModelDefinition().Accepts(localizationTemplateParameters);
+	}
 
-		if (requiredFields.Count != localizationTemplateParameters.Fields.Count)
+	public static bool Accepts(this ICompositeModelDefinition modelDefinition, ParameterValue parameterValue)
+	{
+		if (parameterValue is not CompositeParameter compositeParameter)
+			return false;
+
+		var requiredFields = modelDefinition.Fields;
+
+		if (requiredFields.Count != compositeParameter.Fields.Count())
 			return false;
 
 		foreach (var field in requiredFields)
 		{
-			if (!localizationTemplateParameters.Fields.ContainsKey(field.Key))
+			var parameter = compositeParameter.Fields.SingleOrDefault(x => x.Name == field.Key);
+
+			if (parameter is null)
+				return false;
+
+			if (field.Value is ICompositeModelDefinition compositeModelDefinition &&
+			    !compositeModelDefinition.Accepts(parameter.Value))
 				return false;
 		}
 
