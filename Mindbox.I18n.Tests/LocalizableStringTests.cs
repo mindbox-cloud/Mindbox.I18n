@@ -47,7 +47,9 @@ public class LocalizableStringTests
 				.WithField("SecondValue", secondParameter));
 
 		Assert.IsNotNull(localizableString.LocalizationParameters);
-		Assert.AreEqual(firstParameter, localizableString.LocalizationParameters.Fields["FirstValue"]);
-		Assert.AreEqual(secondParameter, localizableString.LocalizationParameters.Fields["SecondValue"]);
+		Assert.AreEqual(firstParameter,
+			(localizableString.LocalizationParameters.Fields["FirstValue"] as PrimitiveParameter)!.Value);
+		Assert.AreEqual(secondParameter,
+			(localizableString.LocalizationParameters.Fields["SecondValue"] as PrimitiveParameter)!.Value);
 	}
 }
