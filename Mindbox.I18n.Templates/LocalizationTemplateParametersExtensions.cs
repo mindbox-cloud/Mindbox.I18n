@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
 using Mindbox.I18n.Abstractions;
 using Mindbox.Quokka;
@@ -22,6 +23,30 @@ public static class LocalizationTemplateParametersExtensions
 {
 	public static ICompositeModelValue ToCompositeModelValue(this LocalizationTemplateParameters parameters)
 	{
-		return new CompositeModelValue(parameters.Fields.Select(f => new ModelField(f.Key, f.Value)));
+		return new CompositeModelValue(parameters.Fields.Select(value =>
+			new ModelField(
+				value.Key,
+				value.Value.ToModelValue()
+			)));
 	}
+
+	public static IModelField ToModelField(this ParameterField value)
+	{
+		return new ModelField(
+			value.Name,
+			value.Value.ToModelValue()
+		);
+	}
+
+	public static IModelValue ToModelValue(this ParameterValue value) => value switch
+	{
+		CompositeParameter composite => composite.ToModelValue(),
+		PrimitiveParameter primitive => primitive.ToModelValue(),
+		_ => throw new InvalidCastException()
+	};
+
+	public static IModelValue ToModelValue(this PrimitiveParameter value) => new PrimitiveModelValue(value.Value);
+
+	public static IModelValue ToModelValue(this CompositeParameter value) =>
+		new CompositeModelValue(value.Fields.Select(field => field.ToModelField()));
 }
