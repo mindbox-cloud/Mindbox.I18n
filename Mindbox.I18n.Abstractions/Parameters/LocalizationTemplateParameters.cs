@@ -16,7 +16,18 @@ namespace Mindbox.I18n.Abstractions;
 
 public sealed class LocalizationTemplateParameters
 {
-	public Dictionary<string, object?> Fields { get; } = new();
+	public Dictionary<string, ParameterValue> Fields { get; } = new();
+
+	public LocalizationTemplateParameters WithField(
+		string fieldName,
+		ParameterValue value)
+	{
+		if (string.IsNullOrWhiteSpace(fieldName))
+			throw new ArgumentNullException(nameof(fieldName));
+
+		Fields.Add(fieldName, value);
+		return this;
+	}
 
 	public LocalizationTemplateParameters WithField(
 		string fieldName,
@@ -102,9 +113,20 @@ public sealed class LocalizationTemplateParameters
 		if (string.IsNullOrWhiteSpace(fieldName))
 			throw new ArgumentNullException(nameof(fieldName));
 
-		Fields.Add(fieldName, value);
+		Fields.Add(fieldName, new PrimitiveParameter(value));
 
 		return this;
+	}
+
+#pragma warning disable CA2225
+	public static implicit operator ParameterValue(LocalizationTemplateParameters localizationTemplateParameters)
+#pragma warning restore CA2225
+	{
+		var parameterFields = localizationTemplateParameters
+			.Fields
+			.Select(x => new ParameterField(x.Key, x.Value));
+
+		return new CompositeParameter(parameterFields);
 	}
 
 	public static LocalizationTemplateParameters? Contact(
