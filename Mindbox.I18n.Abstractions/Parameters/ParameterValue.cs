@@ -14,8 +14,6 @@
 
 namespace Mindbox.I18n.Abstractions;
 
-#pragma warning disable CA1040
-public record ParameterValue
-#pragma warning restore CA1040
+public abstract record ParameterValue
 {
 }
