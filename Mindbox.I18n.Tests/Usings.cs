@@ -12,19 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Mindbox.I18n.Abstractions;
+global using Microsoft.VisualStudio.TestTools.UnitTesting;
+global using Mindbox.I18n.Abstractions;
+global using Mindbox.I18n.Template;
+global using Mindbox.Quokka;
+global using Microsoft.Extensions.Logging.Abstractions;
+global using Moq;
 
-public interface ILocalizer
-{
-	string? TryGetLocalizedString(
-		ILocale locale,
-		LocalizableString localizableString,
-		LocalizationTemplateParameters? localizationTemplateParameters = null);
-
-	string GetLocalizedString(
-		ILocale locale,
-		LocalizableString localizableString,
-		LocalizationTemplateParameters? localizationTemplateParameters = null);
-
-	string GetLocalizedEnum(ILocale locale, Enum value);
-}

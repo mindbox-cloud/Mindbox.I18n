@@ -36,22 +36,56 @@ public sealed class Localizer : ILocalizer
 		_logger = logger;
 	}
 
+	internal Localizer(
+		ILocalizationProvider localizationProvider,
+		ITemplateFactory templateFactory,
+		ILogger<Localizer> logger)
+	{
+		_localizationProvider = localizationProvider;
+		_templateFactory = templateFactory;
+		_logger = logger;
+	}
+
+	public string? TryGetLocalizedString(
+		ILocale locale,
+		LocalizableString localizableString,
+		LocalizationTemplateParameters? localizationTemplateParameters = null)
+	{
+		var @string = GetTranslate(locale, localizableString);
+
+		var localizationParameters = LocalizationTemplateParameters.Contact(
+			localizableString.LocalizationParameters,
+			localizationTemplateParameters);
+
+		if (localizationParameters is null)
+			return @string;
+
+		var template = _templateFactory.CreateTemplate(@string);
+
+		try
+		{
+			return template.Accepts(localizationParameters)
+				? template.Render(localizationParameters.ToCompositeModelValue(locale))
+				: null;
+		}
+		catch (TemplateException ex)
+		{
+			_logger.LogWarning(ex,
+				"Rendering template for key {Key} in locale {Locale} threw an exception.",
+				localizableString.Key,
+				locale.Name);
+
+			return null;
+		}
+	}
+
 	public string GetLocalizedString(
 		ILocale locale,
 		LocalizableString localizableString,
 		LocalizationTemplateParameters? localizationTemplateParameters = null)
 	{
-		var @string = localizableString switch
-		{
-			LocaleIndependentString => localizableString.Key,
-			_ => _localizationProvider.Translate(locale, localizableString.Key)
-		};
-
-		if (localizationTemplateParameters is null)
-			return @string;
-
-		var template = _templateFactory.CreateTemplate(@string);
-		return template.Render(localizationTemplateParameters.ToCompositeModelValue());
+		return TryGetLocalizedString(locale, localizableString, localizationTemplateParameters)
+		       ?? localizableString.Key;
 	}
 
 	public string GetLocalizedEnum(ILocale locale, Enum value)
@@ -73,4 +107,10 @@ public sealed class Localizer : ILocalizer
 
 		return value.ToString();
 	}
+
+	private string GetTranslate(ILocale locale, LocalizableString localizableString) => localizableString switch
+	{
+		LocaleIndependentString => localizableString.Key,
+		_ => _localizationProvider.Translate(locale, localizableString.Key)
+	};
 }

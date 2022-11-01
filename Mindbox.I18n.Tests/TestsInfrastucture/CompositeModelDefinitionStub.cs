@@ -1,4 +1,4 @@
-// Copyright 2022 Mindbox Ltd
+﻿// Copyright 2022 Mindbox Ltd
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,19 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Mindbox.I18n.Abstractions;
+namespace Mindbox.I18n.Tests;
 
-public interface ILocalizer
+public class CompositeModelDefinitionStub : ICompositeModelDefinition
 {
-	string? TryGetLocalizedString(
-		ILocale locale,
-		LocalizableString localizableString,
-		LocalizationTemplateParameters? localizationTemplateParameters = null);
+	public IReadOnlyDictionary<string, IModelDefinition> Fields { get; }
 
-	string GetLocalizedString(
-		ILocale locale,
-		LocalizableString localizableString,
-		LocalizationTemplateParameters? localizationTemplateParameters = null);
+	public IReadOnlyDictionary<IMethodCallDefinition, IModelDefinition> Methods =>
+		new Dictionary<IMethodCallDefinition, IModelDefinition>();
 
-	string GetLocalizedEnum(ILocale locale, Enum value);
+	public CompositeModelDefinitionStub(IReadOnlyDictionary<string, IModelDefinition> fields)
+	{
+		Fields = fields ?? throw new ArgumentNullException(nameof(fields));
+	}
 }

@@ -16,7 +16,18 @@ namespace Mindbox.I18n.Abstractions;
 
 public sealed class LocalizationTemplateParameters
 {
-	public Dictionary<string, object?> Fields { get; } = new();
+	public Dictionary<string, ParameterValue> Fields { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+	public LocalizationTemplateParameters WithField(
+		string fieldName,
+		ParameterValue value)
+	{
+		if (string.IsNullOrWhiteSpace(fieldName))
+			throw new ArgumentNullException(nameof(fieldName));
+
+		Fields.Add(fieldName, value);
+		return this;
+	}
 
 	public LocalizationTemplateParameters WithField(
 		string fieldName,
@@ -102,8 +113,54 @@ public sealed class LocalizationTemplateParameters
 		if (string.IsNullOrWhiteSpace(fieldName))
 			throw new ArgumentNullException(nameof(fieldName));
 
-		Fields.Add(fieldName, value);
+		Fields.Add(fieldName, new PrimitiveParameter(_ => value));
 
 		return this;
+	}
+
+	public CompositeParameter ToCompositeParameter()
+	{
+		var parameterFields = Fields
+			.Select(x => new ParameterField(x.Key, x.Value));
+
+		return new CompositeParameter(parameterFields);
+	}
+
+	public static implicit operator CompositeParameter(LocalizationTemplateParameters localizationTemplateParameters)
+	{
+		return localizationTemplateParameters.ToCompositeParameter();
+	}
+
+	public static LocalizationTemplateParameters? Contact(
+		LocalizationTemplateParameters? first,
+		LocalizationTemplateParameters? second)
+	{
+		if (first is null && second is null)
+			return null;
+
+		if (first is not null && second is null)
+			return first;
+		if (first is null && second is not null)
+			return second;
+
+		return Union(first!, second!);
+	}
+
+	public static LocalizationTemplateParameters Union(params LocalizationTemplateParameters[] localizationTemplateParameters)
+	{
+		var result = new LocalizationTemplateParameters();
+
+		foreach (var parameters in localizationTemplateParameters)
+		{
+			foreach (var field in parameters.Fields)
+			{
+				if (result.Fields.ContainsKey(field.Key))
+					throw new InvalidOperationException($"Localization parameter with key {field.Key} has already been added");
+
+				result.Fields.Add(field.Key, field.Value);
+			}
+		}
+
+		return result;
 	}
 }

@@ -1,4 +1,4 @@
-// Copyright 2022 Mindbox Ltd
+﻿// Copyright 2022 Mindbox Ltd
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,17 +14,6 @@
 
 namespace Mindbox.I18n.Abstractions;
 
-public interface ILocalizer
+public abstract record ParameterValue
 {
-	string? TryGetLocalizedString(
-		ILocale locale,
-		LocalizableString localizableString,
-		LocalizationTemplateParameters? localizationTemplateParameters = null);
-
-	string GetLocalizedString(
-		ILocale locale,
-		LocalizableString localizableString,
-		LocalizationTemplateParameters? localizationTemplateParameters = null);
-
-	string GetLocalizedEnum(ILocale locale, Enum value);
 }

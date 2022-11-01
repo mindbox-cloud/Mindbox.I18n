@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Linq;
 using Mindbox.I18n.Abstractions;
 using Mindbox.Quokka;
@@ -20,8 +21,22 @@ namespace Mindbox.I18n.Template;
 
 public static class LocalizationTemplateParametersExtensions
 {
-	public static ICompositeModelValue ToCompositeModelValue(this LocalizationTemplateParameters parameters)
+	public static ICompositeModelValue ToCompositeModelValue(this LocalizationTemplateParameters parameters, ILocale locale)
 	{
-		return new CompositeModelValue(parameters.Fields.Select(f => new ModelField(f.Key, f.Value)));
+		return new CompositeModelValue(parameters.Fields.Select(value =>
+			new ModelField(
+				value.Key,
+				value.Value.ToModelValue(locale)
+			)));
 	}
+
+	public static LocalizationTemplateParameters WithField(
+		this LocalizationTemplateParameters localizationTemplateParameters,
+		string fieldName,
+		Func<ILocale, string> valueProvider)
+	{
+		return  localizationTemplateParameters
+			.WithField(fieldName, new PrimitiveParameter(valueProvider));
+	}
+
 }
