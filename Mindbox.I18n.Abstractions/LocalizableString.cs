@@ -54,4 +54,10 @@ public abstract class LocalizableString
 
 		return this;
 	}
+
+	public LocalizableString WithParameters(LocalizationTemplateParameters parameters)
+	{
+		LocalizationParameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
+		return this;
+	}
 }
