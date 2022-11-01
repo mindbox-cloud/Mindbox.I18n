@@ -118,15 +118,17 @@ public sealed class LocalizationTemplateParameters
 		return this;
 	}
 
-#pragma warning disable CA2225
-	public static implicit operator CompositeParameter(LocalizationTemplateParameters localizationTemplateParameters)
-#pragma warning restore CA2225
+	public CompositeParameter ToCompositeParameter()
 	{
-		var parameterFields = localizationTemplateParameters
-			.Fields
+		var parameterFields = Fields
 			.Select(x => new ParameterField(x.Key, x.Value));
 
 		return new CompositeParameter(parameterFields);
+	}
+
+	public static implicit operator CompositeParameter(LocalizationTemplateParameters localizationTemplateParameters)
+	{
+		return localizationTemplateParameters.ToCompositeParameter();
 	}
 
 	public static LocalizationTemplateParameters? Contact(
