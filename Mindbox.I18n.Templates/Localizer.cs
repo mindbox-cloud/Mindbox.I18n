@@ -65,7 +65,7 @@ public sealed class Localizer : ILocalizer
 		try
 		{
 			return template.Accepts(localizationParameters)
-				? template.Render(localizationParameters.ToCompositeModelValue())
+				? template.Render(localizationParameters.ToCompositeModelValue(locale))
 				: null;
 		}
 		catch (TemplateException ex)

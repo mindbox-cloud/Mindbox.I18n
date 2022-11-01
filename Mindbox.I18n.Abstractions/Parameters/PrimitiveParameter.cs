@@ -16,10 +16,10 @@ namespace Mindbox.I18n.Abstractions;
 
 public record PrimitiveParameter : ParameterValue
 {
-	public object? Value { get; }
+	public Func<ILocale, object?> ValueProvider { get; }
 
-	public PrimitiveParameter(object? value)
+	public PrimitiveParameter(Func<ILocale, object?> valueProvider)
 	{
-		Value = value;
+		ValueProvider = valueProvider;
 	}
 }

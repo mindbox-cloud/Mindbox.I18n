@@ -62,8 +62,8 @@ public class LocalizationTemplateParametersTests
 
 		Assert.IsNotNull(result);
 		Assert.AreEqual(2, result.Fields.Count);
-		Assert.AreEqual(DefaultStringValue, (result.Fields[FirstKey] as PrimitiveParameter)!.Value);
-		Assert.AreEqual(DefaultIntValue, (result.Fields[SecondKey] as PrimitiveParameter)!.Value);
+		Assert.AreEqual(DefaultStringValue, (result.Fields[FirstKey] as PrimitiveParameter)!.ValueProvider(Locales.enUS));
+		Assert.AreEqual(DefaultIntValue, (result.Fields[SecondKey] as PrimitiveParameter)!.ValueProvider(Locales.enUS));
 	}
 
 	[TestMethod]
@@ -75,8 +75,8 @@ public class LocalizationTemplateParametersTests
 		var result = LocalizationTemplateParameters.Union(firstParameters, secondParameters);
 
 		Assert.AreEqual(2, result.Fields.Count);
-		Assert.AreEqual(DefaultStringValue, (result.Fields[FirstKey] as PrimitiveParameter)!.Value);
-		Assert.AreEqual(DefaultIntValue, (result.Fields[SecondKey] as PrimitiveParameter)!.Value);
+		Assert.AreEqual(DefaultStringValue, (result.Fields[FirstKey] as PrimitiveParameter)!.ValueProvider(Locales.enUS));
+		Assert.AreEqual(DefaultIntValue, (result.Fields[SecondKey] as PrimitiveParameter)!.ValueProvider(Locales.enUS));
 	}
 
 	[TestMethod]
@@ -103,7 +103,7 @@ public class LocalizationTemplateParametersTests
 			.WithField(SecondKey, new LocalizationTemplateParameters()
 				.WithField(subFiledKey, DefaultIntValue));
 
-		var compositeModel = parameters.ToCompositeModelValue();
+		var compositeModel = parameters.ToCompositeModelValue(Locales.enUS);
 
 		Assert.AreEqual(2, compositeModel.Fields.Count());
 

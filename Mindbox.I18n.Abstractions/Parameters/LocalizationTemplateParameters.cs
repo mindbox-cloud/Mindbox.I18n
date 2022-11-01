@@ -113,7 +113,7 @@ public sealed class LocalizationTemplateParameters
 		if (string.IsNullOrWhiteSpace(fieldName))
 			throw new ArgumentNullException(nameof(fieldName));
 
-		Fields.Add(fieldName, new PrimitiveParameter(value));
+		Fields.Add(fieldName, new PrimitiveParameter(_ => value));
 
 		return this;
 	}
