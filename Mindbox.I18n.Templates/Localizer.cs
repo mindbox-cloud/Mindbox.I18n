@@ -64,9 +64,7 @@ public sealed class Localizer : ILocalizer
 
 		try
 		{
-			return template.Accepts(localizationParameters)
-				? template.Render(localizationParameters.ToCompositeModelValue(locale))
-				: null;
+			return template.Render(localizationParameters.ToCompositeModelValue(locale));
 		}
 		catch (TemplateException ex)
 		{
@@ -84,30 +82,8 @@ public sealed class Localizer : ILocalizer
 		LocalizableString localizableString,
 		LocalizationTemplateParameters? localizationTemplateParameters = null)
 	{
-		var @string = GetTranslate(locale, localizableString);
-
-		var localizationParameters = LocalizationTemplateParameters.Contact(
-			localizableString.LocalizationParameters,
-			localizationTemplateParameters);
-
-		if (localizationParameters is null)
-			return @string;
-
-		var template = _templateFactory.CreateTemplate(@string);
-
-		try
-		{
-			return template.Render(localizationParameters.ToCompositeModelValue(locale));
-		}
-		catch (TemplateException ex)
-		{
-			_logger.LogWarning(ex,
-				"Rendering template for key {Key} in locale {Locale} threw an exception.",
-				localizableString.Key,
-				locale.Name);
-
-			return localizableString.Key;
-		}
+		return TryGetLocalizedString(locale, localizableString, localizationTemplateParameters)
+		?? localizableString.Key;
 	}
 
 	public string GetLocalizedEnum(ILocale locale, Enum value)

@@ -39,14 +39,18 @@ public class LocalizerTests
 	public void TryGetLocalizedString_TemplateNotAccepted_ReturnNull()
 	{
 		var compositeModelDefinitionStub = new CompositeModelDefinitionStub(DefaultValues.CompositeModelDefinitionFields);
-		var template = new TemplateStub(compositeModelDefinitionStub);
+
+		var mockTemplate = new Mock<TemplateStub>(MockBehavior.Loose, compositeModelDefinitionStub);
+		mockTemplate.Setup(x =>
+				x.Render(It.IsAny<ICompositeModelValue>(), It.IsAny<ICallContextContainer?>()))
+			.Throws(new TemplateException("Error"));
 
 		var mockTemplateFactory = new Mock<ITemplateFactory>();
 		mockTemplateFactory
 			.Setup(x =>
 				x.CreateTemplate(It.Is<string>(inputString =>
 					inputString == DefaultValues.ParameterizedLocalizableStringValue)))
-			.Returns(template);
+			.Returns(mockTemplate.Object);
 
 		var localizer = new Localizer(
 			new LocalizationProviderStub(),
