@@ -68,7 +68,7 @@ public sealed class Localizer : ILocalizer
 		}
 		catch (TemplateException ex)
 		{
-			_logger.LogWarning(ex,
+			_logger.LogError(ex,
 				"Rendering template for key {Key} in locale {Locale} threw an exception.",
 				localizableString.Key,
 				locale.Name);
@@ -98,7 +98,7 @@ public sealed class Localizer : ILocalizer
 		if (localizableString is not null)
 			return GetLocalizedString(locale, localizableString);
 
-		_logger.LogWarning(
+		_logger.LogError(
 			"No localization key defined for value {Value} of enum {EnumType}",
 			value,
 			value.GetType());
