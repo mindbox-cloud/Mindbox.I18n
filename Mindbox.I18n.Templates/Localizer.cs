@@ -69,9 +69,7 @@ public sealed class Localizer : ILocalizer
 		catch (TemplateException ex)
 		{
 			_logger.LogWarning(ex,
-				"Rendering template for key {Key} in locale {Locale} threw an exception.",
-				localizableString.Key,
-				locale.Name);
+				$"Rendering template for key {localizableString.Key} in locale {locale.Name} threw an exception.");
 
 			return null;
 		}
