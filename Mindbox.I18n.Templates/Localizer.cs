@@ -83,7 +83,7 @@ public sealed class Localizer : ILocalizer
 		LocalizationTemplateParameters? localizationTemplateParameters = null)
 	{
 		return TryGetLocalizedString(locale, localizableString, localizationTemplateParameters)
-			?? localizableString.Key;
+		       ?? localizableString.Key;
 	}
 
 	public string GetLocalizedEnum(ILocale locale, Enum value)
