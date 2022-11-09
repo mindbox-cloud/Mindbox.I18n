@@ -55,6 +55,9 @@ public class AcceptLanguageHeaderLocalizationProvider : IRequestLocalizationProv
 					 .OrderByDescending(h => h, StringWithQualityHeaderValueComparer.QualityComparer)
 					 .Select(x => x.Value))
 		{
+			if (language.Value == null)
+				continue;
+
 			var locale = Locales.TryGetByName(language.Value);
 			if (locale != null)
 			{
