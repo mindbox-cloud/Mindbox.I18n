@@ -19,9 +19,9 @@
       <PackageVersion>$(VersionMajor).$(VersionMinor).$(BuildNumber)$(VersionTag)</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.2.32" PrivateAssets="all">
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.4.27" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Mindbox.Analyzers.V3" Version="5.0.10" ExcludeAssets="all" />
+    <PackageReference Include="Mindbox.Analyzers.V3" Version="5.0.11" ExcludeAssets="all" />
   </ItemGroup>
 </Project>
