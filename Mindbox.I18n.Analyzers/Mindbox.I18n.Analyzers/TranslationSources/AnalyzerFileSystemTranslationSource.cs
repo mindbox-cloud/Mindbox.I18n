@@ -151,7 +151,7 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 					?? false)
 				.Select(node => node.Attribute("Include").Value)
 				.SelectMany(path =>
-					path.Contains("?") || path.Contains("*")
+					path.Contains('?', StringComparison.InvariantCulture) || path.Contains('*', StringComparison.InvariantCulture)
 					? GetFilesFromWildcard(Path.GetDirectoryName(projectFile), path)
 					: new[]{ Path.Combine(
 						Path.GetDirectoryName(projectFile), path) }));

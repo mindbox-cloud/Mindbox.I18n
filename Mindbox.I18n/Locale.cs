@@ -58,7 +58,7 @@ public class Locale : ILocale, IEquatable<ILocale>
 		Name = name;
 	}
 
-	public override bool Equals(object obj)
+	public override bool Equals(object? obj)
 	{
 		if (obj is null)
 			return false;
@@ -69,9 +69,9 @@ public class Locale : ILocale, IEquatable<ILocale>
 		return Equals((ILocale)obj);
 	}
 
-	public override int GetHashCode() => Name.GetHashCode();
+	public override int GetHashCode() => Name.GetHashCode(StringComparison.InvariantCulture);
 
-	public bool Equals(ILocale other) => Name == other?.Name;
+	public bool Equals(ILocale? other) => Name == other?.Name;
 
 	public override string ToString() => Name;
 }
