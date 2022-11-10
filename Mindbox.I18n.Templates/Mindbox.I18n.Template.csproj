@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
         <Copyright>Copyright Mindbox 2022</Copyright>
         <PackageTags>Mindbox, I18n, template</PackageTags>
     </PropertyGroup>
