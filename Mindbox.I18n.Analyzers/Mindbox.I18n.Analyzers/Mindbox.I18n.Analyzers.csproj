@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <PackageId>Mindbox.I18n.Analyzers</PackageId>
     <RepositoryUrl>https://github.com/mindbox-moscow/Mindbox.I18n</RepositoryUrl>
@@ -26,13 +26,6 @@
     <None Include="$(OutputPath)/Mindbox.I18n.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(OutputPath)/Mindbox.I18n.Abstractions.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(ProjectDir)/tools/*" Pack="true" PackagePath="tools" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.4.27">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Update="Mindbox.Analyzers.V3" Version="5.0.11" />
   </ItemGroup>
   <Target Name="AddNuGetDlls" BeforeTargets="_GetPackageFiles">
     <!-- Merge the collection of PackageReference and Assemblies using the NuGetPackageId key.
