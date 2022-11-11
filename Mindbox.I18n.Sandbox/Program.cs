@@ -11,29 +11,43 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+using Mindbox.I18n.Abstractions;
+
+#pragma warning disable CS0219
+#pragma warning disable IDE0059
+
 namespace Mindbox.I18n.Sandbox;
 
 internal class Program
 {
 	private static void Main(string[] _1)
 	{
+		LocalizableString str;
+
 		// Incorrect key
-		_ = "Abacaba";
+		// str = "Abacaba";
 
 		// Correct key, should be found
-		_ = "Cars:Bntl";
+		str = "Cars:Bntl";
+
+		// Correct key, but the file is not included in the project, so won't be found
+		// str = "Outside:Found";
 
 		// Correct key, should be found
-		_ = "Bands:DeathCab";
+		str = "Bands:DeathCab";
 
 		// Correct key but doesn't have a translation
-		_ = "Bands:SomeUnknownGuys";
+		// str = "Bands:SomeUnknownGuys";
 
 		// Correct key but doesn't have a translation
-		_ = "Bands:UnknownAtTheBeginning";
+		str = "Bands:UnknownAtTheBeginning";
 
 		// Should be an error because the translation file is ignored by the configuration
-		_ = "Drinks:Coke";
-		_ = $"Try {"that"}";
+		// (actually, ignoring is NOT SUPPORTED, so should actually be found
+		str = "Drinks:Coke";
+
+		// Should be an error because an interpolated string can't represent a localization key
+		// str = $"Try {"that"}";
 	}
 }
