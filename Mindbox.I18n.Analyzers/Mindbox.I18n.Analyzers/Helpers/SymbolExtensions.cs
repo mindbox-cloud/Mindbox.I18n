@@ -39,12 +39,12 @@ public static class SymbolExtensions
 			return false;
 
 		return symbol.GetAttributes()
-			.Any(attribute => attribute.AttributeClass.Name.Contains("LocalizationKey", StringComparison.InvariantCulture));
+			.Any(attribute => attribute.AttributeClass.Name.Contains("LocalizationKey"));
 	}
 
 	public static bool IsLocalizableString(this ITypeSymbol type)
 	{
-		return type.Name.Contains(nameof(LocalizableString), StringComparison.InvariantCulture);
+		return type.Name.Contains(nameof(LocalizableString));
 	}
 
 	public static bool IsString(this ITypeSymbol symbolType)
