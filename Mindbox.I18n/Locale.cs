@@ -69,7 +69,7 @@ public class Locale : ILocale, IEquatable<ILocale>
 		return Equals((ILocale)obj);
 	}
 
-	public override int GetHashCode() => Name.GetHashCode(StringComparison.InvariantCulture);
+	public override int GetHashCode() => Name.GetHashCode();
 
 	public bool Equals(ILocale? other) => Name == other?.Name;
 
