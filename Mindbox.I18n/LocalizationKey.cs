@@ -47,7 +47,7 @@ public class LocalizationKey : IEquatable<LocalizationKey>
 		FullKey = fullKey;
 	}
 
-	public bool Equals(LocalizationKey? other)
+	public bool Equals(LocalizationKey other)
 	{
 		if (other is null)
 			return false;
@@ -57,7 +57,7 @@ public class LocalizationKey : IEquatable<LocalizationKey>
 		return StringComparer.InvariantCultureIgnoreCase.Equals(FullKey, other.FullKey);
 	}
 
-	public override bool Equals(object? obj)
+	public override bool Equals(object obj)
 	{
 		if (obj is null)
 			return false;
