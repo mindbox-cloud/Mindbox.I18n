@@ -20,7 +20,7 @@ namespace TestHelper;
 /// <summary>
 /// Location where the diagnostic appears, as determined by path, line number, and column number.
 /// </summary>
-public readonly struct DiagnosticResultLocation
+public struct DiagnosticResultLocation
 {
 	public DiagnosticResultLocation(string path, int line, int column)
 	{
