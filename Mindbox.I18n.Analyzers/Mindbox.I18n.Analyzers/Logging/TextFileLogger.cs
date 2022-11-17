@@ -45,6 +45,5 @@ internal class TextFileLogger : ILogger
 	public bool IsEnabled(LogLevel logLevel) => true;
 
 	public IDisposable BeginScope<TState>(TState state)
-		where TState : notnull
 		=> NullLogger.Instance.BeginScope(state);
 }
