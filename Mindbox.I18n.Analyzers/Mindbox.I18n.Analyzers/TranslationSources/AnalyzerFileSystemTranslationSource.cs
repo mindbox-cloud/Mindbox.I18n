@@ -45,7 +45,7 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 
 		var solutionDirectory = Path.GetDirectoryName(_solutionFilePath);
 
-		CreateTranslationFileChangeWatcher(solutionDirectory);
+		TryCreateTranslationFileChangeWatcher(solutionDirectory);
 
 		var localizationFiles = projectFiles
 			.Select(TryGetLocalizationFilesFromProjectFile)
@@ -59,18 +59,25 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 		base.Initialize();
 	}
 
-	private void CreateTranslationFileChangeWatcher(string solutionDirectory)
+	private void TryCreateTranslationFileChangeWatcher(string solutionDirectory)
 	{
-		_translationFileChangeWatcher = new FileSystemWatcher
+		try
 		{
-			Path = solutionDirectory,
-			Filter = $"*.{TranslationFileSuffix}",
-			IncludeSubdirectories = true,
-			NotifyFilter = NotifyFilters.LastWrite
-		};
+			_translationFileChangeWatcher = new FileSystemWatcher
+			{
+				Path = solutionDirectory,
+				Filter = $"*.{TranslationFileSuffix}",
+				IncludeSubdirectories = true,
+				NotifyFilter = NotifyFilters.LastWrite
+			};
 
-		_translationFileChangeWatcher.Changed += (_, ea) => HandleLocalizationFileChange(ea.FullPath);
-		_translationFileChangeWatcher.EnableRaisingEvents = true;
+			_translationFileChangeWatcher.Changed += (_, ea) => HandleLocalizationFileChange(ea.FullPath);
+			_translationFileChangeWatcher.EnableRaisingEvents = true;
+		}
+		catch (Exception ex)
+		{
+			Logger.LogError(ex, "Error creating file system watcher at {Path}", solutionDirectory);
+		}
 	}
 
 	private void HandleLocalizationFileChange(string localizationFile)
