@@ -12,14 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.IO;
 using System.Text.Json;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Mindbox.I18n.Abstractions;
-using Mindbox.I18n.Analyzers.Configuration;
-using Mindbox.I18n.Analyzers.Logging;
 
 namespace Mindbox.I18n.Analyzers;
 #nullable disable
@@ -38,19 +34,13 @@ internal class AnalyzerTranslationSource : IAnalyzerTranslationSource
 		var configuration = JsonSerializer.Deserialize<AnalysisSettingsConfiguration>(
 			File.ReadAllText(configurationFilePath));
 
-		ILogger logger = configuration.Logging?.Enabled == true
-			? new TextFileLogger(Path.Combine(Path.GetDirectoryName(configurationFilePath), configuration.Logging.LogPath))
-			: NullLogger.Instance;
-
-		logger.LogInformation("Analyzer translation source created.");
-
 		var solutionFilePath = Path.Combine(
 			Path.GetDirectoryName(configurationFilePath),
 			configuration.TranslationSource.SolutionFilePath);
 
 		_locale = Locales.GetByName(configuration.TranslationSource.Locale);
 		_translationSource = new AnalyzerFileSystemTranslationSource(
-			solutionFilePath, new[] { _locale }, logger);
+			solutionFilePath, new[] { _locale }, NullLogger.Instance);
 		_translationSource.Initialize();
 	}
 }

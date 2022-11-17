@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,8 +28,11 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 {
 	private readonly string _solutionFilePath;
 
-	private readonly HashSet<string> _localizationFiles = new();
-	private FileSystemWatcher _translationFileChangeWatcher;
+	private readonly ConcurrentDictionary<string, FileSystemWatcher> _projectFileWatchers =
+		new(8, 200);
+
+	private readonly ConcurrentDictionary<string, FileSystemWatcher> _localizationFileSystemWatchers =
+		new(8, 200);
 
 	public AnalyzerFileSystemTranslationSource(
 		string solutionFilePath,
@@ -42,41 +46,88 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 	public override void Initialize()
 	{
 		var projectFiles = GetProjectFilesFromSolution(_solutionFilePath);
+		LoadProjectFiles(projectFiles);
 
-		var solutionDirectory = Path.GetDirectoryName(_solutionFilePath);
-
-		CreateTranslationFileChangeWatcher(solutionDirectory);
-
-		var localizationFiles = projectFiles
+		var localizationFiles = GetLoadedProjectFiles()
 			.Select(TryGetLocalizationFilesFromProjectFile)
 			.Where(files => files != null)
-			.SelectMany(files => files)
-			.ToList();
+			.SelectMany(files => files);
 
-		foreach (var file in localizationFiles)
-			_localizationFiles.Add(file);
+		LoadLocalizationFiles(localizationFiles);
 
 		base.Initialize();
 	}
 
-	private void CreateTranslationFileChangeWatcher(string solutionDirectory)
+	private ICollection<string> GetLoadedProjectFiles()
 	{
-		_translationFileChangeWatcher = new FileSystemWatcher
-		{
-			Path = solutionDirectory,
-			Filter = $"*.{TranslationFileSuffix}",
-			IncludeSubdirectories = true,
-			NotifyFilter = NotifyFilters.LastWrite
-		};
+		return _projectFileWatchers.Keys;
+	}
 
-		_translationFileChangeWatcher.Changed += (_, ea) => HandleLocalizationFileChange(ea.FullPath);
-		_translationFileChangeWatcher.EnableRaisingEvents = true;
+	private void LoadProjectFiles(IEnumerable<string> projectFiles)
+	{
+		foreach (var projectFile in projectFiles)
+		{
+			var watcher = new FileSystemWatcher
+			{
+				Path = Path.GetDirectoryName(projectFile),
+				Filter = Path.GetFileName(projectFile),
+				IncludeSubdirectories = false,
+				NotifyFilter = NotifyFilters.LastWrite
+			};
+
+			watcher.Changed += (s, ea) => HandleProjectFileChange(projectFile);
+			watcher.Renamed += (s, ea) => HandleProjectFileChange(projectFile);
+
+			if (_projectFileWatchers.TryAdd(projectFile, watcher))
+			{
+				watcher.EnableRaisingEvents = true;
+			}
+			else
+			{
+				watcher.Dispose();
+			}
+		}
+	}
+
+	private void LoadLocalizationFiles(IEnumerable<string> localizationFiles)
+	{
+		foreach (var localizationFile in localizationFiles)
+		{
+			var watcher = new FileSystemWatcher
+			{
+				Path = Path.GetDirectoryName(localizationFile),
+				Filter = Path.GetFileName(localizationFile),
+				IncludeSubdirectories = false,
+				NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName
+			};
+
+			watcher.Changed += (s, ea) => HandleLocalizationFileChange(localizationFile);
+			watcher.Renamed += (s, ea) => HandleLocalizationFileChange(localizationFile);
+
+			if (_localizationFileSystemWatchers.TryAdd(localizationFile, watcher))
+			{
+				watcher.EnableRaisingEvents = true;
+			}
+			else
+			{
+				watcher.Dispose();
+			}
+		}
 	}
 
 	private void HandleLocalizationFileChange(string localizationFile)
 	{
-		Logger.LogInformation("Handling localization file change: {Path}", localizationFile);
 		LoadTranslationFile(localizationFile);
+	}
+
+	private void HandleProjectFileChange(string projectFile)
+	{
+		var localizationFilesFromProject = TryGetLocalizationFilesFromProjectFile(projectFile);
+		if (localizationFilesFromProject == null)
+			return;
+
+		var localizationFilesToAdd = localizationFilesFromProject.Except(_localizationFileSystemWatchers.Keys);
+		LoadLocalizationFiles(localizationFilesToAdd);
 	}
 
 	private IEnumerable<string> TryGetLocalizationFilesFromProjectFile(string projectFile)
@@ -90,7 +141,7 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 		var document = XDocument.Parse(projectFileContent);
 
 		// TODO: It would be nice to reuse this code with the TranslationChecker, now it's a copy-paste.
-		var localizationFiles = document.Descendants()
+		return document.Descendants()
 			.Where(x => x.Name.LocalName == "ItemGroup")
 			.SelectMany(itemGroup => itemGroup.Descendants()
 				.Where(y =>
@@ -103,14 +154,7 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 					path.Contains("?") || path.Contains("*")
 					? GetFilesFromWildcard(Path.GetDirectoryName(projectFile), path)
 					: new[]{ Path.Combine(
-						Path.GetDirectoryName(projectFile), path) }))
-				.ToList();
-
-		Logger.LogInformation("Found translation files:");
-		foreach (var file in localizationFiles)
-			Logger.LogInformation($"- {file}");
-
-		return localizationFiles;
+						Path.GetDirectoryName(projectFile), path) }));
 	}
 
 	private static IEnumerable<string> GetFilesFromWildcard(string projectDirectory, string wildcard)
@@ -147,7 +191,7 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 		}
 	}
 
-	private IReadOnlyList<string> GetProjectFilesFromSolution(string solutionFilePath)
+	private IEnumerable<string> GetProjectFilesFromSolution(string solutionFilePath)
 	{
 		var projectRelativePaths = SolutionFileParser.GetProjectRelativePaths(solutionFilePath);
 		var solutionDirectory = Path.GetDirectoryName(solutionFilePath);
@@ -156,15 +200,26 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 
 		return projectRelativePaths
 			.Select(PathHelpers.ConvertToUnixPath)
-			.Select(projectRelativePath => Path.Combine(solutionDirectory, projectRelativePath))
-			.Distinct()
-			.ToList();
+			.Select(projectRelativePath => Path.Combine(solutionDirectory, projectRelativePath));
 	}
 
-	protected override IEnumerable<string> GetTranslationFiles() => _localizationFiles;
+	protected override IEnumerable<string> GetTranslationFiles()
+	{
+		return _localizationFileSystemWatchers.Keys;
+	}
 
 	public void Dispose()
 	{
-		_translationFileChangeWatcher?.Dispose();
+		foreach (var localizationFileSystemWatcher in _localizationFileSystemWatchers.Values)
+		{
+			localizationFileSystemWatcher.EnableRaisingEvents = false;
+			localizationFileSystemWatcher.Dispose();
+		}
+
+		foreach (var projectFileWatcher in _projectFileWatchers.Values)
+		{
+			projectFileWatcher.EnableRaisingEvents = false;
+			projectFileWatcher.Dispose();
+		}
 	}
 }
