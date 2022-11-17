@@ -10,7 +10,6 @@
     <PackageTags>Mindbox, I18n, analyzers</PackageTags>
     <NoPackageAnalysis>false</NoPackageAnalysis>
     <NoWarn>$(NoWarn);NU5128</NoWarn>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../Mindbox.I18n/Mindbox.I18n.csproj" ExcludeAssets="all" />
