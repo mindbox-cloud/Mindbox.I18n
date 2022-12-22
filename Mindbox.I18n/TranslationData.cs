@@ -83,7 +83,7 @@ internal class TranslationData
 					}
 					catch (Exception e)
 					{
-						logger.LogError($"Error loading file {filePath}", e);
+						logger.LogError(e, $"Error loading file {filePath}");
 						return new Dictionary<string, string>();
 					}
 				});
