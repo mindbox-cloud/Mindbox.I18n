@@ -52,14 +52,14 @@ public sealed class LocalizationTemplateParameters
 		string fieldName,
 		DateTime value)
 	{
-		return WithFieldCore(fieldName, value.ToString(DateTimeFormat));
+		return WithFieldCore(fieldName, value.ToString(DateTimeFormat, CultureInfo.InvariantCulture));
 	}
 
 	public LocalizationTemplateParameters WithField(
 		string fieldName,
 		DateTime? value)
 	{
-		return WithFieldCore(fieldName, value?.ToString(DateTimeFormat) ?? NullValue);
+		return WithFieldCore(fieldName, value?.ToString(DateTimeFormat, CultureInfo.InvariantCulture) ?? NullValue);
 	}
 
 	public LocalizationTemplateParameters WithField(

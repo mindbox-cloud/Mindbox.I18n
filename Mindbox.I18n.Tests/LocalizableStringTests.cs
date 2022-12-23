@@ -12,11 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Globalization;
+using System.Runtime.Serialization;
+
 namespace Mindbox.I18n.Tests;
 
 [TestClass]
 public class LocalizableStringTests
 {
+	private const string DateTimeFormat = "dd.MM.yyyy H:mm:ss";
 	private const string DefaultKey = "Prefix:key";
 
 	[TestMethod]
@@ -49,7 +53,7 @@ public class LocalizableStringTests
 		Assert.IsNotNull(localizableString.LocalizationParameters);
 		Assert.AreEqual(firstParameter,
 			(localizableString.LocalizationParameters.Fields["FirstValue"] as PrimitiveParameter)!.ValueProvider(Locales.enUS));
-		Assert.AreEqual(secondParameter,
+		Assert.AreEqual(secondParameter.ToString(DateTimeFormat, CultureInfo.InvariantCulture),
 			(localizableString.LocalizationParameters.Fields["SecondValue"] as PrimitiveParameter)!.ValueProvider(Locales.enUS));
 	}
 }
