@@ -45,7 +45,7 @@ public sealed class LocalizationTemplateParameters
 		string fieldName,
 		bool? value)
 	{
-		return WithFieldCore(fieldName, value?.ToString() ?? NullValue);
+		return WithFieldCore(fieldName, value?.ToString(CultureInfo.InvariantCulture) ?? NullValue);
 	}
 
 	public LocalizationTemplateParameters WithField(
@@ -73,7 +73,7 @@ public sealed class LocalizationTemplateParameters
 		string fieldName,
 		int? value)
 	{
-		return WithFieldCore(fieldName, value?.ToString() ?? NullValue);
+		return WithFieldCore(fieldName, value?.ToString(CultureInfo.InvariantCulture) ?? NullValue);
 	}
 
 	public LocalizationTemplateParameters WithField(
