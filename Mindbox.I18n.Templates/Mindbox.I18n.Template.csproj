@@ -1,23 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <Copyright>Copyright Mindbox 2022</Copyright>
-        <PackageTags>Mindbox, I18n, template</PackageTags>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Copyright>Copyright Mindbox 2022</Copyright>
+    <PackageTags>Mindbox, I18n, template</PackageTags>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Mindbox.I18n.Abstractions\Mindbox.I18n.Abstractions.csproj" />
-      <ProjectReference Include="..\Mindbox.I18n\Mindbox.I18n.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mindbox.I18n.Abstractions\Mindbox.I18n.Abstractions.csproj" />
+    <ProjectReference Include="..\Mindbox.I18n\Mindbox.I18n.csproj" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-      <PackageReference Include="Mindbox.Quokka.Abstractions" Version="5.0.0" />
-    </ItemGroup>
-  
-    <ItemGroup>
-      <InternalsVisibleTo Include="Mindbox.I18n.Tests" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Mindbox.Quokka.Abstractions" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Mindbox.I18n.Tests" />
+  </ItemGroup>
 
 </Project>
