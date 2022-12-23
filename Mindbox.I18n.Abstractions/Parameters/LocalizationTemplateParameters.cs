@@ -73,9 +73,9 @@ public sealed class LocalizationTemplateParameters
 
 	public LocalizationTemplateParameters WithField(
 		string fieldName,
-		string value)
+		string? value)
 	{
-		return WithFieldCore(fieldName, value);
+		return WithFieldCore(fieldName, value ?? string.Empty);
 	}
 
 	public LocalizationTemplateParameters WithField(
