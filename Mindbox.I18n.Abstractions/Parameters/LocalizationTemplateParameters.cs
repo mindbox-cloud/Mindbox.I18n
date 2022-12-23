@@ -12,10 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Globalization;
+
 namespace Mindbox.I18n.Abstractions;
 
 public sealed class LocalizationTemplateParameters
 {
+	private const string NullValue = "null";
+	private const string DateTimeFormat = "dd.MM.yyyy H:mm:ss";
+
 	public Dictionary<string, ParameterValue> Fields { get; } = new(StringComparer.OrdinalIgnoreCase);
 
 	public LocalizationTemplateParameters WithField(
@@ -40,21 +45,21 @@ public sealed class LocalizationTemplateParameters
 		string fieldName,
 		bool? value)
 	{
-		return WithFieldCore(fieldName, value);
+		return WithFieldCore(fieldName, value?.ToString() ?? NullValue);
 	}
 
 	public LocalizationTemplateParameters WithField(
 		string fieldName,
 		DateTime value)
 	{
-		return WithFieldCore(fieldName, value);
+		return WithFieldCore(fieldName, value.ToString(DateTimeFormat));
 	}
 
 	public LocalizationTemplateParameters WithField(
 		string fieldName,
 		DateTime? value)
 	{
-		return WithFieldCore(fieldName, value);
+		return WithFieldCore(fieldName, value?.ToString(DateTimeFormat) ?? NullValue);
 	}
 
 	public LocalizationTemplateParameters WithField(
@@ -68,7 +73,7 @@ public sealed class LocalizationTemplateParameters
 		string fieldName,
 		int? value)
 	{
-		return WithFieldCore(fieldName, value);
+		return WithFieldCore(fieldName, value?.ToString() ?? NullValue);
 	}
 
 	public LocalizationTemplateParameters WithField(
@@ -89,21 +94,21 @@ public sealed class LocalizationTemplateParameters
 		string fieldName,
 		TimeSpan? value)
 	{
-		return WithFieldCore(fieldName, value);
+		return WithFieldCore(fieldName, value.ToString() ?? NullValue);
 	}
 
 	public LocalizationTemplateParameters WithField(
 		string fieldName,
 		decimal value)
 	{
-		return WithFieldCore(fieldName, value);
+		return WithFieldCore(fieldName, value.ToString("0.##", CultureInfo.InvariantCulture));
 	}
 
 	public LocalizationTemplateParameters WithField(
 		string fieldName,
 		decimal? value)
 	{
-		return WithFieldCore(fieldName, value);
+		return WithFieldCore(fieldName, value?.ToString("0.##", CultureInfo.InvariantCulture) ?? NullValue);
 	}
 
 	private LocalizationTemplateParameters WithFieldCore<TEntityType>(
