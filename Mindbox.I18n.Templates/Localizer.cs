@@ -49,40 +49,15 @@ public sealed class Localizer : ILocalizer
 	public string? TryGetLocalizedString(
 		ILocale locale,
 		LocalizableString localizableString,
-		LocalizationTemplateParameters? localizationTemplateParameters = null)
-	{
-		var @string = GetTranslate(locale, localizableString);
-
-		var localizationParameters = LocalizationTemplateParameters.Contact(
-			localizableString.LocalizationParameters,
-			localizationTemplateParameters);
-
-		if (localizationParameters is null)
-			return @string;
-
-		var template = _templateFactory.CreateTemplate(@string);
-
-		try
-		{
-			return template.Render(localizationParameters.ToCompositeModelValue(locale));
-		}
-		catch (TemplateException ex)
-		{
-			_logger.LogError(ex,
-				"Rendering template for key {Key} in locale {Locale} threw an exception.",
-				localizableString.Key,
-				locale.Name);
-
-			return null;
-		}
-	}
+		LocalizationTemplateParameters? localizationTemplateParameters = null) =>
+		TryRender(locale, localizableString, localizationTemplateParameters, true);
 
 	public string GetLocalizedString(
 		ILocale locale,
 		LocalizableString localizableString,
 		LocalizationTemplateParameters? localizationTemplateParameters = null)
 	{
-		return TryGetLocalizedString(locale, localizableString, localizationTemplateParameters)
+		return TryRender(locale, localizableString, localizationTemplateParameters, false)
 		       ?? localizableString.Key;
 	}
 
@@ -111,4 +86,37 @@ public sealed class Localizer : ILocalizer
 		LocaleIndependentString => localizableString.Key,
 		_ => _localizationProvider.Translate(locale, localizableString.Key)
 	};
+
+	private string? TryRender(
+		ILocale locale,
+		LocalizableString localizableString,
+		LocalizationTemplateParameters? localizationTemplateParameters,
+		bool suppressErrors)
+	{
+		var @string = GetTranslate(locale, localizableString);
+
+		var localizationParameters = LocalizationTemplateParameters.Contact(
+			localizableString.LocalizationParameters,
+			localizationTemplateParameters);
+
+		if (localizationParameters is null)
+			return @string;
+
+		var template = _templateFactory.CreateTemplate(@string);
+
+		try
+		{
+			return template.Render(localizationParameters.ToCompositeModelValue(locale));
+		}
+		catch (TemplateException ex)
+		{
+			if (!suppressErrors)
+				_logger.LogError(ex,
+					"Rendering template for key {Key} in locale {Locale} threw an exception.",
+					localizableString.Key,
+					locale.Name);
+
+			return null;
+		}
+	}
 }
