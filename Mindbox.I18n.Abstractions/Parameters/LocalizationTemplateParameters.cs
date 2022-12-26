@@ -19,7 +19,7 @@ namespace Mindbox.I18n.Abstractions;
 public sealed class LocalizationTemplateParameters
 {
 	private const string NullValue = "null";
-	private const string DateTimeFormat = "dd.MM.yyyy H:mm:ss";
+	private const string DateTimeFormat = "dd.MM.yyyy HH:mm:ss";
 
 	public Dictionary<string, ParameterValue> Fields { get; } = new(StringComparer.OrdinalIgnoreCase);
 
