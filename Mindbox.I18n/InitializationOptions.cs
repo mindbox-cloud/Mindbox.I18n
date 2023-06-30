@@ -14,6 +14,7 @@
 
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
+using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n;
 
@@ -23,4 +24,5 @@ public class InitializationOptions
 	public ILogger Logger { get; set; } = null!;
 	public string LocalizationDirectoryPath { get; set; } = null!;
 	public ITranslationSource TranslationSource { get; set; } = null!;
+	public ILocale? FallbackLocale { get; set; }
 }
