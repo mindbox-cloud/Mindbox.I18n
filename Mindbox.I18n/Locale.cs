@@ -1,11 +1,11 @@
 // Copyright 2022 Mindbox Ltd
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,6 +14,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 using Mindbox.I18n.Abstractions;
@@ -58,7 +59,7 @@ public class Locale : ILocale, IEquatable<ILocale>
 		Name = name;
 	}
 
-	public override bool Equals(object obj)
+	public override bool Equals(object? obj)
 	{
 		if (obj is null)
 			return false;
@@ -69,9 +70,10 @@ public class Locale : ILocale, IEquatable<ILocale>
 		return Equals((ILocale)obj);
 	}
 
+	[SuppressMessage("Globalization", "CA1307:Specify StringComparison for clarity")]
 	public override int GetHashCode() => Name.GetHashCode();
 
-	public bool Equals(ILocale other) => Name == other?.Name;
+	public bool Equals(ILocale? other) => Name == other?.Name;
 
 	public override string ToString() => Name;
 }
