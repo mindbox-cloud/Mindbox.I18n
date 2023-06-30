@@ -81,10 +81,10 @@ public sealed class Localizer : ILocalizer
 		return value.ToString();
 	}
 
-	private string GetTranslate(ILocale locale, LocalizableString localizableString) => localizableString switch
+	private string? GetTranslate(ILocale locale, LocalizableString localizableString) => localizableString switch
 	{
 		LocaleIndependentString => localizableString.Key,
-		_ => _localizationProvider.Translate(locale, localizableString.Key)
+		_ => _localizationProvider.TryTranslate(locale, localizableString.Key)
 	};
 
 	private string? TryRender(
@@ -94,6 +94,11 @@ public sealed class Localizer : ILocalizer
 		bool suppressErrors)
 	{
 		var @string = GetTranslate(locale, localizableString);
+
+		if (@string is null)
+		{
+			return null;
+		}
 
 		var localizationParameters = LocalizationTemplateParameters.Contact(
 			localizableString.LocalizationParameters,

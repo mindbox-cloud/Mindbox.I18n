@@ -16,7 +16,7 @@ namespace Mindbox.I18n.Tests;
 
 public class LocalizationProviderStub : ILocalizationProvider
 {
-	public string Translate(ILocale locale, string key)
+	public string? TryTranslate(ILocale locale, string key)
 	{
 		if (locale.Name != Locales.enUS.Name)
 			throw new NotSupportedException("Stub only supports English locale");
@@ -25,6 +25,7 @@ public class LocalizationProviderStub : ILocalizationProvider
 		{
 			DefaultValues.SimpleLocalizableStringKey => DefaultValues.SimpleLocalizableStringValue,
 			DefaultValues.ParameterizedLocalizableStringKey => DefaultValues.ParameterizedLocalizableStringValue,
+			DefaultValues.NonExistentLocalizableStringKey => null,
 			_ => throw new InvalidOperationException()
 		};
 	}
