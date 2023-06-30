@@ -23,12 +23,14 @@ internal class LocalizationProvider : ILocalizationProvider
 	public InitializationOptions InitializationOptions { get; }
 
 	private readonly ITranslationSource _translationSource;
+	private readonly ILocale? _fallbackLocale;
 
 	public LocalizationProvider(InitializationOptions options)
 	{
 		InitializationOptions = options;
 		_translationSource = options.TranslationSource;
 		_translationSource.Initialize();
+		_fallbackLocale = options.FallbackLocale;
 
 		if (InitializationOptions.Logger == null)
 			throw new InvalidOperationException($"{nameof(InitializationOptions)} is null");
@@ -44,7 +46,15 @@ internal class LocalizationProvider : ILocalizationProvider
 				InitializationOptions.Logger.LogError($"Key \"{key}\" is not a valid key.");
 				return null;
 			}
-			return _translationSource.TryGetTranslation(locale, localizationKey);
+
+			var translation = _translationSource.TryGetTranslation(locale, localizationKey);
+
+			if (translation is null && _fallbackLocale is not null && !_fallbackLocale.Equals(locale))
+			{
+				translation = _translationSource.TryGetTranslation(_fallbackLocale, localizationKey);
+			}
+
+			return translation;
 		}
 		catch (Exception e)
 		{

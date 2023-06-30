@@ -25,10 +25,11 @@ public static class ServiceCollectionExtensions
 {
 	public static IServiceCollection AddDefaultLocalization(
 		this IServiceCollection services,
-		ILogger? loggerOverride = null) =>
+		ILogger? loggerOverride = null,
+		ILocale? fallbackLocale = null) =>
 		services
 			.AddSingleton(
-				serviceProvider => CreateLocalizationInitializationOptions(serviceProvider, loggerOverride))
+				serviceProvider => CreateLocalizationInitializationOptions(serviceProvider, loggerOverride, fallbackLocale))
 			.AddSingleton<ILocalizer, Localizer>();
 
 	public static IServiceCollection AddDefaultLocalizer(this IServiceCollection services) =>
@@ -36,12 +37,14 @@ public static class ServiceCollectionExtensions
 
 	public static IServiceCollection AddDefaultLocalizationInitializationOptions(
 		this IServiceCollection services,
-		ILogger? loggerOverride = null) =>
-		services.AddSingleton(sp => CreateLocalizationInitializationOptions(sp, loggerOverride));
+		ILogger? loggerOverride = null,
+		ILocale? fallbackLocale = null) =>
+		services.AddSingleton(sp => CreateLocalizationInitializationOptions(sp, loggerOverride, fallbackLocale));
 
 	private static InitializationOptions CreateLocalizationInitializationOptions(
 		IServiceProvider serviceProvider,
-		ILogger? loggerOverride = null)
+		ILogger? loggerOverride = null,
+		ILocale? fallbackLocale = null)
 	{
 		var assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 		var localizationDirectory = Path.Combine(assemblyDirectory!, "Resources", "Localization");
@@ -68,7 +71,8 @@ public static class ServiceCollectionExtensions
 		return new InitializationOptions()
 		{
 			TranslationSource = translationSource,
-			Logger = localizationLogger
+			Logger = localizationLogger,
+			FallbackLocale = fallbackLocale
 		};
 	}
 }
