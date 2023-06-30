@@ -1,8 +1,13 @@
 # You can modify the rules from these initially generated values to suit your own policies
 # You can learn more about editorconfig here: https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
 
+root = true
+
 [*.props]
 indent_style = space
+
+[*.i18n.json]
+indent_style = tab
 
 [*.{csproj, config.development, config}]
 indent_style = space
@@ -16,8 +21,18 @@ insert_final_newline=false
 indent_style = tab
 trim_trailing_whitespace = true
 
+# CA1024 Use properties where appropriate
+dotnet_diagnostic.CA1024.severity = suggestion
 
-csharp_style_namespace_declarations = file_scoped
+# There are false-positives. Reevaluate after 28.01.2024
+# CA1508 Avoid dead conditional code
+dotnet_diagnostic.CA1508.severity = none
+
+# URI-like parameters should not be strings
+dotnet_diagnostic.CA1054.severity = suggestion
+
+#csharp_style_namespace_declarations = file_scoped
+dotnet_diagnostic.IDE0160.severity = none
 
 # CA2007: Consider calling ConfigureAwait on the awaited task
 dotnet_diagnostic.CA2007.severity = none
@@ -49,7 +64,7 @@ dotnet_diagnostic.CS1591.severity = none
 # CA1848 Use the LoggerMessage delegates
 dotnet_diagnostic.CA1848.severity = none
 
-# CS1998 Async method lacks await and will run synchronously 
+# CS1998 Async method lacks await and will run synchronously
 dotnet_diagnostic.CS1998.severity = none
 
 
@@ -59,7 +74,7 @@ dotnet_analyzer_diagnostic.category-Style.severity = warning
 dotnet_analyzer_diagnostic.category-CodeQuality.severity = warning
 
 # IDE0008 Use explicit type instead of var
-dotnet_diagnostic.IDE0008.severity = none 
+dotnet_diagnostic.IDE0008.severity = none
 
 # IDE0009 Add this or Me qualification
 dotnet_diagnostic.IDE0009.severity = none
@@ -68,7 +83,7 @@ dotnet_diagnostic.IDE0009.severity = none
 dotnet_diagnostic.IDE0010.severity = none
 
 # IDE0011 Add braces '{}'
-dotnet_diagnostic.IDE0011.severity = none 
+dotnet_diagnostic.IDE0011.severity = none
 
 # IDE0021 Use expression body for constructors
 dotnet_diagnostic.IDE0021.severity = none
@@ -94,7 +109,10 @@ dotnet_diagnostic.IDE0027.severity = none
 # IDE0037 Use inferred member name
 dotnet_diagnostic.IDE0037.severity = none
 
-# IDE0042 Deconstruct variable declaration 
+# IDE0039 Use local functions
+dotnet_diagnostic.IDE0039.severity = none
+
+# IDE0042 Deconstruct variable declaration
 dotnet_diagnostic.IDE0042.severity = none
 
 # IDE0045 If statement can be simplified
@@ -127,11 +145,20 @@ dotnet_code_quality_unused_parameters = non_public
 # IDE0061 Use block body for local functions
 dotnet_diagnostic.IDE0061.severity = none
 
+# IDE0066 Use switch expression
+dotnet_diagnostic.IDE0066.severity = none
+
 # IDE0072 Populate switch
 dotnet_diagnostic.IDE0072.severity = none
 
 # IDE0074 Use coalesce compound assignment
 dotnet_diagnostic.IDE0074.severity = none
+
+# IDE0078 Use pattern mathcing
+dotnet_diagnostic.IDE0078.severity = none
+
+# IDE0083 Use pattern mathcing
+dotnet_diagnostic.IDE0083.severity = none
 
 # IDE0130 Namespace {0} does not match folder structure, expected "{1}" based on directory structure
 dotnet_diagnostic.IDE0130.severity = none
@@ -139,8 +166,19 @@ dotnet_diagnostic.IDE0130.severity = none
 # IDE0220 'foreach' statement implicitly converts 'object' to '{1}'. Add an explicit cast to make intent clearer, as it may fail at runtime
 dotnet_diagnostic.IDE0220.severity = none
 
-# JSON002 Enable json support 
+dotnet_diagnostic.IDE0251.severity = none
+
+# IDE0270 Null check can be simplified
+dotnet_diagnostic.IDE0270.severity = none
+
+# JSON002 Enable json support
 dotnet_diagnostic.JSON002.severity = none
+
+# IDE0200 Lambda expressions
+dotnet_diagnostic.IDE0200.severity = silent
+
+# CA1311 Specify culture
+dotnet_diagnostic.CA1311.severity = silent
 
 # Naming convention - Private and internal fields should start with _ and be camelCased
 dotnet_naming_symbols.private_internal_fields.applicable_kinds = field
@@ -204,9 +242,13 @@ csharp_preferred_modifier_order = public,private,protected,internal,static,exter
 resharper_csharp_wrap_after_declaration_lpar = true
 resharper_csharp_wrap_parameters_style = chop_if_long
 
+# Threading
+dotnet_diagnostic.VSTHDR003.severity = none
+
 [*Test{s.cs,.cs,sBase.cs,Base.cs}]
 dotnet_diagnostic.VSTHRD200.severity = none
 dotnet_diagnostic.CA1707.severity = none
 
 [*Controller.cs]
 dotnet_diagnostic.VSTHRD200.severity = none
+
