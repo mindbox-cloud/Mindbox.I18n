@@ -34,7 +34,7 @@ internal class LocalizationProvider : ILocalizationProvider
 			throw new InvalidOperationException($"{nameof(InitializationOptions)} is null");
 	}
 
-	public string? TryGetTranslation(ILocale locale, string key)
+	public string? TryTranslate(ILocale locale, string key)
 	{
 		try
 		{
@@ -51,23 +51,5 @@ internal class LocalizationProvider : ILocalizationProvider
 			InitializationOptions.Logger.LogError(e, $"Error occured while translating key {key}");
 			return null;
 		}
-	}
-
-	public string? TryGetTranslation(ILocale locale, LocalizationKey key)
-	{
-		try
-		{
-			return _translationSource.TryGetTranslation(locale, key);
-		}
-		catch (Exception e)
-		{
-			InitializationOptions.Logger.LogError(e, $"Error occured while translating key {key.FullKey}");
-			return null;
-		}
-	}
-
-	public string Translate(ILocale locale, string key)
-	{
-		return TryGetTranslation(locale, key) ?? key;
 	}
 }

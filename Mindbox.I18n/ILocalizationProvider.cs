@@ -18,5 +18,5 @@ namespace Mindbox.I18n;
 
 internal interface ILocalizationProvider
 {
-	string Translate(ILocale locale, string key);
+	string? TryTranslate(ILocale locale, string key);
 }

@@ -100,4 +100,39 @@ public class LocalizerTests
 		Assert.IsNotNull(result);
 		Assert.AreEqual(DefaultValues.ParameterizedLocalizableStringValue, result);
 	}
+
+	[TestMethod]
+	public void TryGetLocalizedString_TranslationNotFound_ReturnNull()
+	{
+		var mockTemplateFactory = new Mock<ITemplateFactory>();
+
+		var localizer = new Localizer(
+			new LocalizationProviderStub(),
+			mockTemplateFactory.Object,
+			NullLogger<Localizer>.Instance);
+
+		var localizableString = LocalizableString.ForKey(DefaultValues.NonExistentLocalizableStringKey);
+
+		var result = localizer.TryGetLocalizedString(Locales.enUS, localizableString);
+
+		Assert.IsNull(result);
+	}
+
+	[TestMethod]
+	public void GetLocalizedString_TranslationNotFound_ReturnKey()
+	{
+		var mockTemplateFactory = new Mock<ITemplateFactory>();
+
+		var localizer = new Localizer(
+			new LocalizationProviderStub(),
+			mockTemplateFactory.Object,
+			NullLogger<Localizer>.Instance);
+
+		var localizableString = LocalizableString.ForKey(DefaultValues.NonExistentLocalizableStringKey);
+
+		var result = localizer.GetLocalizedString(Locales.enUS, localizableString);
+
+		Assert.IsNotNull(result);
+		Assert.AreEqual(DefaultValues.NonExistentLocalizableStringKey, result);
+	}
 }
