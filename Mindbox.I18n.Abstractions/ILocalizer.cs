@@ -28,3 +28,7 @@ public interface ILocalizer
 
 	string GetLocalizedEnum(ILocale locale, Enum value);
 }
+
+public interface Test : ILocalizer
+{
+}
