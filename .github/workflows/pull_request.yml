@@ -63,15 +63,17 @@ jobs:
             echo "::set-output name=changed::false"
           fi
 
-      - name: Get MajorVersion Value
+      - name: Get XML Element Value
         id: xml
-        run: |
-          echo "::set-output name=value::$(xmllint --xpath 'string(/Project/PropertyGroup/VersionMajor)' Directory.Build.Props)"
-
+        uses: mavrosxristoforos/get-xml-info@1.0
+        with:
+          xml-file: 'Directory.Build.props'
+          xpath: '/Project/PropertyGroup/VersionMajor'
+          
       - name: Detect Changes MajorVersion
         id: xml_changes
         run: |
-          if git diff HEAD^ HEAD -- "Directory.Build.Props" | grep -q "${{ steps.xml.outputs.value }}"
+          if git diff HEAD^ HEAD -- "Directory.Build.props" | grep -q "${{ steps.xml.outputs.info }}"
           then
           echo "::set-output name=changed::true"
           else
