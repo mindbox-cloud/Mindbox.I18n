@@ -44,3 +44,47 @@ jobs:
       with:
         recreate: true
         path: code-coverage-results.md
+        
+  check_version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+
+      - name: Detect Changes in Mindbox.I18n.Abstractions
+        id: dir_changes
+        run: |
+          if git diff --name-only HEAD^ HEAD | grep -q "Mindbox.I18n.Abstractions"
+          then
+            echo "::set-output name=changed::true"
+          else
+            echo "::set-output name=changed::false"
+          fi
+
+      - name: Get MajorVersion Value
+        id: xml
+        run: |
+          echo "::set-output name=value::$(xmllint --xpath 'string(/Project/PropertyGroup/VersionMajor)' Directory.Build.Props)"
+
+      - name: Detect Changes MajorVersion
+        id: xml_changes
+        run: |
+          if git diff HEAD^ HEAD -- "Directory.Build.Props" | grep -q "${{ steps.xml.outputs.value }}"
+          then
+          echo "::set-output name=changed::true"
+          else
+          echo "::set-output name=changed::false"
+          fi
+        
+      - name: If Mindbox.I18n.Abstractions changed, check MajorVersion
+        if: steps.dir_changes.outputs.changed == 'true'
+        run: |
+          if [[ "${{ steps.xml_changes.outputs.changed }}" == "false" ]]
+          then
+            echo "Error: Mindbox.I18n.Abstractions was changed but MajorVersion was not" >&2
+            exit 1
+          else
+            echo "Both Mindbox.I18n.Abstractions and MajorVersion were changed"
+          fi    
