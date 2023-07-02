@@ -20,7 +20,7 @@ namespace Mindbox.I18n.Tests;
 [TestClass]
 public class LocalizableStringTests
 {
-	private const string DateTimeFormat = "dd.MM.yyyy H:mm:ss";
+	private const string DateTimeFormat = "dd.MM.yyyy HH:mm:ss";
 	private const string DefaultKey = "Prefix:key";
 
 	[TestMethod]
