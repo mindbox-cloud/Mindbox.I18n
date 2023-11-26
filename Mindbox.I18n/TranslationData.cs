@@ -22,8 +22,6 @@ using Microsoft.Extensions.Logging;
 
 namespace Mindbox.I18n;
 
-#pragma warning disable IDE0290
-#pragma warning disable IDE0028
 internal class TranslationData
 {
 	private readonly ILocale _locale;

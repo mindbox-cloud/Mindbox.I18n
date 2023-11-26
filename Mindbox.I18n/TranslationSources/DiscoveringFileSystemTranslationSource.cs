@@ -21,7 +21,6 @@ using Mindbox.I18n.Abstractions;
 
 namespace Mindbox.I18n;
 
-#pragma warning disable IDE0290
 public class DiscoveringFileSystemTranslationSource : FileSystemTranslationSourceBase
 {
 	private readonly string _baseDirectory;
