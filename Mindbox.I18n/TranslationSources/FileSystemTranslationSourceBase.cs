@@ -24,6 +24,7 @@ public abstract class FileSystemTranslationSourceBase : ITranslationSource
 {
 	protected const string TranslationFileSuffix = ".i18n.json";
 
+	//TODO delete after migration
 	private static readonly Regex _legacyTranslationFileRegex = new(
 		$@"(?<namespace>[^\\\/]+)\.(?<locale>[^\\\/]+){Regex.Escape(TranslationFileSuffix)}$",
 		RegexOptions.IgnoreCase | RegexOptions.Compiled);

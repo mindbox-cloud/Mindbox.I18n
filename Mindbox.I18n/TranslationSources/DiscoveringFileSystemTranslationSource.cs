@@ -25,14 +25,15 @@ public class DiscoveringFileSystemTranslationSource : FileSystemTranslationSourc
 {
 	private readonly string _baseDirectory;
 	private readonly IReadOnlyList<string> _ignoredPathRules;
-	private readonly string? _subdivision;
+	// TODO make not nullable after migration
+	private readonly Subdivision? _subdivision;
 
 	public DiscoveringFileSystemTranslationSource(
 		string baseDirectory,
 		IReadOnlyList<ILocale> supportedLocales,
 		IReadOnlyList<string> ignoredPathRules,
 		ILogger logger,
-		string? subdivision = null) : base(supportedLocales, logger)
+		Subdivision? subdivision = null) : base(supportedLocales, logger)
 	{
 		_baseDirectory = baseDirectory;
 		_ignoredPathRules = ignoredPathRules;
@@ -48,7 +49,7 @@ public class DiscoveringFileSystemTranslationSource : FileSystemTranslationSourc
 
 		var searchPattern = _subdivision is null
 			? $"*{TranslationFileSuffix}"
-			: $"*.{_subdivision}*{TranslationFileSuffix}";
+			: $"*.{_subdivision.ToString()}*{TranslationFileSuffix}";
 
 		return Directory.GetFiles(
 				_baseDirectory,

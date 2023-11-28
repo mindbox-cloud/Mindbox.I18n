@@ -27,7 +27,7 @@ public static class ServiceCollectionExtensions
 		this IServiceCollection services,
 		ILogger? loggerOverride = null,
 		ILocale? fallbackLocale = null,
-		string? subdivision = null) =>
+		Subdivision? subdivision = null) =>
 		services
 			.AddSingleton(
 				serviceProvider =>
@@ -41,12 +41,12 @@ public static class ServiceCollectionExtensions
 		this IServiceCollection services,
 		ILogger? loggerOverride = null,
 		ILocale? fallbackLocale = null,
-		string? subdivision = null) =>
+		Subdivision? subdivision = null) =>
 		services.AddSingleton(sp => CreateLocalizationInitializationOptions(sp, subdivision, loggerOverride, fallbackLocale));
 
 	private static InitializationOptions CreateLocalizationInitializationOptions(
 		IServiceProvider serviceProvider,
-		string? subdivision,
+		Subdivision? subdivision,
 		ILogger? loggerOverride = null,
 		ILocale? fallbackLocale = null)
 	{
