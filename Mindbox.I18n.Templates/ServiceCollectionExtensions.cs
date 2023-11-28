@@ -26,10 +26,12 @@ public static class ServiceCollectionExtensions
 	public static IServiceCollection AddDefaultLocalization(
 		this IServiceCollection services,
 		ILogger? loggerOverride = null,
-		ILocale? fallbackLocale = null) =>
+		ILocale? fallbackLocale = null,
+		string? subdivision = null) =>
 		services
 			.AddSingleton(
-				serviceProvider => CreateLocalizationInitializationOptions(serviceProvider, loggerOverride, fallbackLocale))
+				serviceProvider =>
+					CreateLocalizationInitializationOptions(serviceProvider, subdivision, loggerOverride, fallbackLocale))
 			.AddSingleton<ILocalizer, Localizer>();
 
 	public static IServiceCollection AddDefaultLocalizer(this IServiceCollection services) =>
@@ -38,11 +40,13 @@ public static class ServiceCollectionExtensions
 	public static IServiceCollection AddDefaultLocalizationInitializationOptions(
 		this IServiceCollection services,
 		ILogger? loggerOverride = null,
-		ILocale? fallbackLocale = null) =>
-		services.AddSingleton(sp => CreateLocalizationInitializationOptions(sp, loggerOverride, fallbackLocale));
+		ILocale? fallbackLocale = null,
+		string? subdivision = null) =>
+		services.AddSingleton(sp => CreateLocalizationInitializationOptions(sp, subdivision, loggerOverride, fallbackLocale));
 
 	private static InitializationOptions CreateLocalizationInitializationOptions(
 		IServiceProvider serviceProvider,
+		string? subdivision,
 		ILogger? loggerOverride = null,
 		ILocale? fallbackLocale = null)
 	{
@@ -66,7 +70,8 @@ public static class ServiceCollectionExtensions
 			localizationDirectory,
 			supportedLocales,
 			Array.Empty<string>(),
-			localizationLogger);
+			localizationLogger,
+			subdivision);
 
 		return new InitializationOptions()
 		{
