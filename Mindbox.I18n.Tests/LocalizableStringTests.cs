@@ -13,7 +13,6 @@
 // limitations under the License.
 
 using System.Globalization;
-using System.Runtime.Serialization;
 
 namespace Mindbox.I18n.Tests;
 

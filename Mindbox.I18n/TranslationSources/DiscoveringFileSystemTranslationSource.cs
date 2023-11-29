@@ -49,7 +49,7 @@ public class DiscoveringFileSystemTranslationSource : FileSystemTranslationSourc
 
 		var searchPattern = _subdivision is null
 			? $"*{TranslationFileSuffix}"
-			: $"*.{_subdivision.ToString()}*{TranslationFileSuffix}";
+			: $"*.{_subdivision}*{TranslationFileSuffix}";
 
 		return Directory.GetFiles(
 				_baseDirectory,
