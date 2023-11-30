@@ -26,14 +26,14 @@ public class DiscoveringFileSystemTranslationSource : FileSystemTranslationSourc
 	private readonly string _baseDirectory;
 	private readonly IReadOnlyList<string> _ignoredPathRules;
 	// TODO make not nullable after migration
-	private readonly Subdivision? _subdivision;
+	private readonly string? _subdivision;
 
 	public DiscoveringFileSystemTranslationSource(
 		string baseDirectory,
 		IReadOnlyList<ILocale> supportedLocales,
 		IReadOnlyList<string> ignoredPathRules,
 		ILogger logger,
-		Subdivision? subdivision = null) : base(supportedLocales, logger)
+		string? subdivision = null) : base(supportedLocales, logger)
 	{
 		_baseDirectory = baseDirectory;
 		_ignoredPathRules = ignoredPathRules;
