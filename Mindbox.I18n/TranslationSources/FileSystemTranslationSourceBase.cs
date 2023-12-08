@@ -24,13 +24,8 @@ public abstract class FileSystemTranslationSourceBase : ITranslationSource
 {
 	protected const string TranslationFileSuffix = ".i18n.json";
 
-	//TODO delete after migration
-	private static readonly Regex _legacyTranslationFileRegex = new(
-		$@"(?<namespace>[^\\\/]+)\.(?<locale>[^\\\/]+){Regex.Escape(TranslationFileSuffix)}$",
-		RegexOptions.IgnoreCase | RegexOptions.Compiled);
-
 	private static readonly Regex _translationFileRegex = new(
-		$@"(?<namespace>[^\\\/]+)\.(?<subdivision>[^\\\/]+)\.(?<locale>[^\\\/]+){Regex.Escape(TranslationFileSuffix)}$",
+		$@"(?<namespace>[^\\\/.]+)(?:\.[^\\\/.]+)*\.(?<locale>[^\\\/]+){Regex.Escape(TranslationFileSuffix)}$",
 		RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
 	private readonly Dictionary<string, TranslationData> _translationsPerLocale;
@@ -68,7 +63,7 @@ public abstract class FileSystemTranslationSourceBase : ITranslationSource
 		var translationFileRegexMatch = _translationFileRegex.Match(translationFile);
 
 		if (!translationFileRegexMatch.Success)
-			translationFileRegexMatch = _legacyTranslationFileRegex.Match(translationFile);
+			return;
 
 		var @namespace = translationFileRegexMatch.Groups["namespace"].Value;
 		var localeName = translationFileRegexMatch.Groups["locale"].Value;
