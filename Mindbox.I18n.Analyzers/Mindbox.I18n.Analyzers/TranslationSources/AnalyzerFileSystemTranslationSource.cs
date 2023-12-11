@@ -51,6 +51,7 @@ public sealed class AnalyzerFileSystemTranslationSource : FileSystemTranslationS
 			.Select(TryGetLocalizationFilesFromProjectFile)
 			.Where(files => files != null)
 			.SelectMany(files => files)
+			.OrderBy(file => file)
 			.ToList();
 
 		foreach (var file in localizationFiles)
