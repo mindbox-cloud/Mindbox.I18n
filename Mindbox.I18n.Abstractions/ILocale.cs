@@ -12,9 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Globalization;
+
 namespace Mindbox.I18n.Abstractions;
 
 public interface ILocale
 {
 	string Name { get; }
+
+	CultureInfo Culture { get; }
 }

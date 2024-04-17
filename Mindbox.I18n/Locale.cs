@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 
 using Mindbox.I18n.Abstractions;
@@ -48,7 +49,10 @@ public static class Locales
 
 public class Locale : ILocale, IEquatable<ILocale>
 {
+	private CultureInfo? _culture;
+
 	public string Name { get; }
+	public CultureInfo Culture => _culture ??= new CultureInfo(Name);
 
 	static Locale()
 	{
