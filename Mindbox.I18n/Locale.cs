@@ -28,6 +28,7 @@ public static class Locales
 
 	public static ILocale ruRU { get; } = new Locale("ru-RU");
 	public static ILocale enUS { get; } = new Locale("en-US");
+	public static ILocale enGB { get; } = new Locale("en-GB");
 
 	public static ILocale GetByName(string name) => _localesByName[name];
 
@@ -42,7 +43,8 @@ public static class Locales
 		_localesByName = new[]
 		{
 			ruRU,
-			enUS
+			enUS,
+			enGB
 		}.ToDictionary(locale => locale.Name);
 	}
 }
