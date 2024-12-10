@@ -12,25 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Mindbox.I18n.Abstractions;
+using Mindbox.I18n.Abstractions;
+
+namespace Mindbox.I18n.Template;
 
 [AttributeUsage(AttributeTargets.Field)]
-public sealed class LocalizableDisplayAttribute : Attribute
+public sealed class LocalizableEnumMemberAttribute : Attribute
 {
+	public LocalizableString LocalizableString { get; }
+
 #pragma warning disable CA1019
-	public LocalizableDisplayAttribute([LocalizationKey] string name)
-	{
-		LocalizableName = LocalizableString.ForKey(name);
-	}
-
-	public LocalizableDisplayAttribute([LocalizationKey] string name, [LocalizationKey] string description)
-	{
-		LocalizableName = LocalizableString.ForKey(name);
-		LocalizableDescription = LocalizableString.ForKey(description);
-	}
+	public LocalizableEnumMemberAttribute([LocalizationKey] string localizationKey)
 #pragma warning restore CA1019
-
-	public LocalizableString LocalizableName { get; }
-
-	public LocalizableString? LocalizableDescription { get; }
+		=> LocalizableString = LocalizableString.ForKey(localizationKey);
 }
