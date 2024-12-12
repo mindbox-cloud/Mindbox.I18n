@@ -14,7 +14,7 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
   <PropertyGroup>
-      <VersionMajor>15</VersionMajor>
+      <VersionMajor>16</VersionMajor>
       <VersionMinor>1</VersionMinor>
       <BuildNumber>$(BuildNumber)</BuildNumber>
       <BuildNumber Condition="'$(BuildNumber)' == ''">0</BuildNumber>
