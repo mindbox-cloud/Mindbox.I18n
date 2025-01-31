@@ -29,10 +29,8 @@ public static class ServiceCollectionExtensions
 		ILocale? fallbackLocale = null,
 		string? prefix = null) =>
 		services
-			.AddSingleton(
-				serviceProvider =>
-					CreateLocalizationInitializationOptions(serviceProvider, prefix, loggerOverride, fallbackLocale))
-			.AddSingleton<ILocalizer, Localizer>();
+			.AddDefaultLocalizationInitializationOptions(loggerOverride, fallbackLocale, prefix)
+			.AddDefaultLocalizer();
 
 	public static IServiceCollection AddDefaultLocalizer(this IServiceCollection services) =>
 		services.AddSingleton<ILocalizer, Localizer>();

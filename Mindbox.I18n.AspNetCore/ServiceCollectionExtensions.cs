@@ -29,6 +29,7 @@ public static class ServiceCollectionExtensions
 	{
 		services.TryAddSingleton<ILocalizationContextAccessor, LocalizationContextAccessor>();
 		services.TryAddTransient<IRequestLocalizationProvider, AcceptLanguageHeaderLocalizationProvider>();
+		services.TryAddTransient<IRequestLocalizationProvider, TokenLocalizationProvider>();
 
 		return services;
 	}
