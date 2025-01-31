@@ -23,12 +23,12 @@ using Moq;
 namespace Mindbox.I18n.AspNetCore.Tests
 {
 	/// <summary>
-	/// Тесты <see cref="TokenLocalizationProvider"/>.
+	/// Тесты <see cref="ClaimsLocalizationProvider"/>.
 	/// </summary>
 	[TestClass]
-	public class TokenLocalizationProviderTests
+	public class ClaimsLocalizationProviderTests
 	{
-		private readonly TokenLocalizationProvider _provider = new();
+		private readonly ClaimsLocalizationProvider _provider = new();
 
 		[TestMethod]
 		public async Task Provide_When_LocaleIsInToken_ReturnsCorrectLocale()
@@ -81,8 +81,8 @@ namespace Mindbox.I18n.AspNetCore.Tests
 
 			httpContextMock.Setup(x => x.User).Returns(userMock.Object);
 
-			userMock.Setup(x => x.FindFirst(Constants.LocaleKey))
-				.Returns(new Claim(Constants.LocaleKey, locale!));
+			userMock.Setup(x => x.FindFirst(ClaimsLocalizationProvider.DefaultLocaleKey))
+				.Returns(new Claim(ClaimsLocalizationProvider.DefaultLocaleKey, locale!));
 
 			return httpContextMock.Object;
 		}

@@ -14,6 +14,15 @@
 services
   .AddI18nRequestLocalization();
 ```
+Или эквивалентное
+
+```csharp
+services
+  .AddLocalizationContextAccessor()
+// далее можно зарегистрировать только желаемые провайдеры:
+  .AddAcceptLanguageHeaderLocalizationProvider()
+  .AddClaimsLocalizationProvider();
+```
 
 И в методе `Configure`:
 

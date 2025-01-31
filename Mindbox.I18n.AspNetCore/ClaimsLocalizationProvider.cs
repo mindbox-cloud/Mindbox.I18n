@@ -18,23 +18,29 @@ using Mindbox.I18n.Abstractions;
 namespace Mindbox.I18n.AspNetCore;
 
 /// <summary>
-/// Провайдер получающий язык пользователя из токена.
+/// Провайдер получающий язык пользователя из Claims пользователя.
 /// </summary>
-public class TokenLocalizationProvider : IRequestLocalizationProvider
+public class ClaimsLocalizationProvider : IRequestLocalizationProvider
 {
-	private static readonly Task<ILocale?> _nullProviderCultureResult = Task.FromResult((ILocale?)null);
+	private readonly string _keyOfLocaleClaim;
+	public const string DefaultLocaleKey = "Locale";
 
-	public Task<ILocale?> TryGetLocale(HttpContext httpContext)
+	public ClaimsLocalizationProvider(string? keyOfLocaleClaim = null)
 	{
-		var languageFromToken = httpContext.User.FindFirst(Constants.LocaleKey)?.Value;
+		_keyOfLocaleClaim = keyOfLocaleClaim ?? DefaultLocaleKey;
+	}
+
+	public async Task<ILocale?> TryGetLocale(HttpContext httpContext)
+	{
+		var languageFromToken = httpContext.User.FindFirst(_keyOfLocaleClaim)?.Value;
 
 		if (string.IsNullOrWhiteSpace(languageFromToken))
 		{
-			return _nullProviderCultureResult;
+			return null;
 		}
 
 		var locale = Locales.TryGetByName(languageFromToken);
 
-		return Task.FromResult(locale);
+		return locale;
 	}
 }
