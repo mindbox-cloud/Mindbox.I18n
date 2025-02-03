@@ -14,6 +14,15 @@
 services
   .AddI18nRequestLocalization();
 ```
+Или эквивалентное
+
+```csharp
+services
+  .AddLocalizationContextAccessor()
+// далее можно зарегистрировать только желаемые провайдеры:
+  .AddAcceptLanguageHeaderLocalizationProvider()
+  .AddClaimsLocalizationProvider();
+```
 
 И в методе `Configure`:
 
@@ -27,3 +36,7 @@ app.UseI18nRequestLocalization();
 
 После подключения, для доступа к локализации используйте абстракцию `ILocalizationContextAccessor`:
 * `ILocalizationContextAccessor.Context.UserLocale` - язык пользователя
+
+Для определения языка пользователя используются реализации `IRequestLocalizationProvider`.
+- `AcceptLanguageHeaderLocalizationProvider` – получает язык из HTTP-заголовка Accept-Language.
+- `TokenLocalizationProvider` – получает язык из токена пользователя (например, из JWT).
