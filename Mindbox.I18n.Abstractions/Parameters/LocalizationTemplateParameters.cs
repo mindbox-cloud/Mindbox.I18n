@@ -34,6 +34,12 @@ public sealed class LocalizationTemplateParameters
 		return this;
 	}
 
+	public LocalizationTemplateParameters WithField(string fieldName, LocalizableString value)
+	{
+		Fields.Add(fieldName, new LocalizableStringParameter(value));
+		return this;
+	}
+
 	public LocalizationTemplateParameters WithField(
 		string fieldName,
 		bool value)
