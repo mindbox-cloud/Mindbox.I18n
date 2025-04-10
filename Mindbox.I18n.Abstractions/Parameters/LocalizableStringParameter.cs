@@ -14,13 +14,12 @@
 
 namespace Mindbox.I18n.Abstractions;
 
-/// <summary>
-/// Контекст локализации в рамках запроса.
-/// </summary>
-public interface ILocalizationContext
+public record LocalizableStringParameter : ParameterValue
 {
-	/// <summary>
-	/// Язык пользователя.
-	/// </summary>
-	ILocale? UserLocale { get; set; }
+	public LocalizableString Value { get; }
+
+	public LocalizableStringParameter(LocalizableString value)
+	{
+		Value = value;
+	}
 }

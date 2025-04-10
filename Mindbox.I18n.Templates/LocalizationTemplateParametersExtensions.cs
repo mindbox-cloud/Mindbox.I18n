@@ -21,12 +21,16 @@ namespace Mindbox.I18n.Template;
 
 public static class LocalizationTemplateParametersExtensions
 {
-	public static ICompositeModelValue ToCompositeModelValue(this LocalizationTemplateParameters parameters, ILocale locale)
+	public static ICompositeModelValue ToCompositeModelValue(
+		this LocalizationTemplateParameters parameters,
+		ILocale locale,
+		ILocalizer? localizer = null,
+		bool suppressErrors = false)
 	{
 		return new CompositeModelValue(parameters.Fields.Select(value =>
 			new ModelField(
 				value.Key,
-				value.Value.ToModelValue(locale)
+				value.Value.ToModelValue(locale, localizer, suppressErrors)
 			)));
 	}
 
@@ -35,8 +39,7 @@ public static class LocalizationTemplateParametersExtensions
 		string fieldName,
 		Func<ILocale, string> valueProvider)
 	{
-		return  localizationTemplateParameters
+		return localizationTemplateParameters
 			.WithField(fieldName, new PrimitiveParameter(valueProvider));
 	}
-
 }

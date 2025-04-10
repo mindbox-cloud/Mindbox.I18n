@@ -21,6 +21,8 @@ public class LocalizableStringTests
 {
 	private const string DateTimeFormat = "dd.MM.yyyy HH:mm:ss";
 	private const string DefaultKey = "Prefix:key";
+	private const int DefaultIntValue = 123;
+	private readonly DateTime _defaultDateTimeValue = DateTime.UtcNow;
 
 	[TestMethod]
 	public void ForKey_NullValue_ThrowException()
@@ -40,19 +42,46 @@ public class LocalizableStringTests
 	[TestMethod]
 	public void ForKey_WithParameters()
 	{
-		var firstParameter = 123;
-		var secondParameter = DateTime.UtcNow;
-
 		var localizableString = LocalizableString
 			.ForKey(DefaultKey)
 			.WithParameters(parameters => parameters
-				.WithField("FirstValue", firstParameter)
-				.WithField("SecondValue", secondParameter));
+				.WithField("FirstValue", DefaultIntValue)
+				.WithField("SecondValue", _defaultDateTimeValue));
 
 		Assert.IsNotNull(localizableString.LocalizationParameters);
-		Assert.AreEqual(firstParameter,
+		Assert.AreEqual(DefaultIntValue,
 			(localizableString.LocalizationParameters.Fields["FirstValue"] as PrimitiveParameter)!.ValueProvider(Locales.enUS));
-		Assert.AreEqual(secondParameter.ToString(DateTimeFormat, CultureInfo.InvariantCulture),
+		Assert.AreEqual(_defaultDateTimeValue.ToString(DateTimeFormat, CultureInfo.InvariantCulture),
 			(localizableString.LocalizationParameters.Fields["SecondValue"] as PrimitiveParameter)!.ValueProvider(Locales.enUS));
+	}
+
+	[TestMethod]
+	public void ForKey_WithLocalizableStringParameter_WithParameters()
+	{
+		var localizableString = LocalizableString
+			.ForKey(DefaultKey)
+			.WithParameters(rootParameters => rootParameters
+				.WithField("FirstValue", DefaultIntValue)
+				.WithField("SecondValue", _defaultDateTimeValue)
+				.WithField("ThirdValue", LocalizableString
+					.ForKey(DefaultKey)
+					.WithParameters(childParameters => childParameters
+						.WithField("FirstValue", DefaultIntValue)
+						.WithField("SecondValue", _defaultDateTimeValue))));
+
+		Assert.IsNotNull(localizableString.LocalizationParameters);
+
+		Assert.AreEqual(DefaultIntValue,
+			(localizableString.LocalizationParameters.Fields["FirstValue"] as PrimitiveParameter)!.ValueProvider(Locales.enUS));
+		Assert.AreEqual(_defaultDateTimeValue.ToString(DateTimeFormat, CultureInfo.InvariantCulture),
+			(localizableString.LocalizationParameters.Fields["SecondValue"] as PrimitiveParameter)!.ValueProvider(Locales.enUS));
+
+		Assert.AreEqual(DefaultIntValue,
+			((localizableString.LocalizationParameters.Fields["ThirdValue"] as LocalizableStringParameter)!
+				.Value.LocalizationParameters!.Fields["FirstValue"] as PrimitiveParameter)!.ValueProvider(Locales.enUS));
+
+		Assert.AreEqual(_defaultDateTimeValue.ToString(DateTimeFormat, CultureInfo.InvariantCulture),
+			((localizableString.LocalizationParameters.Fields["ThirdValue"] as LocalizableStringParameter)!
+				.Value.LocalizationParameters!.Fields["SecondValue"] as PrimitiveParameter)!.ValueProvider(Locales.enUS));
 	}
 }

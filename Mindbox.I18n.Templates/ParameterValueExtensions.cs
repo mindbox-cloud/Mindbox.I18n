@@ -29,12 +29,35 @@ public static class ParameterValueExtensions
 		);
 	}
 
-	public static IModelValue ToModelValue(this ParameterValue value, ILocale locale) => value switch
+	public static IModelValue ToModelValue(
+		this ParameterValue value,
+		ILocale locale,
+		ILocalizer? localizer = null,
+		bool suppressErrors = false)
+		=> value switch
+		{
+			CompositeParameter composite => composite.ToModelValue(locale),
+			PrimitiveParameter primitive => primitive.ToModelValue(locale),
+			LocalizableStringParameter localizableString => localizableString.ToModelValue(locale,
+				localizer ?? throw new ArgumentNullException(nameof(localizer)), suppressErrors),
+			_ => throw new InvalidCastException()
+		};
+
+	public static IModelValue ToModelValue(
+		this LocalizableStringParameter value,
+		ILocale locale,
+		ILocalizer localizer,
+		bool suppressErrors = false)
 	{
-		CompositeParameter composite => composite.ToModelValue(locale),
-		PrimitiveParameter primitive => primitive.ToModelValue(locale),
-		_ => throw new InvalidCastException()
-	};
+		if (localizer == null)
+			throw new ArgumentNullException(nameof(localizer));
+
+		var localizedString = suppressErrors
+			? localizer.TryGetLocalizedString(locale, value.Value)
+			: localizer.GetLocalizedString(locale, value.Value);
+
+		return new PrimitiveModelValue(localizedString);
+	}
 
 	public static IModelValue ToModelValue(this PrimitiveParameter value, ILocale locale) =>
 		new PrimitiveModelValue(value.ValueProvider(locale));
