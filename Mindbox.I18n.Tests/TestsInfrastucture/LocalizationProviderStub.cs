@@ -25,6 +25,8 @@ public class LocalizationProviderStub : ILocalizationProvider
 		{
 			DefaultValues.SimpleLocalizableStringKey => DefaultValues.SimpleLocalizableStringValue,
 			DefaultValues.ParameterizedLocalizableStringKey => DefaultValues.ParameterizedLocalizableStringValue,
+			DefaultValues.ParameterizedLocalizableStringWithLocalizableStringParameterKey =>
+				DefaultValues.ParameterizedLocalizableStringWithLocalizableStringParameterValue,
 			DefaultValues.NonExistentLocalizableStringKey => null,
 			_ => throw new InvalidOperationException()
 		};

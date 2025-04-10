@@ -22,10 +22,24 @@ public static class DefaultValues
 	public const string ParameterizedLocalizableStringValue = "Test with message: ${firstParam} and ${secondParam}";
 	public const string NonExistentLocalizableStringKey = "Test:NonExistentLocalizableStringKey";
 
+	public const string ParameterizedLocalizableStringWithLocalizableStringParameterKey =
+		"Test:ParameterizedLocalizableStringWithLocalizableStringParameterKey";
+
+	public const string ParameterizedLocalizableStringWithLocalizableStringParameterValue =
+		"Test with message: ${firstParam} and ${secondParam} and ${thirdParam}";
+
 	public static IReadOnlyDictionary<string, IModelDefinition> CompositeModelDefinitionFields =>
 		new Dictionary<string, IModelDefinition>()
 		{
 			["firstParam"] = Mock.Of<IModelDefinition>(),
 			["secondParam"] = Mock.Of<IModelDefinition>()
+		};
+
+	public static IReadOnlyDictionary<string, IModelDefinition> CompositeModelDefinitionFieldsWithLocalizableStringParameter =>
+		new Dictionary<string, IModelDefinition>()
+		{
+			["firstParam"] = Mock.Of<IModelDefinition>(),
+			["secondParam"] = Mock.Of<IModelDefinition>(),
+			["thirdParam"] = Mock.Of<IModelDefinition>()
 		};
 }

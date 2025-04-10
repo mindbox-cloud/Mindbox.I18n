@@ -70,17 +70,18 @@ public class LocalizerTests
 	[TestMethod]
 	public void TryGetLocalizedString_TemplateAccepted_ReturnString()
 	{
-		var compositeModelDefinitionStub = new CompositeModelDefinitionStub(DefaultValues.CompositeModelDefinitionFields);
+		var compositeModelDefinitionStub =
+			new CompositeModelDefinitionStub(DefaultValues.CompositeModelDefinitionFieldsWithLocalizableStringParameter);
 		var mockTemplate = new Mock<TemplateStub>(compositeModelDefinitionStub);
 		mockTemplate.Setup(x =>
 				x.Render(It.IsAny<ICompositeModelValue>(), It.IsAny<ICallContextContainer?>()))
-			.Returns(DefaultValues.ParameterizedLocalizableStringValue);
+			.Returns(DefaultValues.ParameterizedLocalizableStringWithLocalizableStringParameterValue);
 
 		var mockTemplateFactory = new Mock<ITemplateFactory>();
 		mockTemplateFactory
 			.Setup(x =>
 				x.CreateTemplate(It.Is<string>(inputString =>
-					inputString == DefaultValues.ParameterizedLocalizableStringValue)))
+					inputString == DefaultValues.ParameterizedLocalizableStringWithLocalizableStringParameterValue)))
 			.Returns(mockTemplate.Object);
 
 		var localizer = new Localizer(
@@ -89,16 +90,20 @@ public class LocalizerTests
 			NullLogger<Localizer>.Instance);
 
 		var localizableString = LocalizableString
-			.ForKey(DefaultValues.ParameterizedLocalizableStringKey)
+			.ForKey(DefaultValues.ParameterizedLocalizableStringWithLocalizableStringParameterKey)
 			.WithParameters(parameters => parameters
 				.WithField("firstParam", 1)
-				.WithField("secondParam", 2));
+				.WithField("secondParam", 2)
+				.WithField("thirdParam", LocalizableString
+					.ForKey(DefaultValues.ParameterizedLocalizableStringWithLocalizableStringParameterKey)
+					.WithParameters(childParameters => childParameters
+						.WithField("firstParam", 1))));
 
 		var result = localizer.TryGetLocalizedString(Locales.enUS, localizableString);
 
 		mockTemplate.Verify();
 		Assert.IsNotNull(result);
-		Assert.AreEqual(DefaultValues.ParameterizedLocalizableStringValue, result);
+		Assert.AreEqual(DefaultValues.ParameterizedLocalizableStringWithLocalizableStringParameterValue, result);
 	}
 
 	[TestMethod]

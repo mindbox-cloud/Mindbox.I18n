@@ -47,12 +47,12 @@ public static class ParameterValueExtensions
 		this LocalizableStringParameter value,
 		ILocale locale,
 		ILocalizer localizer,
-		bool suppressErros = false)
+		bool suppressErrors = false)
 	{
 		if (localizer == null)
 			throw new ArgumentNullException(nameof(localizer));
 
-		var localizedString = suppressErros
+		var localizedString = suppressErrors
 			? localizer.TryGetLocalizedString(locale, value.Value)
 			: localizer.GetLocalizedString(locale, value.Value);
 
