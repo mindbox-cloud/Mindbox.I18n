@@ -41,7 +41,17 @@ internal class TranslationData
 		_translationSetsByNamespace.AddOrUpdate(
 			@namespace,
 			ns => new TranslationSet(filePath, _logger),
-			(ns, oldSet) => new TranslationSet(filePath, _logger));
+			(ns, oldSet) =>
+			{
+				if (!string.Equals(oldSet.FilePath, filePath, StringComparison.Ordinal))
+					_logger.LogError(
+						$"Namespace \"{@namespace}\" for locale \"{_locale.Name}\" is provided by multiple files " +
+						$"(\"{oldSet.FilePath}\" and \"{filePath}\"); \"{filePath}\" silently overwrites the previous one. " +
+						$"This usually means several files resolve to the same namespace (for example per-subdivision " +
+						$"files) without a discriminating prefix — pass a prefix to the translation source.");
+
+				return new TranslationSet(filePath, _logger);
+			});
 	}
 
 	internal string? TryGetTranslation(LocalizationKey localizationKey)
@@ -68,10 +78,13 @@ internal class TranslationData
 
 	private class TranslationSet
 	{
+		public string FilePath { get; }
+
 		public Lazy<Dictionary<string, string>> Data { get; }
 
 		public TranslationSet(string filePath, ILogger logger)
 		{
+			FilePath = filePath;
 			Data = new Lazy<Dictionary<string, string>>(
 				() =>
 				{
